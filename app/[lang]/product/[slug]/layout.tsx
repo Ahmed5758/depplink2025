@@ -1,17 +1,24 @@
 import { Api } from "../../api/Api";
 import { redirect } from 'next/navigation'
+import { cache } from 'react';
 import { headers,cookies } from 'next/headers'
 import next from "next";
 
-const fetcher = async (params: any) => {
-    const slug = params.slug
-    // const res: any = await fetch(`${Api}/product-regional/${slug}`)
+const fetcher = cache(async (params: any) => {
+    const { slug } = params;
     const cookieStore = cookies();
     const city = cookieStore.get('selectedCity')?.value || 'Jeddah';
-    // const res: any = await fetch(`${Api}/product-regional-new-copy/${slug}/${city}`)
-    const res: any = await fetch(`${Api}product-regional-new-copy/${slug}?v=updated&lang=${params.lang}`, { next: { revalidate: 36000 } })
-    return res.json()
-}
+
+    const res = await fetch(`${Api}/product-regional-new-copy/${slug}/${city}?update19May303404`, {
+        next: { revalidate: 86400 }, // Cache for 24 hours
+    });
+
+    if (!res.ok) {
+        throw new Error(`Failed to fetch: ${res.statusText}`);
+    }
+
+    return res.json();
+});
 
 export const viewport = {
     width: 'device-width',
