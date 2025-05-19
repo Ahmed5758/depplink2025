@@ -10,6 +10,7 @@ import { getDictionary } from "../dictionaries"
 export default function Login({ params }: { params: { lang: string, data: any } }) {
     const [dict, setDict] = useState<any>([]);
     const [brandsData, setBrandsData] = useState<any>([]);
+    const [gridCount, setGridCount] = useState<any>(6);
     const getBrandsData = async () => {
         await get(`get-brands`).then((responseJson: any) => {
             setBrandsData(responseJson?.brands)

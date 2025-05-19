@@ -4,11 +4,11 @@
 
 @layer utilities {
 	.min-h-custom {
-		min-height: calc(65vh - 10rem);
+		min-height: calc(630px - 0rem);
 	}
 
 	.h-proBoxMobile {
-		height: 35rem;
+		height: 35.5rem;
 	}
 }
 
@@ -33,7 +33,7 @@ html {
 }
 
 .kuXgun {
-    background: #f7f7fa !important;
+	background: #f7f7fa !important;
 }
 
 .ios-scroll {
@@ -57,6 +57,40 @@ body {
 		rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb)); */
 	background: #F7F7FA;
 	/* #ebf2fd; */
+}
+
+.backTopbar {
+	background-image: url('/images/bgTopImg.png');
+	background-size: cover;
+	background-repeat: repeat;
+	background-position: center;
+	display: flex;
+}
+
+.specificationImagesProduct {
+	height: 22px;
+	width: 30px;
+	object-fit: contain;
+}
+
+.WhatsappBeforeHover {
+	@apply fill-[#ECF8EE] px-1 py-1.5 justify-center items-center opacity-80 bg-[#ECF8EE] shadow-md h-10 absolute top-52 rtl:right-0 ltr:left-0 rtl:rounded-l-2xl ltr:rounded-r-2xl
+}
+
+.whatsappLayout {
+	@apply px-1 py-1.5 justify-center items-center opacity-80 bg-[#ECF8EE] shadow-md h-10 absolute top-52 rtl:right-0 ltr:left-0 rtl:rounded-l-2xl ltr:rounded-r-2xl
+}
+
+.mobileSwiperTransaction {
+	transform: scale(0.9) !important;
+	opacity: 0.7;
+	/* Optional */
+	z-index: 1;
+	/* Keep them behind the center */
+}
+
+.swiper-slide {
+	transition: transform 0.3s ease;
 }
 
 .hide-scroll-bar {
@@ -431,11 +465,24 @@ input[type='range']:focus {
 /* Custom CSS */
 
 .headingHomeMain {
-	@apply text-lg font-bold text-primary
+	@apply text-[1.375rem] font-bold text-primary
 }
 
 .bestProButton {
-	@apply border border-[#004B7A] text-[#004B7A] hover:bg-[#004B7A] hover:text-white px-3.5 py-2.5 rounded-full text-xs font-medium w-full md:w-auto
+	@apply border border-[#004B7A] text-[#004B7A] hover:bg-[#004B7A] hover:text-white px-4 py-[11px] rounded-full text-xs md:text-[0.875rem] font-semibold w-full md:w-auto transition-all duration-300 ease-in-out
+}
+
+.tamkeenSales_btns_light .bestProButton {
+	@apply border border-[#004B7A] text-[#004B7A] bg-white hover:bg-transparent hover:border-white hover:text-white px-3.5 py-2.5 rounded-full text-xs font-semibold w-full md:w-auto transition-all duration-300 ease-in-out
+}
+
+.tamkeenSales_btns_light .bestProButton.selected {
+	@apply bg-white bg-transparent border-white text-white
+}
+
+
+.tamkeenSales_btns .tamkeenBtns.bestProButton:hover, .tamkeenSales_btns .tamkeenBtns.bestProButton.selected {
+	@apply bg-[#3d759a] !text-white
 }
 
 .paraHomeMain {
@@ -464,7 +511,7 @@ input[type='range']:focus {
 
 /* Products Classes Start From Here */
 .proBox {
-	@apply bg-white rounded-md p-2 border border-[#d9dbdf] text-xs h-full flex-1
+	@apply bg-white rounded-md p-5 border border-[#d9dbdf] text-xs h-full flex-1 min-h-custom
 }
 
 .proBoxMob {
@@ -480,7 +527,7 @@ input[type='range']:focus {
 }
 
 .productSliderBtns {
-	@apply bg-primary/25 p-2.5 rounded-full fill-primary shadow-md hover:bg-primary hover:fill-white
+	@apply bg-primary/25 p-1.5 rounded-full fill-primary shadow-md hover:bg-primary hover:fill-white
 }
 
 .productSliderBtnsMobile {
@@ -504,7 +551,7 @@ input[type='range']:focus {
 }
 
 .headingHomeMobile {
-	@apply text-[0.85rem] text-primary font-semibold
+	@apply text-[1.125rem] text-primary font-bold
 }
 
 .text__txs {
@@ -1534,15 +1581,15 @@ tp__309mainDiv
 }
 
 .sht_303mainInnenStatusDiv {
-	@apply grid grid-cols-6 absolute top-[0.645rem] w-full
+	@apply grid grid-cols-4 absolute top-[0.645rem] w-full
 }
 
 .sht_303mainInnerFStatusDiv {
-	@apply grid grid-cols-6 relative
+	@apply grid grid-cols-4 relative
 }
 
 .sht_303mainInnerSStatusDiv {
-	@apply grid grid-cols-6 relative mt-1.5 text-[0.65rem] font-semibold
+	@apply grid grid-cols-4 relative mt-1.5 text-[0.65rem] font-semibold
 }
 
 .sht_303mainInnenFSTDiv {
@@ -2163,4 +2210,134 @@ tp__309mainDiv
 
 .animationImp {
 	animation: pulse 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.left_banner_slider .swiper-pagination-bullet,
+.right_banner_slider_top .swiper-pagination-bullet {
+	width: 1rem !important;
+}
+
+.tamkeenSales_btns .bestProButton {
+	border-width: 1.4px;
+}
+
+/* Footer Active Style Start */
+.footer_nav li.active .nav_icon {
+	position: absolute;
+	top: -35px;
+	border: 10px solid #E5F5FF;
+	border-radius: 50%;
+	transition: all 0.3s ease-in-out;
+	animation: IconMoveUp 0.5s ease-in-out forwards;
+	z-index: 1;
+}
+
+.footer_nav li.active .nav_icon div {
+	border-radius: 50%;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 2px 0px #004b7a;
+	padding: 0.8rem;
+	transform: scale(1.1);
+	transition: all 0.3s ease-in-out;
+	animation: BorderPulse 0.5s ease-in-out;
+}
+
+.footer_nav li.active span {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.footer_nav li.active .nav_icon svg path {
+	fill: #004b7a;
+}
+
+/* Floating up animation */
+@keyframes IconMoveUp {
+	0% {
+		top: 0;
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	100% {
+		top: -35px;
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* Glowing pulse effect */
+@keyframes BorderPulse {
+	0% {
+		box-shadow: 0px 0px 2px 0px #004b7a;
+	}
+
+	50% {
+		box-shadow: 0px 0px 6px 0px #004B7A;
+	}
+
+	100% {
+		box-shadow: 0px 0px 2px 0px #004b7a;
+	}
+}
+
+/* Footer Active Style End */
+
+/* Section 11 Button Background */
+.builtInAppliances_sec .btnPrimarySpecial {
+	background-color: #000000;
+	border-color: #000000;
+}
+
+.builtInAppliances_sec .btnPrimarySpecial:hover {
+	background-color: #004b7a;
+	border-color: #004b7a;
+}
+
+section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton:hover,
+section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected {
+	background-color: #FF7B34;
+}
+.tamkeenProduct_card_footer  .productSliderBtns svg path{
+	transition: all .3s ease-in-out;
+}
+.tamkeenProduct_card_footer  .productSliderBtns:hover svg path {
+	fill: #ffffff;
+}
+
+@media (max-width: 480px) {
+	.product_badge {
+		padding-left: 1.6rem;
+		/* margin-top: 1.5rem; */
+	}
+
+	.product_badge span {
+		font-size: 5rem;
+		margin-right: -.3rem;
+	}
+
+	.product_badge span.span_one {
+		margin-right: -.7rem !important;
+	}
+
+	.tamkeenProduct_card_footer .bestProButton {
+		font-size: 0.65rem;
+		line-height: 10px;
+		/* padding: 0.875rem; */
+	}
+
+	/* .headingHomeMain {
+		@apply text-base
+	} */
+
+	.proBox {
+		@apply p-1.5
+	}
+
+	.specificationImagesProduct {
+		height: 18px;
+		width: 26px;
+		object-fit: contain;
+	}
+
 }

@@ -20,8 +20,7 @@ const fetcher = async (url: any, options: RequestInit = {}) => {
   return res.json()
 }
 
-const MobileFooter = dynamic(() => import('./components/MobileFooter'), { ssr: true })
-const Footer = dynamic(() => import('./components/Footer'), { ssr: false })
+const MobileFooterNew = dynamic(() => import('./components/MobileFooterNew'), { ssr: true })
 const notoSans = Noto_Sans({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
@@ -41,11 +40,11 @@ export const viewport = {
   themeColor: 'white',
 }
 export default async function RootLayout({ children, params }: { children: React.ReactNode, params: any }) {
+  let globalcity: any = 'Jeddah';
   const headersList = headers()
   const currenturl = headersList.get('next-url')?.split('#')[0]
   const deviceType = headersList.get('device-type')
   const userIP = headersList.get('user-ip')
-  params.devicetype = deviceType
 
 
   // getting city from cookies
@@ -54,25 +53,20 @@ export default async function RootLayout({ children, params }: { children: React
   params.selectedCity = city
   const userLocation = city
   params.userlocation = city
-  if (deviceType === 'desktop') {
-    permanentRedirect(`https://tamkeenstores.com.sa/${params?.lang}`)
-  }
   const dict = await getDictionary(params.lang);
   params.dict = dict;
   // if (currenturl === `/${params.lang}`) {
-    const homepagedata = await fetcher(`homepage-frontend?lang=${params.lang}`, { next: { revalidate: 36000 } })
-    params.data = homepagedata
+  const homepagedata = await fetcher(`homepage-frontend?lang=${params.lang}&dasdadad30494`)
+  params.data = homepagedata
 
+  const homepagepartonelatest = await fetcher(`homepagelatest-one?lang=${params?.lang}&device_type=mobile&city=${globalcity}&dasdadad30494`)
+  params.homepagepartonelatest = homepagepartonelatest
 
-    //homepage part two
-    const homepageparttwonew = await fetcher(`homepagetwo-secone?lang=${params.lang}`, { next: { revalidate: 36000 } })
-    params.homepageparttwonew = homepageparttwonew
+  const homepageparttwolatest = await fetcher(`homepagelatest-two?lang=${params?.lang}&device_type=mobile&city=${globalcity}&dasdadad30494`)
+  params.homepageparttwolatest = homepageparttwolatest
 
-    const homepageparttwosecTwo = await fetcher(`homepagetwo-sectwo?lang=${params.lang}&device_type=${params.devicetype}`, { next: { revalidate: 36000 } })
-    params.homepageparttwoSecTwo = homepageparttwosecTwo
-
-    const homepageparttwosecThree = await fetcher(`homepagetwo-secthree?lang=${params.lang}&device_type=${params.devicetype}`, { next: { revalidate: 36000 } })
-    params.homepageparttwoSecThree = homepageparttwosecThree
+  const homepagepartthreelatest = await fetcher(`homepagelatest-three?lang=${params?.lang}&device_type=mobile&city=${globalcity}&dasdadad30494`)
+  params.homepagepartthreelatest = homepagepartthreelatest
 
   // }
 
@@ -82,11 +76,11 @@ export default async function RootLayout({ children, params }: { children: React
         <Providers>
           {children}
         </Providers>
-        <div className="fixed bottom-16 w-full z-40">
-          <div className="h-2" id="loader-spin"></div>
+        <div className="fixed top-0 w-full z-50">
+          <div className="h-1.5" id="loader-spin"></div>
         </div>
-        <Footer lang={params.lang} dict={dict} />
-        <MobileFooter lang={params.lang} dict={dict} />
+        <div className='py-12'></div>
+        <MobileFooterNew lang={params?.lang} dict={dict} />
       </body>
     </html>
   )

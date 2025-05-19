@@ -9,12 +9,13 @@ import { getDictionary } from "../../dictionaries"
 import { useRouter, usePathname } from 'next/navigation'
 import { Dialog, Transition } from '@headlessui/react'
 import { post } from "../../api/ApiCalls"
+import { useUserAgent } from 'next-useragent'
 import shoppingCart from "../../../../public/json/NoProductsFound.json"
 
-const Products = dynamic(() => import('../../components/Products'), { ssr: true })
 const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ssr: true })
 const BrandSliderOther = dynamic(() => import('../../components/BrandSliderOther'), { ssr: true })
 const Pagination = dynamic(() => import('../../components/Pagination'), { ssr: false })
+const ProductLoop = dynamic(() => import("../../components/NewHomePageComp/ProductLoop"), { ssr: true });
 export const fetchCache = 'force-no-store'
 
 export default function Category({ params, searchParams }: { params: { lang: string, slug: string, data: any, devicetype: any }, searchParams: any }) {
@@ -39,6 +40,9 @@ export default function Category({ params, searchParams }: { params: { lang: str
   const [filterMobile, setFilterMobile] = useState<boolean>(false)
   const [termsandCondition, setTermsandCondition] = useState<boolean>(true)
   const [products, setproducts] = useState<any>([])
+  const isArabic = params?.lang === 'ar';
+  const userAgent: UserAgent | null = typeof window !== 'undefined' ? useUserAgent(window.navigator.userAgent) : null;
+  const isMobileOrTablet = true;
   const path = usePathname();
   const [loaderStatus, setLoaderStatus] = useState<any>(false)
 
@@ -321,16 +325,16 @@ export default function Category({ params, searchParams }: { params: { lang: str
                   />
                 </div>
                 {products?.length ?
-                <div className="grid grid-cols-1 md:grid-cols-1 2xl:grid-cols-1 gap-3">
+                <div className="tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center">
                   {/* SORTING */}
                   {loaderStatus ? 
                     <div className={`animate-pulse my-5 grid grid-cols-2 md:grid-cols-4 gap-3`}>
-                        {[...Array(2)].map((_, i) => (
-                            <div className='h-[26rem] bg-white rounded-md shadow-md' key={i}></div>
+                        {[...Array(isMobileOrTablet ? 10 : 12)].map((_, i) => (
+                          <div className='h-[26rem] bg-white rounded-md shadow-md' key={i + 200}></div>
                         ))}
                     </div>
                     :
-                    <Products grid={'2'} className="!min-w-40" devicetype={true} lang={params?.lang} dict={dict?.products} products={products?.length ? products : params?.data?.productData?.products?.data} />
+                    <ProductLoop productData={products?.length ? products : params?.data?.productData?.products?.data} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} />
                   }
                 </div>
                 :null}

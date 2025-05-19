@@ -128,10 +128,8 @@ export default function ProductSliderNew(props: any) {
                         }
                     }
                 } else {
-                    console.log('No objects have fbtdata not equal to false.');
                 }
             } else {
-                console.log('No valid data found.');
             }
         })
 
@@ -551,10 +549,10 @@ export default function ProductSliderNew(props: any) {
                 // const badgeImage = `${NewMedia}VAT-ON-USE-BADG-09FEB.webp`
                 const badgeTitle = isArabic ? "" : ""
                 const badgeAlt = isArabic ? "" : ""
-                const shortDescriptionImage = `${NewMedia}32eac6e753c2a26ddfe51cb82847394f1719238746.webp`
+                const shortDescriptionImage = data?.short_description ? data?.short_description : ''
                 // const shortDescriptionAvailable = i == 0 ? true : i == 1 ? false : null
 
-                const shortDescriptionAvailable = true
+                const shortDescriptionAvailable = data?.short_description ? true : false
                 const expressImage = isArabic ? `/icons/express_logo/express_logo_ar.png` : `/icons/express_logo/express_logo_en.png`
                 const expressAlt = isArabic ? "express delivery" : "express delivery"
                 const saleType = data?.savetype == 1 ? false : true // 1 = percentage, 2 = save
@@ -631,13 +629,13 @@ export default function ProductSliderNew(props: any) {
                         <div className='proBox relative'>
                             <div className='align__center'>
                                 {customBadge ?
-                                    <div className={`text-[0.60rem] font-semibold bg-${customBadgeColor}/15 py-1 px-1.5 rounded-md w-fit`} style={{backgroundColor:`${customBadgeColor}15`}}>
-                                        <span className={`text-${customBadgeColor} animationImp`} style={{color:`${customBadgeColor}`}}>{customBadge}</span>
+                                    <div className={`text-[0.60rem] font-semibold bg-${customBadgeColor}/15 py-1 px-1.5 rounded-md w-fit`} style={{ backgroundColor: `${customBadgeColor}15` }}>
+                                        <span className={`text-${customBadgeColor} animationImp`} style={{ color: `${customBadgeColor}` }}>{customBadge}</span>
                                     </div>
                                     : null}
                                 {useCodeText ?
-                                    <div className={`text-[0.60rem] font-semibold bg-${useCodeTextColor}/15 py-1 px-1.5 rounded-md w-fit`} style={{backgroundColor:`${useCodeTextColor}15`}}>
-                                        <span className={`text-${useCodeTextColor}`} style={{color:`${useCodeTextColor}`}}>{useCodeText}</span>
+                                    <div className={`text-[0.60rem] font-semibold bg-${useCodeTextColor}/15 py-1 px-1.5 rounded-md w-fit`} style={{ backgroundColor: `${useCodeTextColor}15` }}>
+                                        <span className={`text-${useCodeTextColor}`} style={{ color: `${useCodeTextColor}` }}>{useCodeText}</span>
                                     </div>
                                     : null}
                             </div>
@@ -686,7 +684,7 @@ export default function ProductSliderNew(props: any) {
                                     </div>
                                 </div>
                             </div>
-                            <Link href={productLink} className=''>
+                            <Link prefetch={false} scroll={false} href={productLink} className=''>
                                 <div className='overflow-hidden'>
                                     <Image
                                         src={proImageSrc}
@@ -738,38 +736,40 @@ export default function ProductSliderNew(props: any) {
                                         />
                                         : null}
                                 </div>
-                                {shortDescriptionAvailable ?
-                                    <div className='bg-gray/10 p-2 rounded-md mt-2'>
-                                        <h3 className='font-normal text-[0.65rem]'>{installmentPlans}</h3>
-                                        <div className='w-full overflow-hidden'>
-                                            <Image
-                                                src={'/images/logos_paymentmethods.webp?updated'}
-                                                alt={isArabic ? "طرق الدفع" : "payment methods"}
-                                                title={isArabic ? "طرق الدفع" : "payment methods"}
-                                                height={45}
-                                                width={350}
-                                                loading='lazy'
-                                                className='rounded-md mt-1.5 w-full max-w-[350px] h-auto'
-                                                sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
-                                            />
-                                        </div>
+                                <div className='bg-gray/10 p-2 rounded-md mt-2'>
+                                    <h3 className='font-normal text-[0.65rem]'>{installmentPlans}</h3>
+                                    <div className='w-full overflow-hidden'>
+                                        <Image
+                                            src={'/images/logos_paymentmethods.webp?updated'}
+                                            alt={isArabic ? "طرق الدفع" : "payment methods"}
+                                            title={isArabic ? "طرق الدفع" : "payment methods"}
+                                            height={45}
+                                            width={350}
+                                            loading='lazy'
+                                            className='rounded-md mt-1.5 w-full max-w-[350px] h-auto'
+                                            sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
+                                        />
                                     </div>
+                                </div>
+                                {shortDescriptionAvailable ?
+                                    <>
+                                        <div className='bg-gray/10 p-2 rounded-md mt-2'>
+                                            <div className='flex items-center gap-1 justify-between overflow-hidden'>
+                                                <Image
+                                                    src={shortDescriptionImage}
+                                                    alt={proIimageAlt}
+                                                    title={proTitle}
+                                                    height={0}
+                                                    width={0}
+                                                    loading='lazy'
+                                                    className='rounded-md h-full w-full'
+                                                    sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
+                                                />
+                                            </div>
+                                        </div>
+                                    </>
                                     :
-                                    null
-                                    // <div className='bg-gray/10 p-2 rounded-md mt-2'>
-                                    //     <div className='flex items-center gap-1 justify-between overflow-hidden'>
-                                    //         <Image
-                                    //             src={shortDescriptionImage}
-                                    //             alt={proIimageAlt}
-                                    //             title={proTitle}
-                                    //             height={0}
-                                    //             width={0}
-                                    //             loading='lazy'
-                                    //             className='rounded-md h-full w-full'
-                                    //             sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
-                                    //         />
-                                    //     </div>
-                                    // </div>
+                                    <div className='h-[74.5px]'></div>
                                 }
                                 {/* <div className='rounded-md mt-2'>
                                     <div className='flex items-center gap-1 justify-between overflow-hidden'>
@@ -789,12 +789,6 @@ export default function ProductSliderNew(props: any) {
                                     {fGift && fGift?.allowed_gifts >= 1 ?
                                         <FreeGiftData freeGiftType={fGiftType} freeGiftAllowed={fGift ? fGift?.allowed_gifts : 0} />
                                         : null}
-                                    {/* {vatOnUs ? 
-                                        <>
-                                        <span className='before:content-["•"] mx-1 text-specialDarkYellow'></span>
-                                        <h5 className='text-specialDarkYellow'>Vat on us</h5>
-                                        </>
-                                    :null} */}
                                     {data?.pormotion_arabic || data?.pormotion != null ?
                                         <>
                                             <span className={`before:content-["•"] mx-1 text-${pormotionColor}`}></span>

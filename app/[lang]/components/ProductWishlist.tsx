@@ -130,10 +130,8 @@ export default function ProductWishlist(props: any) {
                         }
                     }
                 } else {
-                    console.log('No objects have fbtdata not equal to false.');
                 }
             } else {
-                console.log('No valid data found.');
             }
         })
 
@@ -614,9 +612,9 @@ export default function ProductWishlist(props: any) {
                     // const badgeImage = `${NewMedia}VAT-ON-USE-BADG-09FEB.webp`
                     const badgeTitle = isArabic == 'ar' ? "" : ""
                     const badgeAlt = isArabic == 'ar' ? "" : ""
-                    const shortDescriptionImage = `${NewMedia}32eac6e753c2a26ddfe51cb82847394f1719238746.webp`
+                    const shortDescriptionImage = data?.short_description ? data?.short_description : ''
                     // const shortDescriptionAvailable = i == 0 ? true : i == 1 ? false : null
-                    const shortDescriptionAvailable = true
+                    const shortDescriptionAvailable = data?.short_description ? true : false
                     const expressImage = isArabic == 'ar' ? `/icons/express_logo/express_logo_ar.png` : `/icons/express_logo/express_logo_en.png`
                     const expressAlt = isArabic == 'ar' ? "express delivery" : "express delivery"
                     const saleType = data?.savetype == 1 ? false : true // 1 = percentage, 2 = save
@@ -743,14 +741,14 @@ export default function ProductWishlist(props: any) {
                                                             removeWishlistProduct(data?.id, true)
                                                         }}
                                                     >
-                                                        <svg id="fi_4240564" enable-background="new 0 0 512 512" height="14" viewBox="0 0 512 512" width="14" xmlns="http://www.w3.org/2000/svg"><path clipRule="evenodd" d="m256 469.878c-86.27-49.763-253.779-170.182-255.971-290.334-2.395-131.178 145.05-190.67 255.971-77.883 110.905-112.771 258.343-53.318 255.971 77.86-2.171 120.16-169.697 240.59-255.971 290.357z" fillRule="evenodd"></path></svg>
+                                                        <svg id="fi_4240564" enableBackground="new 0 0 512 512" height="14" viewBox="0 0 512 512" width="14" xmlns="http://www.w3.org/2000/svg"><path clipRule="evenodd" d="m256 469.878c-86.27-49.763-253.779-170.182-255.971-290.334-2.395-131.178 145.05-190.67 255.971-77.883 110.905-112.771 258.343-53.318 255.971 77.86-2.171 120.16-169.697 240.59-255.971 290.357z" fillRule="evenodd"></path></svg>
                                                     </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <Link href={productLink} className=''>
+                                <Link prefetch={false} scroll={false} href={productLink} className=''>
                                     <div className='overflow-hidden'>
                                         <Image
                                             src={proImageSrc}
@@ -789,52 +787,40 @@ export default function ProductWishlist(props: any) {
                                         </div>
                                     </div>
                                     {shortDescriptionAvailable ?
-                                        <div className='bg-gray/10 p-2 rounded-md mt-2'>
-                                            <h3 className='font-normal text-[0.65rem]'>{installmentPlans}</h3>
-                                            <div className='w-full overflow-hidden'>
-                                                <Image
-                                                    src={'/images/logos_paymentmethods.webp?updated'}
-                                                    alt={isArabic ? "طرق الدفع" : "payment methods"}
-                                                    title={isArabic ? "طرق الدفع" : "payment methods"}
-                                                    height={45}
-                                                    width={350}
-                                                    loading='lazy'
-                                                    className='rounded-md mt-1.5 w-full max-w-[350px] h-auto'
-                                                    sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
-                                                />
+                                        <>
+                                            <div className='bg-gray/10 p-2 rounded-md mt-2'>
+                                                <h3 className='font-normal text-[0.65rem]'>{installmentPlans}</h3>
+                                                <div className='w-full overflow-hidden'>
+                                                    <Image
+                                                        src={'/images/logos_paymentmethods.webp?updated'}
+                                                        alt={isArabic ? "طرق الدفع" : "payment methods"}
+                                                        title={isArabic ? "طرق الدفع" : "payment methods"}
+                                                        height={45}
+                                                        width={350}
+                                                        loading='lazy'
+                                                        className='rounded-md mt-1.5 w-full max-w-[350px] h-auto'
+                                                        sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
+                                            <div className='bg-gray/10 p-2 rounded-md mt-2'>
+                                                <div className='flex items-center gap-1 justify-between overflow-hidden'>
+                                                    <Image
+                                                        src={shortDescriptionImage}
+                                                        alt={proIimageAlt}
+                                                        title={proTitle}
+                                                        height={0}
+                                                        width={0}
+                                                        loading='lazy'
+                                                        className='rounded-md h-full w-full'
+                                                        sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
+                                                    />
+                                                </div>
+                                            </div>
+                                        </>
                                         :
-                                        null
-                                        // <div className='bg-gray/10 p-2 rounded-md mt-2'>
-                                        //     <div className='flex items-center gap-1 justify-between overflow-hidden'>
-                                        //         <Image
-                                        //             src={shortDescriptionImage}
-                                        //             alt={proIimageAlt}
-                                        //             title={proTitle}
-                                        //             height={0}
-                                        //             width={0}
-                                        //             loading='lazy'
-                                        //             className='rounded-md h-full w-full'
-                                        //             sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
-                                        //         />
-                                        //     </div>
-                                        // </div>
+                                        <div className='h-[74.5px]'></div>  
                                     }
-                                    {/* <div className='rounded-md mt-2'>
-                                        <div className='flex items-center gap-1 justify-between overflow-hidden'>
-                                            <Image
-                                                src={badgeImage}
-                                                alt={badgeAlt}
-                                                title={badgeTitle}
-                                                height={0}
-                                                width={0}
-                                                loading='lazy'
-                                                className='h-full w-full rounded-md'
-                                                sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
-                                            />
-                                        </div>
-                                    </div> */}
                                     {ProExtraData[data?.id]?.expressdeliveryData ?
                                         <Image
                                             src={props?.lang == 'ar' ? "/icons/express_logo/Express_ar_48.webp" : "/icons/express_logo/Express_en_48.webp"}
@@ -917,7 +903,7 @@ export default function ProductWishlist(props: any) {
                                         </div>
                                     </div>
                                 </div>
-                                <Link href={productLink} className=''>
+                                <Link prefetch={false} scroll={false} href={productLink} className=''>
                                     <div className='overflow-hidden'>
                                         <Image
                                             src={proImageSrc}
@@ -961,47 +947,47 @@ export default function ProductWishlist(props: any) {
                                                     className='rounded-md'
                                                     sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
                                                 />
-                                            : null}
-                                        </div>            
+                                                : null}
+                                        </div>
                                         {data?.promotional_price > 0 ?
                                             <span className='text-[#DC4E4E] text-xs mt-0.5 font-bold animationImp'>{isArabic == 'ar' ? data?.promo_title_arabic : data?.promo_title}</span>
                                             :
                                             null
                                         }
                                     </div>
-                                    {shortDescriptionAvailable ?
-                                        <div className='bg-gray/10 p-2 rounded-md mt-2'>
-                                            <h3 className='font-normal text-[0.65rem]'>{installmentPlans}</h3>
-                                            <div className='flex items-center gap-1 justify-between overflow-hidden'>
-                                                <Image
-                                                    src={'/images/logos_paymentmethods.webp?updated'}
-                                                    alt={isArabic ? "طرق الدفع" : "payment methods"}
-                                                    title={isArabic ? "طرق الدفع" : "payment methods"}
-                                                    height={45}
-                                                    width={350}
-                                                    loading='lazy'
-                                                    className='rounded-md mt-1.5 w-full max-w-[350px] h-auto'
-                                                    sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
-                                                />
-                                            </div>
+                                    <div className='bg-gray/10 p-2 rounded-md mt-2'>
+                                        <h3 className='font-normal text-[0.65rem]'>{installmentPlans}</h3>
+                                        <div className='flex items-center gap-1 justify-between overflow-hidden'>
+                                            <Image
+                                                src={'/images/logos_paymentmethods.webp'}
+                                                alt={isArabic ? "طرق الدفع" : "payment methods"}
+                                                title={isArabic ? "طرق الدفع" : "payment methods"}
+                                                height={45}
+                                                width={350}
+                                                loading='lazy'
+                                                className='rounded-md mt-1.5 w-full max-w-[350px] h-auto'
+                                                sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
+                                            />
                                         </div>
-                                        :
-                                        null
-                                        // <div className='bg-gray/10 p-2 rounded-md mt-2'>
-                                        //     <div className='flex items-center gap-1 justify-between overflow-hidden'>
-                                        //         <Image
-                                        //             src={shortDescriptionImage}
-                                        //             alt={proIimageAlt}
-                                        //             title={proTitle}
-                                        //             height={0}
-                                        //             width={0}
-                                        //             loading='lazy'
-                                        //             className='rounded-md h-full w-full'
-                                        //             sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
-                                        //         />
-                                        //     </div>
-                                        // </div>
-                                    }
+                                    </div>
+                                    {shortDescriptionAvailable ?
+                                        <>
+                                            <div className='bg-gray/10 p-2 rounded-md mt-2'>
+                                                <div className='flex items-center gap-1 justify-between overflow-hidden'>
+                                                    <Image
+                                                        src={shortDescriptionImage}
+                                                        alt={proIimageAlt}
+                                                        title={proTitle}
+                                                        height={0}
+                                                        width={0}
+                                                        loading='lazy'
+                                                        className='rounded-md h-full w-full'
+                                                        sizes='(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw'
+                                                    />
+                                                </div>
+                                            </div>
+                                        </>
+                                    : null}
                                     {/* <div className='rounded-md mt-2'>
                                     <div className='flex items-center gap-1 justify-between overflow-hidden'>
                                         <Image

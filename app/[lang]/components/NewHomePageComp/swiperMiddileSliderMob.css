@@ -1,0 +1,8 @@
+/* .mySwiper .swiper-slide .slide-inner {
+    transform: scaleY(0.9);
+    transition: transform 0.3s ease;
+}
+
+.mySwiper .swiper-slide.swiper-slide-active .slide-inner {
+    transform: scaleY(1);
+} */

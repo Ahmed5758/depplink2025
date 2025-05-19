@@ -1,0 +1,49 @@
+/* Custom Swiper styles */
+.mySwiper {
+    width: 100%;
+    overflow: hidden;
+}
+
+.mySwiper .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mySwiper .swiper-scrollbar {
+    background-color: #a4a4a4 !important;
+    scroll-behavior: smooth;
+    /* Customize scrollbar */
+}
+
+.mySwiper .swiper-scrollbar-drag {
+    background-color: #004B7A !important;
+    border-radius: 20px;
+}
+
+.swiper-horizontal>.swiper-scrollbar,
+.swiper-scrollbar.swiper-scrollbar-horizontal {
+    position: absolute;
+    left: 40% !important;
+    bottom: var(--swiper-scrollbar-bottom, 4px);
+    top: var(--swiper-scrollbar-top, auto);
+    z-index: 50;
+    height: var(--swiper-scrollbar-size, 0.40rem) !important;
+    width: calc(20% - 2* var(--swiper-scrollbar-sides-offset, 1%)) !important;
+    background-color: #6a6a6a !important;
+}
+
+.swiper-scrollbar-drag {
+    background-color: #FFFFFF !important;
+}
+
+@media only screen and (max-width: 990px) {
+    .swiper-scrollbar-drag {
+        background-color: #004B7A !important;
+    }
+
+    .swiper-horizontal>.swiper-scrollbar,
+    .swiper-scrollbar.swiper-scrollbar-horizontal {
+        background-color: #e3e3e3db !important;
+    }
+}
