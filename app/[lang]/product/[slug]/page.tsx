@@ -24,8 +24,6 @@ import PickupStorePopup from '../../components/PickupStorePopup';
 
 const LoginSingup = dynamic(() => import('../../components/LoginSignup'), { ssr: false })
 const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ssr: true })
-const ProductSlider = dynamic(() => import('../../components/ProductSlider'), { ssr: true })
-const ProductSliderNew = dynamic(() => import('../../components/ProductSliderNew'), { ssr: false })
 const RatingComponent = dynamic(() => import('../../components/ProductComponents/Rating'), { ssr: false })
 const ProductSliderMobile = dynamic(() => import('../../components/HomePageComponents/ProductSliderMobile'), { ssr: true })
 
