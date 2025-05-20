@@ -13,6 +13,7 @@ import { GlobalProvider } from './GlobalContext';
 import { permanentRedirect } from 'next/navigation'
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 import {cacheKey} from './GlobalVar'
+import LayoutWrapper from './LayoutWrapper'
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -56,25 +57,34 @@ export default async function RootLayout({ children, params }: { children: React
   params.userlocation = city
   const dict = await getDictionary(params.lang);
   params.dict = dict;
+  let homepageProps = {}
   if (!currenturl || currenturl === `/${params.lang}`) {
     const homepagedata = await fetcher(`homepage-frontend?lang=${params.lang}&${cacheKey}`)
-    params.data = homepagedata
+    // params.data = homepagedata
 
     const homepagepartonelatest = await fetcher(`homepagelatest-one?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
-    params.homepagepartonelatest = homepagepartonelatest
+    // params.homepagepartonelatest = homepagepartonelatest
 
     const homepageparttwolatest = await fetcher(`homepagelatest-two?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
-    params.homepageparttwolatest = homepageparttwolatest
+    // params.homepageparttwolatest = homepageparttwolatest
 
     const homepagepartthreelatest = await fetcher(`homepagelatest-three?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
-    params.homepagepartthreelatest = homepagepartthreelatest
+    // params.homepagepartthreelatest = homepagepartthreelatest
+    homepageProps = {
+      homepagedata,
+      homepagepartonelatest,
+      homepageparttwolatest,
+      homepagepartthreelatest,
+    }
   }
 
   return (
     <html lang={params.lang} dir={params.lang == 'ar' ? 'rtl' : 'ltr'} className='nprogress-busy'>
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
         <Providers>
-          {children}
+            <LayoutWrapper homepageProps={homepageProps}>
+              {children}
+            </LayoutWrapper>
         </Providers>
         <div className="fixed top-0 w-full z-50">
           <div className="h-1.5" id="loader-spin"></div>
