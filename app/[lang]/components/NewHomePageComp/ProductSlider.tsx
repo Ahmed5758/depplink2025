@@ -38,7 +38,7 @@ export default function ProductSliderComponent(props: any) {
   const extraproductdata = async () => {
 
     var a: number[] = []
-    productDataSlider.forEach((item: any) => {
+    productDataSlider?.forEach((item: any) => {
       a.push(item.id)
     });
     // localStorage.getItem("globalcity")
