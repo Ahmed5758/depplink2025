@@ -428,7 +428,7 @@ export default function MobileHeaderNew(props: any) {
                   <circle cx="8" cy="8.00017" r="1" fill="#004B7A" />
                 </svg>
               </div>
-              <div className="location_text">
+              <div className="location_text w-4">
                 <div
                   className="flex ltr:flex-row rtl:flex-row-reverse ltr:justify-start rtl:justify-end items-center space-x-2"
                   onClick={() => {
