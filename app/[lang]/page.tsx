@@ -848,9 +848,14 @@ export default function Homepage({ params }: { params: any }) {
                       {sec8Para}
                     </p>
                   </div>
-                  <button className="btnPrimarySpecial transition-all duration-300 ease-in-out">
-                    {sec8ButtonTitle}
-                  </button>
+                  <Link
+                      prefetch={false}
+                      scroll={false}
+                      href={`${origin}/${lang}/${sec8Link}`}
+                      className="btnPrimarySpecial text-center transition-all duration-300 ease-in-out"
+                  >
+                      {sec8ButtonTitle}
+                    </Link>
                 </div>
               </div>
             </>

@@ -1,7 +1,6 @@
-import { get } from "../../api/ApiCalls";
 import { Api } from "../../api/Api";
-import { permanentRedirect, redirect } from 'next/navigation'
-import { headers,cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
+import { headers, cookies } from 'next/headers'
 import { cacheKey } from '../../GlobalVar';
 
 type Props = {
