@@ -652,13 +652,24 @@ export default function Homepage({ params }: { params: any }) {
                   }
                 )}
               </div>
-              <ProductLoopMobile
-                productData={sec4SelectedProducts}
-                lang={isArabic}
-                isMobileOrTablet={true}
-                origin={origin}
-              />
-
+              {!isSection4Visible ? (
+              <>
+                <ProductLoopMobile
+                  productData={sec4SelectedProducts}
+                  lang={isArabic}
+                  isMobileOrTablet={true}
+                  origin={origin}
+                />
+              </>
+              ) : (
+                <div className="animate-pulse">
+                  <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
+                    {[...Array(5)].map((_, i) => (
+                      <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
+                    ))}
+                  </div>
+                </div>
+              )}
               {/* New Price Section */}
               <div className="py-8">
                 <PriceSection isArabic={isArabic} isMobileOrTablet={true} origin={origin} />
@@ -712,15 +723,15 @@ export default function Homepage({ params }: { params: any }) {
                 </>
               ) : (
                 <div className="animate-pulse">
-                  <div className="tamkeenSales_cardss flex items-center xl:justify-between justify-center xl:gap-4 gap-x-4 gap-y-8 overflow-hidden">
-                    {[...Array(3)].map((_, i) => (
+                  <div className="tamkeenSales_cardss flex items-center xl:justify-between justify-start xl:gap-4 gap-x-4 gap-y-8 overflow-hidden">
+                    {[...Array(4)].map((_, i) => (
                       <div
                         key={i}
                         className="relative w-full flex rtl:flex-row-reverse items-start mt-[1.2rem] md:mt-6"
                       >
-                        <div className="bg-white h-[450px] relative rounded-2xl w-[334px]"></div>
+                        <div className="bg-white h-[410px] sm:h-[500px] lg:h-[420px] 2xl:h-[500px] relative rounded-2xl w-[200px] sm:w-[280px] lg:w-[190px] xl:w-[210px] 2xl:w-[280px]"></div>
                         <div className="pl-[2rem] bg-white shadow-xl rounded-tr-lg rounded-br-lg w-fit -ml-[10px]">
-                          <span className="text-[10rem] -mr-[1.6rem] font-bold text-primary opacity-0">
+                          <span className="text-[7rem] lg:text-[10rem] -mr-[1.6rem] font-bold text-primary opacity-0">
                             {i + 1}
                           </span>
                         </div>
@@ -740,15 +751,15 @@ export default function Homepage({ params }: { params: any }) {
                   ></div>
                 ))}
               </div>
-              <div className="tamkeenSales_cardss flex items-center xl:justify-between justify-center xl:gap-4 gap-x-4 gap-y-8 overflow-hidden">
-                {[...Array(3)].map((_, i) => (
+              <div className="tamkeenSales_cardss flex items-center xl:justify-between justify-start xl:gap-4 gap-x-4 gap-y-8 overflow-hidden">
+                {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
                     className="relative w-full flex rtl:flex-row-reverse items-start mt-[1.2rem] md:mt-6"
                   >
-                    <div className="bg-white h-[450px] relative rounded-2xl w-[334px]"></div>
+                    <div className="bg-white h-[410px] sm:h-[500px] lg:h-[420px] 2xl:h-[500px] relative rounded-2xl w-[200px] sm:w-[280px] lg:w-[190px] xl:w-[210px] 2xl:w-[280px]"></div>
                     <div className="pl-[2rem] bg-white shadow-xl rounded-tr-lg rounded-br-lg w-fit -ml-[10px]">
-                      <span className="text-[10rem] -mr-[1.6rem] font-bold text-primary opacity-0">
+                      <span className="text-[7rem] lg:text-[10rem] -mr-[1.6rem] font-bold text-primary opacity-0">
                         {i + 1}
                       </span>
                     </div>
@@ -879,9 +890,9 @@ export default function Homepage({ params }: { params: any }) {
         ) : (
           <div className={`${containerClass}`}>
             <div className="animate-pulse">
-              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[450px] overflow-hidden">
+              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
                 {[...Array(5)].map((_, i) => (
-                  <div className="bg-white h-[450px] rounded-2xl" key={i}></div>
+                  <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
                 ))}
               </div>
             </div>
@@ -911,9 +922,9 @@ export default function Homepage({ params }: { params: any }) {
         ) : (
           <div className={`${containerClass}`}>
             <div className="animate-pulse">
-              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[450px] overflow-hidden">
+              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
                 {[...Array(5)].map((_, i) => (
-                  <div className="bg-white h-[450px] rounded-2xl" key={i}></div>
+                  <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
                 ))}
               </div>
             </div>
@@ -973,9 +984,9 @@ export default function Homepage({ params }: { params: any }) {
         ) : (
           <div className={`${containerClass}`}>
             <div className="animate-pulse">
-              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[450px] overflow-hidden">
+              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
                 {[...Array(5)].map((_, i) => (
-                  <div className="bg-white h-[450px] rounded-2xl" key={i}></div>
+                  <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
                 ))}
               </div>
             </div>
@@ -1121,9 +1132,9 @@ export default function Homepage({ params }: { params: any }) {
         ) : (
           <div className={`${containerClass}`}>
             <div className="animate-pulse">
-              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[450px] overflow-hidden">
+              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
                 {[...Array(5)].map((_, i) => (
-                  <div className="bg-white h-[450px] rounded-2xl" key={i}></div>
+                  <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
                 ))}
               </div>
             </div>
@@ -1285,9 +1296,9 @@ export default function Homepage({ params }: { params: any }) {
         ) : (
           <div className={`${containerClass}`}>
             <div className="animate-pulse">
-              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[450px] overflow-hidden">
+              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
                 {[...Array(5)].map((_, i) => (
-                  <div className="bg-white h-[450px] rounded-2xl" key={i}></div>
+                  <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
                 ))}
               </div>
             </div>
@@ -1345,9 +1356,9 @@ export default function Homepage({ params }: { params: any }) {
         ) : (
           <div className={`${containerClass}`}>
             <div className="animate-pulse">
-              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[450px] overflow-hidden">
+              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
                 {[...Array(5)].map((_, i) => (
-                  <div className="bg-white h-[450px] rounded-2xl" key={i}></div>
+                  <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
                 ))}
               </div>
             </div>
