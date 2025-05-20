@@ -12,6 +12,7 @@ import { headers, cookies } from 'next/headers'
 import { GlobalProvider } from './GlobalContext';
 import { permanentRedirect } from 'next/navigation'
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import {cacheKey} from './GlobalVar'
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -55,20 +56,19 @@ export default async function RootLayout({ children, params }: { children: React
   params.userlocation = city
   const dict = await getDictionary(params.lang);
   params.dict = dict;
-  // if (currenturl === `/${params.lang}`) {
-  const homepagedata = await fetcher(`homepage-frontend?lang=${params.lang}&dasdadad30494`)
-  params.data = homepagedata
+  if (!currenturl || currenturl === `/${params.lang}`) {
+    const homepagedata = await fetcher(`homepage-frontend?lang=${params.lang}&${cacheKey}`)
+    params.data = homepagedata
 
-  const homepagepartonelatest = await fetcher(`homepagelatest-one?lang=${params?.lang}&device_type=mobile&city=${globalcity}&dasdadad30494`)
-  params.homepagepartonelatest = homepagepartonelatest
+    const homepagepartonelatest = await fetcher(`homepagelatest-one?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
+    params.homepagepartonelatest = homepagepartonelatest
 
-  const homepageparttwolatest = await fetcher(`homepagelatest-two?lang=${params?.lang}&device_type=mobile&city=${globalcity}&dasdadad30494`)
-  params.homepageparttwolatest = homepageparttwolatest
+    const homepageparttwolatest = await fetcher(`homepagelatest-two?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
+    params.homepageparttwolatest = homepageparttwolatest
 
-  const homepagepartthreelatest = await fetcher(`homepagelatest-three?lang=${params?.lang}&device_type=mobile&city=${globalcity}&dasdadad30494`)
-  params.homepagepartthreelatest = homepagepartthreelatest
-
-  // }
+    const homepagepartthreelatest = await fetcher(`homepagelatest-three?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
+    params.homepagepartthreelatest = homepagepartthreelatest
+  }
 
   return (
     <html lang={params.lang} dir={params.lang == 'ar' ? 'rtl' : 'ltr'} className='nprogress-busy'>

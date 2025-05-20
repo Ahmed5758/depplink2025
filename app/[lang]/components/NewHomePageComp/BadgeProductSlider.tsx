@@ -41,7 +41,7 @@ export default function BadgeProductSlider(props: any) {
             spaceBetween: 25,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 4,
             spaceBetween: 25,
           },
         }}
