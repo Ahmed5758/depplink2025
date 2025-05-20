@@ -17,7 +17,7 @@ export default function product_component(props: any) {
   const isArabic = props?.lang;
   const isMobileOrTablet = props?.isMobileOrTablet;
   var productData: any = props?.productData;
-
+  // const [isImageLoaded, setImageLoaded] = useState(false);
 
   function calculateTimeLeft(endTime: any) {
     const now: any = new Date();
@@ -59,7 +59,7 @@ export default function product_component(props: any) {
     return value != null && value !== "" && value !== undefined;
   }
 
-  const productFeaturedImage = `${NewMedia}/${productData?.featured_image?.image}`;
+  const productFeaturedImage: any = isValidUrl(productData?.featured_image?.image) && productData?.featured_image?.image ? `${NewMedia}/${productData?.featured_image?.image}` : null;
   const productSpecificationImageOne: any = isValidUrl(productData?.specification_image_one) && productData?.specification_image_one ? `${productData?.specification_image_one}` : null;
   const productSpecificationImageTwo: any = isValidUrl(productData?.specification_image_two) && productData?.specification_image_two ? `${productData?.specification_image_two}` : null;
   const productSpecificationImageThree: any = isValidUrl(productData?.specification_image_three) && productData?.specification_image_three ? `${productData?.specification_image_three}` : null;
@@ -581,6 +581,10 @@ export default function product_component(props: any) {
   }
 
   const giftAvailableImage = ProExtraData?.freegiftData?.image ? NewMedia + ProExtraData?.freegiftData?.image : null
+
+  const productImgSkeleton: any = (
+    <div className="2xl:w-[302px] xl:w-[200px] lg:w-[170px] md:w-[140px] sm:w-[240px w-[130px] 2xl:h-[302px] xl:h-[200px] lg:h-[170px] md:h-[140px] sm:h-[240px] h-[130px] bg-primary/10 animate-pulse mx-auto rounded-2xl"></div>
+  );
   return (
     <>
       <div className="tamkeenProduct_card relative w-full h-fit">
@@ -712,103 +716,111 @@ export default function product_component(props: any) {
                 <>
                   <div className="flex flex-col gap-1 absolute left-0 top-14">
                     {productSpecificationImageOne ?
-                    <Image
-                      src={productSpecificationImageOne}
-                      alt={`specification-${productTitle}`}
-                      decoding="async"
-                      data-nimg="1"
-                      title={`Specification ${productTitle}`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      quality={100}
-                      className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
-                    />
-                    : null}
+                      <Image
+                        src={productSpecificationImageOne}
+                        alt={`specification-${productTitle}`}
+                        decoding="async"
+                        data-nimg="1"
+                        title={`Specification ${productTitle}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        quality={100}
+                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                      />
+                      : null}
                     {productSpecificationImageTwo ?
-                    <Image
-                      src={productSpecificationImageTwo}
-                      alt={`specification-${productTitle}`}
-                      decoding="async"
-                      data-nimg="1"
-                      title={`Specification ${productTitle}`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      quality={100}
-                      className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
-                    />
-                    : null}
+                      <Image
+                        src={productSpecificationImageTwo}
+                        alt={`specification-${productTitle}`}
+                        decoding="async"
+                        data-nimg="1"
+                        title={`Specification ${productTitle}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        quality={100}
+                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                      />
+                      : null}
                     {productSpecificationImageThree ?
-                    <Image
-                      src={productSpecificationImageThree}
-                      alt={`specification-${productTitle}`}
-                      decoding="async"
-                      data-nimg="1"
-                      title={`Specification ${productTitle}`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      quality={100}
-                      className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
-                    />
-                    : null}
+                      <Image
+                        src={productSpecificationImageThree}
+                        alt={`specification-${productTitle}`}
+                        decoding="async"
+                        data-nimg="1"
+                        title={`Specification ${productTitle}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        quality={100}
+                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                      />
+                      : null}
                     {productSpecificationImageFour ?
-                    <Image
-                      src={productSpecificationImageFour}
-                      alt={`specification-${productTitle}`}
-                      decoding="async"
-                      data-nimg="1"
-                      title={`Specification ${productTitle}`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      quality={100}
-                      className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
-                    />
-                    : null}
+                      <Image
+                        src={productSpecificationImageFour}
+                        alt={`specification-${productTitle}`}
+                        decoding="async"
+                        data-nimg="1"
+                        title={`Specification ${productTitle}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        quality={100}
+                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                      />
+                      : null}
                     {productSpecificationImageFive ?
-                    <Image
-                      src={productSpecificationImageFive}
-                      alt={`specification-${productTitle}`}
-                      decoding="async"
-                      data-nimg="1"
-                      title={`Specification ${productTitle}`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      quality={100}
-                      className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
-                    />
-                    : null}
+                      <Image
+                        src={productSpecificationImageFive}
+                        alt={`specification-${productTitle}`}
+                        decoding="async"
+                        data-nimg="1"
+                        title={`Specification ${productTitle}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        quality={100}
+                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                      />
+                      : null}
                     {productSpecificationImageSix ?
-                    <Image
-                      src={productSpecificationImageSix}
-                      alt={`specification-${productTitle}`}
-                      decoding="async"
-                      data-nimg="1"
-                      title={`Specification ${productTitle}`}
-                      width={0}
-                      height={0}
-                      sizes="100vw"
-                      quality={100}
-                      className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px] hidden md:block"
-                    />
-                    : null}
+                      <Image
+                        src={productSpecificationImageSix}
+                        alt={`specification-${productTitle}`}
+                        decoding="async"
+                        data-nimg="1"
+                        title={`Specification ${productTitle}`}
+                        width={0}
+                        height={0}
+                        sizes="100vw"
+                        quality={100}
+                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px] hidden md:block"
+                      />
+                      : null}
                   </div>
                 </>
               ) : null}
-              <Image
-                src={productFeaturedImage}
-                alt={productTitle}
-                title={productTitle}
-                width={0}
-                height={0}
-                quality={100}
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                className="mx-auto w-full max-w-[350px] sm:h-auto h-auto object-cover object-center rouneded-2xl"
-                loading="eager"
-              />
+              {productFeaturedImage ? (
+                <>
+                  {/* {!isImageLoaded && productImgSkeleton} */}
+                  <Image
+                    src={productFeaturedImage}
+                    alt={productTitle}
+                    title={productTitle}
+                    width={350}
+                    height={350}
+                    loading="eager"
+                    quality={80}
+                    className={`mx-auto w-full max-w-[350px] sm:h-auto h-auto object-cover object-center rounded-2xl transition-opacity duration-300}`}
+                  // onLoadingComplete={() => setImageLoaded(true)} // Set loaded to true once the image is loaded
+                  />
+                </>
+              ) : (
+                // productImgSkeleton
+                null
+              )}
             </div>
             <div className="tamkeenProduct_card_body mb-1">
               <h2 className="md:mb-4 mb-1 text-[0.65rem] text-start sm:text-xs 2xl:text-sm line-clamp-2 font-semibold 2xl:h-[2.5rem] h-[2rem]">
