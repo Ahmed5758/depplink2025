@@ -837,7 +837,7 @@ export default function Cart({ params }: { params: { lang: string } }) {
 
 
             {cartCount > 0 ?
-                <div className="fixed bottom-[4rem] w-full p-3 bg-white shadow-md border-t border-[#5D686F26]">
+                <div className="fixed bottom-[4rem] w-full p-3 bg-white shadow-md border-t border-[#5D686F26] pb-14">
                     <button
                         type="button"
                         onClick={() => getCheckout()}
