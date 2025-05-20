@@ -240,7 +240,7 @@ export default function product_component(props: any) {
         </div>
       ),
       toast: true,
-      position: props.lang == "ar" ? "top-start" : "top-end",
+      position: isArabic ? "top-start" : "top-end",
       showConfirmButton: false,
       timer: 15000,
       showCloseButton: true,
@@ -258,7 +258,7 @@ export default function product_component(props: any) {
           {viewcart ? (
             <>
               <p className="font-light mb-3">
-                {props.lang == "ar"
+                {isArabic
                   ? "تمت إضافة العنصر إلى سلة التسوق الخاصة بك."
                   : "The item has been added into your cart."}
               </p>
@@ -269,14 +269,14 @@ export default function product_component(props: any) {
                 }}
                 className="focus-visible:outline-none mt-2 underline"
               >
-                {props.lang == "ar" ? "عرض العربة" : "View Cart"}
+                {isArabic ? "عرض العربة" : "View Cart"}
               </button>
             </>
           ) : null}
         </div>
       ),
       toast: true,
-      position: props.lang == "ar" ? "top-start" : "top-end",
+      position: isArabic ? "top-start" : "top-end",
       showConfirmButton: false,
       timer: 5000,
       showCloseButton: false,
