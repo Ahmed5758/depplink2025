@@ -7,7 +7,7 @@ type Props = {
 
 const fetcher = async (params: any) => {
     const slug = "terms-and-conditions";
-    const res: any = await fetch(`${Api}/footer_pages/${slug}`, { next: { revalidate: 1800 } })
+    const res: any = await fetch(`${Api}/footer_pages/${slug}`, { next: { revalidate: 86400 } })
     return res.json()
 }
 

@@ -5,7 +5,7 @@ type Props = {
 }
 
 const fetcher = async (params: any) => {
-    const res: any = await fetch(`${Api}/blogs`, { next: { revalidate: 1800 } })
+    const res: any = await fetch(`${Api}/blogs`, { next: { revalidate: 86400 } })
     return res.json()
 }
 

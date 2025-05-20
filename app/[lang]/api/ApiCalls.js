@@ -12,7 +12,7 @@ const get = async (url) => {
     method: 'GET',
     headers: header,
     next: {
-      revalidate: 1800
+      revalidate: 86400
     },
     // cache: 'no-store',
     //cache: 'force-cache'
@@ -38,7 +38,7 @@ const getStatic = async (url) => {
     method: 'GET',
     headers: header,
     next: {
-      revalidate: 1800
+      revalidate: 86400
     },
     cache: 'no-store',
     //cache: 'force-cache'

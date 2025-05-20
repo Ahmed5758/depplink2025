@@ -1,8 +1,6 @@
 import { Api } from "../../api/Api";
-import { redirect } from 'next/navigation'
 import { cache } from 'react';
-import { headers,cookies } from 'next/headers'
-import next from "next";
+import { headers, cookies } from 'next/headers'
 import { cacheKey } from '../../GlobalVar';
 
 const fetcher = cache(async (params: any) => {
