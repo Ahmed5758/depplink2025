@@ -27,8 +27,8 @@ const MainSliderMobile: React.FC<MainSliderMobileProps> = ({
             <Swiper
                 slidesPerView={1.4}
                 centeredSlides={true}
-                initialSlide={1} // Start from the 5th slide (index 4)
-                spaceBetween={-6}
+                initialSlide={2} // Start from the 5th slide (index 4)
+                spaceBetween={6}
                 autoplay={{
                     delay: 15000,
                     disableOnInteraction: false,

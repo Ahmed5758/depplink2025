@@ -637,7 +637,7 @@ export default function Homepage({ params }: { params: any }) {
                       <button
                         key={index}
                         onClick={() =>
-                          updateCategoryProducts(item?.row_id, index, 1)
+                          updateCategoryProducts(item?.category?.id, index, 1)
                         }
                         className={`bestProButton w-fit whitespace-nowrap px-4 py-2 selected
                                                 ${index == sec4SelectedIndex
@@ -686,7 +686,7 @@ export default function Homepage({ params }: { params: any }) {
                     <button
                       key={index}
                       onClick={() =>
-                        updateCategoryProducts(item?.row_id, index, 2)
+                        updateCategoryProducts(item?.category?.id, index, 2)
                       }
                       className={`bestProButton tamkeenBtns w-fit whitespace-nowrap px-4 py-2
                                     ${index == sec6SelectedIndex

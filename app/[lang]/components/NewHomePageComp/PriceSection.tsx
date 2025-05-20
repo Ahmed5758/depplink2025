@@ -188,7 +188,7 @@ export default function PriceSectionComponent(props: any) {
                         </Link>
                     </SwiperSlide>
                     <SwiperSlide>
-                        <Link href={`${origin}/${lang}/under-5000`} aria-label={`${origin}/${lang}/under-5000`} prefetch={false} scroll={false}>
+                        <Link href={`${origin}/${lang}/above-5000`} aria-label={`${origin}/${lang}/above-5000`} prefetch={false} scroll={false}>
                             <Image
                                 src="/icons/5000.webp"
                                 width={100}
@@ -303,7 +303,7 @@ export default function PriceSectionComponent(props: any) {
                         </Link>
                     </div>
                     <div className="flex items-center justify-center">
-                        <Link href={`${origin}/${lang}/under-5000`} aria-label={`${origin}/${lang}/under-5000`} prefetch={false} scroll={false}>
+                        <Link href={`${origin}/${lang}/above-5000`} aria-label={`${origin}/${lang}/above-5000`} prefetch={false} scroll={false}>
                             <Image
                                 src="/icons/5000.webp"
                                 width={144}

@@ -324,20 +324,21 @@ export default function Category({ params, searchParams }: { params: { lang: str
                     classNamePrefix="react-select"
                   />
                 </div>
-                {products?.length ?
-                <div className="tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center">
-                  {/* SORTING */}
-                  {loaderStatus ? 
-                    <div className={`animate-pulse my-5 grid grid-cols-2 md:grid-cols-4 gap-3`}>
-                        {[...Array(isMobileOrTablet ? 10 : 12)].map((_, i) => (
-                          <div className='h-[26rem] bg-white rounded-md shadow-md' key={i + 200}></div>
-                        ))}
+                {products?.length || params?.data?.productData?.products?.data?.length ?
+                <>
+                  {loaderStatus ?
+                    <div className={`animate-pulse tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center`}>
+                      {[...Array(isMobileOrTablet ? 10 : 12)].map((_, i) => (
+                        <div className='h-[26rem] bg-white rounded-md shadow-md' key={i + 200}></div>
+                      ))}
                     </div>
                     :
-                    <ProductLoop productData={products?.length ? products : params?.data?.productData?.products?.data} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} />
+                    <div className="tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center">
+                      <ProductLoop productData={products?.length ? products : params?.data?.productData?.products?.data} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} />
+                    </div>
                   }
-                </div>
-                :null}
+                </>
+                : null}
                 {/* {params?.data?.productData?.products?.current_page != params?.data?.productData?.products?.last_page ?
                   <button id="loadmore" className='opacity-0 pb-28' onClick={() => { setcurrentPage(params?.data?.productData?.products?.current_page + 1); }}>loadmore</button>
                   : null} */}

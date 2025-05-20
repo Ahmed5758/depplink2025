@@ -239,7 +239,7 @@ export default function MobileHeaderNew(props: any) {
   };
   return (
     <>
-      <header className="py-3 bg-white shadow-lg w-full">
+      <header className="py-3 bg-white shadow-lg w-full overflow-hidden">
 
         <button onClick={() => setWhatsappBtn(true)} className={`WhatsappBeforeHover ${whatsappBtn ? "hidden" : "flex"}`}>
           <svg
@@ -428,7 +428,7 @@ export default function MobileHeaderNew(props: any) {
                   <circle cx="8" cy="8.00017" r="1" fill="#004B7A" />
                 </svg>
               </div>
-              <div className="location_text w-4">
+              <div className="location_text max-w-38">
                 <div
                   className="flex ltr:flex-row rtl:flex-row-reverse ltr:justify-start rtl:justify-end items-center space-x-2"
                   onClick={() => {
@@ -454,7 +454,7 @@ export default function MobileHeaderNew(props: any) {
                   </svg>
                 </div>
                 {fullAddress ? (
-                  <div className="text-[#101010] text-[10px] font-semibold truncate w-38 line-clamp-1">
+                  <div className="text-[#101010] text-[10px] font-semibold max-w-38 line-clamp-1">
                     {fullAddress}
                   </div>
                 ) : null}

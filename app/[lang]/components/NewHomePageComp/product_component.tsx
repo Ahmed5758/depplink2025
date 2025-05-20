@@ -17,6 +17,7 @@ export default function product_component(props: any) {
   const isArabic = props?.lang;
   const isMobileOrTablet = props?.isMobileOrTablet;
   var productData: any = props?.productData;
+  const [isImageLoaded, setImageLoaded] = useState(false);
   // const [isImageLoaded, setImageLoaded] = useState(false);
 
   function calculateTimeLeft(endTime: any) {
@@ -59,7 +60,7 @@ export default function product_component(props: any) {
     return value != null && value !== "" && value !== undefined;
   }
 
-  const productFeaturedImage: any = isValidUrl(productData?.featured_image?.image) && productData?.featured_image?.image ? `${NewMedia}/${productData?.featured_image?.image}` : null;
+  const productFeaturedImage: any = productData?.featured_image?.image ? `${NewMedia}/${productData?.featured_image?.image}` : null;
   const productSpecificationImageOne: any = isValidUrl(productData?.specification_image_one) && productData?.specification_image_one ? `${productData?.specification_image_one}` : null;
   const productSpecificationImageTwo: any = isValidUrl(productData?.specification_image_two) && productData?.specification_image_two ? `${productData?.specification_image_two}` : null;
   const productSpecificationImageThree: any = isValidUrl(productData?.specification_image_three) && productData?.specification_image_three ? `${productData?.specification_image_three}` : null;
@@ -802,25 +803,22 @@ export default function product_component(props: any) {
                   </div>
                 </>
               ) : null}
-              {productFeaturedImage ? (
-                <>
-                  {/* {!isImageLoaded && productImgSkeleton} */}
-                  <Image
-                    src={productFeaturedImage}
-                    alt={productTitle}
-                    title={productTitle}
-                    width={350}
-                    height={350}
-                    loading="eager"
-                    quality={80}
-                    className={`mx-auto w-full max-w-[350px] sm:h-auto h-auto object-cover object-center rounded-2xl transition-opacity duration-300}`}
-                  // onLoadingComplete={() => setImageLoaded(true)} // Set loaded to true once the image is loaded
-                  />
-                </>
-              ) : (
-                // productImgSkeleton
-                null
-              )}
+              <div className="relative z-[-1] w-full max-w-[350px] aspect-square mx-auto">
+                {!isImageLoaded && (
+                  <div className="absolute inset-0 bg-primary/10 animate-pulse rounded-2xl z-10"></div>
+                )}
+                <Image
+                  src={productFeaturedImage}
+                  alt={productTitle}
+                  title={productTitle}
+                  width={350}
+                  height={350}
+                  loading="eager"
+                  quality={80}
+                  className={`mx-auto w-full max-w-[350px] sm:h-auto h-auto object-cover object-center rounded-2xl transition-opacity duration-300}`}
+                  onLoadingComplete={() => setImageLoaded(true)} // Set loaded to true once the image is loaded
+                />
+                </div>
             </div>
             <div className="tamkeenProduct_card_body mb-1">
               <h2 className="md:mb-4 mb-1 text-[0.65rem] text-start sm:text-xs 2xl:text-sm line-clamp-2 font-semibold 2xl:h-[2.5rem] h-[2rem]">
