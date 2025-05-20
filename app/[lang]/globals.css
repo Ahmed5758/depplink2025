@@ -2365,9 +2365,13 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 .offerPercent,.realPrice,.animated_orangePrice,.productDesc,.rating_div span{
 	font-size: 7px;
 }
-.productDesc{
+.productDesc:dir(ltr){
 	line-height: normal;
 	height: 18px;
+}
+.productDesc:dir(rtl){
+	line-height: normal;
+	height: 24px;
 }
 .paymentText{
 	font-size: 5px;
