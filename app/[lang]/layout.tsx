@@ -2,23 +2,19 @@
 import './globals.css'
 import React, { useState } from 'react'
 import dynamic from 'next/dynamic'
-import { get } from "./api/ApiCalls";
 import { Cairo, Noto_Sans } from 'next/font/google'
 import Providers from './providers';
 
 import { getDictionary } from './dictionariesserver'
 import { Api } from './api/Api';
 import { headers, cookies } from 'next/headers'
-import { GlobalProvider } from './GlobalContext';
-import { permanentRedirect } from 'next/navigation'
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
-import {cacheKey} from './GlobalVar'
+import { cacheKey } from './GlobalVar'
 import LayoutWrapper from './LayoutWrapper'
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
   const slug = url
-  const res: any = await fetch(`${Api}${slug}`, { next: { revalidate: 3600 } })
+  const res: any = await fetch(`${Api}${slug}`, { next: { revalidate: 86400 } })
   return res.json()
 }
 
@@ -45,8 +41,6 @@ export default async function RootLayout({ children, params }: { children: React
   let globalcity: any = 'Jeddah';
   const headersList = headers()
   const currenturl = headersList.get('next-url')?.split('#')[0]
-  const deviceType = headersList.get('device-type')
-  const userIP = headersList.get('user-ip')
 
 
   // getting city from cookies
@@ -60,16 +54,9 @@ export default async function RootLayout({ children, params }: { children: React
   let homepageProps = {}
   if (!currenturl || currenturl === `/${params.lang}`) {
     const homepagedata = await fetcher(`homepage-frontend?lang=${params.lang}&${cacheKey}`)
-    // params.data = homepagedata
-
-    const homepagepartonelatest = await fetcher(`homepagelatest-one?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
-    // params.homepagepartonelatest = homepagepartonelatest
-
-    const homepageparttwolatest = await fetcher(`homepagelatest-two?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
-    // params.homepageparttwolatest = homepageparttwolatest
-
-    const homepagepartthreelatest = await fetcher(`homepagelatest-three?lang=${params?.lang}&device_type=${params?.deviceType}&city=${globalcity}&${cacheKey}`)
-    // params.homepagepartthreelatest = homepagepartthreelatest
+    const homepagepartonelatest = await fetcher(`homepagelatest-one?lang=${params?.lang}&device_type=mobile&city=${globalcity}&${cacheKey}`)
+    const homepageparttwolatest = await fetcher(`homepagelatest-two?lang=${params?.lang}&device_type=mobile&city=${globalcity}&${cacheKey}`)
+    const homepagepartthreelatest = await fetcher(`homepagelatest-three?lang=${params?.lang}&device_type=mobile&city=${globalcity}&${cacheKey}`)
     homepageProps = {
       homepagedata,
       homepagepartonelatest,
@@ -79,12 +66,12 @@ export default async function RootLayout({ children, params }: { children: React
   }
 
   return (
-    <html lang={params.lang} dir={params.lang == 'ar' ? 'rtl' : 'ltr'} className='nprogress-busy'>
+    <html lang={params?.lang} dir={params.lang == 'ar' ? 'rtl' : 'ltr'} className='nprogress-busy'>
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
         <Providers>
-            <LayoutWrapper homepageProps={homepageProps}>
-              {children}
-            </LayoutWrapper>
+          <LayoutWrapper homepageProps={homepageProps}>
+            {children}
+          </LayoutWrapper>
         </Providers>
         <div className="fixed top-0 w-full z-50">
           <div className="h-1.5" id="loader-spin"></div>

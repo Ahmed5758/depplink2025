@@ -2321,7 +2321,7 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 	}
 
 	.tamkeenProduct_card_footer .bestProButton {
-		font-size: 0.65rem;
+		font-size: 0.54rem;
 		line-height: 10px;
 		/* padding: 0.875rem; */
 	}
@@ -2339,6 +2339,16 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 		width: 21px;
 		object-fit: contain;
 	}
+
+}
+
+@media (min-width: 300px) and (max-width: 420px) {
+.productBadge_topText{
+  font-size: 5.76px;
+}
+.productBadge_topImg img{
+  height: 14px;
+}
 .headingHomeMain {
 	font-size: 1rem;
 }

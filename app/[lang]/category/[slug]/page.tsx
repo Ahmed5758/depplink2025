@@ -16,7 +16,6 @@ const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ss
 const BrandSliderOther = dynamic(() => import('../../components/BrandSliderOther'), { ssr: true })
 const Pagination = dynamic(() => import('../../components/Pagination'), { ssr: false })
 const ProductLoop = dynamic(() => import("../../components/NewHomePageComp/ProductLoop"), { ssr: true });
-export const fetchCache = 'force-no-store'
 
 export default function Category({ params, searchParams }: { params: { lang: string, slug: string, data: any, devicetype: any }, searchParams: any }) {
   const [filterHide, setFilterHide] = useState<any>(false);
@@ -41,7 +40,7 @@ export default function Category({ params, searchParams }: { params: { lang: str
   const [termsandCondition, setTermsandCondition] = useState<boolean>(true)
   const [products, setproducts] = useState<any>([])
   const isArabic = params?.lang === 'ar';
-  const userAgent: UserAgent | null = typeof window !== 'undefined' ? useUserAgent(window.navigator.userAgent) : null;
+  // const userAgent: UserAgent | null = typeof window !== 'undefined' ? useUserAgent(window.navigator.userAgent) : null;
   const isMobileOrTablet = true;
   const path = usePathname();
   const [loaderStatus, setLoaderStatus] = useState<any>(false)
@@ -141,24 +140,24 @@ export default function Category({ params, searchParams }: { params: { lang: str
 
       };
     }
-    if(searchParams?.notifications?.length){
+    if (searchParams?.notifications?.length) {
       notificationCount()
-  }
+    }
   }, [params])
 
   const notificationCount = () => {
-    if(searchParams?.notifications?.length){
-        var data = {
-            id: searchParams?.notifications,
-            mobileapp: true,
+    if (searchParams?.notifications?.length) {
+      var data = {
+        id: searchParams?.notifications,
+        mobileapp: true,
+      }
+      post('notificationsCounts', data).then((responseJson: any) => {
+        if (responseJson?.success) {
+          // console.log("responseJsonCount",responseJson?.success)
         }
-        post('notificationsCounts', data).then((responseJson: any) => {
-            if (responseJson?.success) {
-                // console.log("responseJsonCount",responseJson?.success)
-            }
-        })
+      })
     }
-}
+  }
 
   const listToTree = (arr: any = []) => {
     let map: any = {}, node, res = [], i;
@@ -218,8 +217,8 @@ export default function Category({ params, searchParams }: { params: { lang: str
   }, [pricefilter])
 
   useEffect(() => {
-    if(currentPage != params.data?.productData?.products?.current_page)
-    filter()
+    if (currentPage != params.data?.productData?.products?.current_page)
+      filter()
   }, [currentPage])
 
   const SortingProduct = [
@@ -325,89 +324,35 @@ export default function Category({ params, searchParams }: { params: { lang: str
                   />
                 </div>
                 {products?.length || params?.data?.productData?.products?.data?.length ?
-                <>
-                  {loaderStatus ?
-                    <div className={`animate-pulse tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center`}>
-                      {[...Array(isMobileOrTablet ? 10 : 12)].map((_, i) => (
-                        <div className='h-[26rem] bg-white rounded-md shadow-md' key={i + 200}></div>
-                      ))}
-                    </div>
-                    :
-                    <div className="tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center">
-                      <ProductLoop productData={products?.length ? products : params?.data?.productData?.products?.data} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} />
-                    </div>
-                  }
-                </>
-                : null}
-                {/* {params?.data?.productData?.products?.current_page != params?.data?.productData?.products?.last_page ?
-                  <button id="loadmore" className='opacity-0 pb-28' onClick={() => { setcurrentPage(params?.data?.productData?.products?.current_page + 1); }}>loadmore</button>
-                  : null} */}
+                  <>
+                    {loaderStatus ?
+                      <div className={`animate-pulse tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center`}>
+                        {[...Array(isMobileOrTablet ? 10 : 12)].map((_, i) => (
+                          <div className='h-[26rem] bg-white rounded-md shadow-md' key={i + 200}></div>
+                        ))}
+                      </div>
+                      :
+                      <div className="tamkeenSales_cardss relative grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 grid-cols-2 xl:gap-x-3 gap-2 items-start justify-center">
+                        <ProductLoop productData={products?.length ? products : params?.data?.productData?.products?.data} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} />
+                      </div>
+                    }
+                  </>
+                  : null}
                 {params?.data?.productData?.products && (
                   <>
-                  {params?.data?.productData?.products?.last_page > 1 && (
-                    <Pagination 
-                      setCurrentPage={(newpage) => {
-                        setLoaderStatus(true)
-                        window.scrollTo(0, 0)
-                        setcurrentPage(newpage);
-                      }} 
-                      currentPage={params?.data?.productData?.products?.current_page} 
-                      lastPage={params?.data?.productData?.products?.last_page}
-                    />
-                  )}
+                    {params?.data?.productData?.products?.last_page > 1 && (
+                      <Pagination
+                        setCurrentPage={(newpage) => {
+                          setLoaderStatus(true)
+                          window.scrollTo(0, 0)
+                          setcurrentPage(newpage);
+                        }}
+                        currentPage={params?.data?.productData?.products?.current_page}
+                        lastPage={params?.data?.productData?.products?.last_page}
+                      />
+                    )}
                   </>
                 )}
-                {/* {params?.data?.productData?.products && (
-                  <div className="pagination mt-3 flex items-center justify-center">
-                    {params?.data?.productData?.products?.current_page > 1 && (
-                      <button
-                        onClick={() => {
-                          setLoaderStatus(true)
-                          window.scrollTo(0, 0)
-                          setcurrentPage(params?.data?.productData?.products?.current_page - 1);
-                        }}
-                        className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-200"
-                      >
-                        {params.lang == 'ar' ? 'السابق' : 'Previous'}
-                      </button>
-                    )}
-
-                    {Array.from(
-                      { length: params?.data?.productData?.products?.last_page },
-                      (_, index) => (
-                        <button
-                          key={index + 1}
-                          onClick={() => {
-                            setLoaderStatus(true)
-                            window.scrollTo(0, 0)
-                            setcurrentPage(index + 1)
-                          }}
-                          className={`px-3 py-2 mx-1 border rounded ${
-                            params?.data?.productData?.products?.current_page === index + 1
-                              ? "bg-[#004B7A] text-white"
-                              : "hover:bg-[#004B7A] hover:text-white"
-                          }`}
-                        >
-                          {index + 1}
-                        </button>
-                      )
-                    )}
-
-                    {params?.data?.productData?.products?.current_page <
-                      params?.data?.productData?.products?.last_page && (
-                      <button
-                        onClick={() => {
-                          setLoaderStatus(true)
-                          window.scrollTo(0, 0)
-                          setcurrentPage(params?.data?.productData?.products?.current_page + 1);
-                        }}
-                        className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-200"
-                      >
-                        {params.lang == 'ar' ? 'التالي' : 'Next'}
-                      </button>
-                    )}
-                  </div>
-                )} */}
               </div>
               :
               <div className="container my-10 flex items-center justify-center py-8">

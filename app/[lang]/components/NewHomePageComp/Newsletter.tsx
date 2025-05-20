@@ -99,26 +99,26 @@ export default function BrandSlider(props: any) {
         <>
             {/* Subscription Section */}
             <div className="bg-white block pb-12">
-                <div className={`${isMobileOrTablet ? 'container pt-3' : 'px-[4.8rem] grid grid-cols-2'} items-center`}>
+                <div className={`container pt-3 items-center`}>
                     <div>
                         <h3 className="headingHomeMain">
                             {getLocalizedText('النشرة الاخبارية', 'Unlock Premium Benefits Today!')}
                         </h3>
-                        <p className={`${isMobileOrTablet ? 'mt-1 text-[0.75rem]' : 'md:mt-2 text-sm'} text-[#4D545B] `}>
+                        <p className={`mt-1 text-[0.75rem] text-[#4D545B] `}>
                             {getLocalizedText(
                                 'اشترك في النشره الاخبارية للحصول علي كل ما هو جديد من العروض والتحديثات الخاصة بمتجر تمكين',
                                 'Enhance Your Home Appliance Experience with Our Subscription Service, Unveiling Exclusive discounts and cashback Rewards'
                             )}
                         </p>
-                        <div className={`${isMobileOrTablet ? 'mt-5' : 'mt-14'} `}>
+                        <div className={`mt-5`}>
                             <p className="text-xs text-[#585141]">
                                 {getLocalizedText('اكتب بريدك الالكتروني واشترك الان', 'Enter your E-mail ID')}
                             </p>
-                            <div className={`mt-2 ${isMobileOrTablet ? 'w-full space-y-2' : 'flex gap-x-3'}`}>
+                            <div className={`mt-2 w-full space-y-2`}>
                                 <input
                                     type="email"
                                     name="shipping-charge"
-                                    className={`focus-visible:outline-none font-normal text-sm ${isMobileOrTablet ? 'w-full' : 'w-1/2'} border rounded-md p-3 border-[#4D545B30] active:border-primary focus-within:border-[#004B7A]`}
+                                    className={`focus-visible:outline-none font-normal text-sm w-full border rounded-md p-3 border-[#4D545B30] active:border-primary focus-within:border-[#004B7A]`}
                                     placeholder={getLocalizedText('اكتب البريد هنا...', 'Write your email here...')}
                                     onChange={(e) => {
                                         setemail(e.target.value);
@@ -129,7 +129,7 @@ export default function BrandSlider(props: any) {
                                     value={email}
                                 />
                                 <button
-                                    className={`focus-visible:outline-none ${isMobileOrTablet ? 'w-full' : ''} btn btn-primary hover:text-white hover:bg-[#004B7A] border-[#004B7A] border text-primary py-2 rounded-md px-8 font-semibold text-sm`}
+                                    className={`focus-visible:outline-none w-full btn btn-primary hover:text-white hover:bg-[#004B7A] border-[#004B7A] border text-primary py-2 rounded-md px-8 font-semibold text-sm`}
                                     disabled={newslatter}
                                     onClick={submitNewslatter}
                                 >

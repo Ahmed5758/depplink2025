@@ -38,11 +38,11 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, lastPage, setCurre
   };
 
   return (
-    <div className="flex items-center justify-center space-x-2 mt-3">
+    <div className="flex items-center justify-center space-x-2 mt-10 pb-32 lg:pb-10">
       {/* Previous Button */}
       <button
         onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-        className={`w-10 h-10 flex items-center justify-center bg-white text-black ${currentPage === 1 ? "text-gray cursor-not-allowed" : "hover:bg-gray-100"
+        className={`w-10 h-10 flex items-center justify-center bg-white text-black rounded-md ${currentPage === 1 ? "text-gray cursor-not-allowed" : "hover:bg-gray-100"
           }`}
         disabled={currentPage === 1}
       >
@@ -52,14 +52,14 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, lastPage, setCurre
       {/* Page Numbers */}
       {getPageNumbers().map((page, index) =>
         page === "..." ? (
-          <span key={index} className="w-10 h-10 flex items-center justify-center text-gray">
+          <span key={index + 100} className="w-10 h-10 flex items-center justify-center text-gray">
             ...
           </span>
         ) : (
           <button
             key={page}
             onClick={() => setCurrentPage(page as number)}
-            className={`w-10 h-10 flex items-center justify-center ${currentPage === page
+            className={`w-10 h-10 flex items-center justify-center rounded-md ${currentPage === page
               ? "bg-white border border-[#004B7A] text-[#004B7A] font-bold"
               : " text-gray hover:bg-gray-100"
               }`}
@@ -72,7 +72,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, lastPage, setCurre
       {/* Next Button */}
       <button
         onClick={() => currentPage < lastPage && setCurrentPage(currentPage + 1)}
-        className={`w-10 h-10 flex items-center justify-center bg-white text-black ${currentPage === lastPage ? "text-gray cursor-not-allowed" : "hover:bg-gray-100"
+        className={`w-10 h-10 flex items-center justify-center bg-white text-black rounded-md ${currentPage === lastPage ? "text-gray cursor-not-allowed" : "hover:bg-gray-100"
           }`}
         disabled={currentPage === lastPage}
       >

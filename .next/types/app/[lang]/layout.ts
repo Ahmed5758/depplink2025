@@ -1,4 +1,4 @@
-// File: C:\Users\new\Documents\GitHub\deeplink2025\app\[lang]\layout.tsx
+// File: /Users/muhamamdusmansiddiqui/depplink2025/app/[lang]/layout.tsx
 import * as entry from '../../../../app/[lang]/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

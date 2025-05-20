@@ -9,14 +9,10 @@ import { NewMedia2 } from "./api/Api";
 import { userAgent } from "next/server";
 import { get } from "./api/ApiCalls";
 
-const ProductLoopSpecialProducts = dynamic(() => import("./components/NewHomePageComp/ProductLoopSpecialProducts"), { ssr: true });
-const MainSliderVertical = dynamic(() => import("./components/NewHomePageComp/MainSliderVertical"), { ssr: false });
-const MainSliderHorizental = dynamic(() => import("./components/NewHomePageComp/MainSliderHorizental"), { ssr: false });
 const ProductSliderComponent = dynamic(() => import("./components/NewHomePageComp/ProductSlider"), { ssr: false });
 const BadgeProductSlider = dynamic(() => import("./components/NewHomePageComp/BadgeProductSlider"), { ssr: false });
 const PriceSection = dynamic(() => import("./components/NewHomePageComp/PriceSection"), { ssr: false });
 const BrandSlider = dynamic(() => import("./components/NewHomePageComp/BrandSlider"), { ssr: false });
-const CategoryHomeSectionNew = dynamic(() => import("./components/NewHomePageComp/CategoryHomeSectionNew"), { ssr: false });
 const BadgeProductLoopComponent = dynamic(() => import("./components/NewHomePageComp/BadgeProductLoop"), { ssr: false });
 const MainSliderMobile = dynamic(() => import("./components/NewHomePageComp/MainSliderMobile"), { ssr: false });
 const CategoriesHomeMobile = dynamic(() => import("./components/NewHomePageComp/CategoriesHomeMobile"), { ssr: false });
@@ -32,7 +28,6 @@ export default function Homepage({ params }: { params: any }) {
   const origin = typeof window !== "undefined" ? window.location.origin : "";
   const lang: any = params?.lang; // Default to 'en' if lang is undefined
   const isArabic = params.lang === "ar" ? true : false;
-  const homepageparttwonew = homepageProps?.homepageparttwoSecTwo;
   const homepagepartonelatest = homepageProps?.homepagepartonelatest;
   const homepageparttwolatest = homepageProps?.homepageparttwolatest;
   const homepagepartthreelatest = homepageProps?.homepagepartthreelatest;
@@ -513,174 +508,174 @@ export default function Homepage({ params }: { params: any }) {
 
   return (
     <>
-        {/* Section 1 Start */}
-        <div className="sticky top-0 z-40 bg-white">
-            {bannerOneVisible ? (
-                <>
-                <div className="relative">
-                    <Link
-                    prefetch={false}
-                    scroll={false}
-                    href={sec1Link}
-                    aria-label={sec1Link}
-                    className="absolute top-1/2 -translate-y-1/2 left-4 rounded bg-primary px-[15px] py-[5px] text-white text-[11px] leading-[14px] shadow-md"
-                    >
-                    {isArabic ? "تحميل" : "Open"}
-                    </Link>
-                    <Image
-                    alt="Description of the image"
-                    title="Description of the image"
-                    src={sec1Image}
-                    width={0}
-                    height={0}
-                    decoding="async"
-                    data-nimg="1"
-                    sizes="100vw"
-                    quality={100}
-                    loading="lazy"
-                    className={`w-full h-auto object-center object-fit-cover`}
+      {/* Section 1 Start */}
+      <div className="sticky top-0 z-40 bg-white">
+        {bannerOneVisible ? (
+          <>
+            <div className="relative">
+              <Link
+                prefetch={false}
+                scroll={false}
+                href={sec1Link}
+                aria-label={sec1Link}
+                className="absolute top-1/2 -translate-y-1/2 left-4 rounded bg-primary px-[15px] py-[5px] text-white text-[11px] leading-[14px] shadow-md"
+              >
+                {isArabic ? "تحميل" : "Open"}
+              </Link>
+              <Image
+                alt="Description of the image"
+                title="Description of the image"
+                src={sec1Image}
+                width={0}
+                height={0}
+                decoding="async"
+                data-nimg="1"
+                sizes="100vw"
+                quality={100}
+                loading="lazy"
+                className={`w-full h-auto object-center object-fit-cover`}
+              />
+              <button
+                onClick={() => setBannerOneVisible(false)}
+                className="absolute top-1/2 -translate-y-1/2 right-2 w-4 h-8 fill-primary cursor-pointer"
+                style={{ border: "none", outline: "none" }}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 11 11"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g filter="url(#filter0_d_463_1862)">
+                    <path
+                      d="M8.80267 2.81407L8.18362 2.19501L5.72934 4.64929L3.27506 2.19501L2.65601 2.81407L5.11028 5.26835L2.65601 7.72262L3.27506 8.34168L5.72934 5.88741L8.18362 8.34168L8.80267 7.72262L6.3484 5.26835L8.80267 2.81407Z"
+                      fill="#004B7A"
                     />
-                    <button
-                    onClick={() => setBannerOneVisible(false)}
-                    className="absolute top-1/2 -translate-y-1/2 right-2 w-4 h-8 fill-primary cursor-pointer"
-                    style={{ border: "none", outline: "none" }}
+                  </g>
+                  <defs>
+                    <filter
+                      id="filter0_d_463_1862"
+                      x="1.65601"
+                      y="1.19501"
+                      width="8.14661"
+                      height="8.14667"
+                      filterUnits="userSpaceOnUse"
+                      colorInterpolationFilters="sRGB"
                     >
-                    <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 11 11"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <g filter="url(#filter0_d_463_1862)">
-                        <path
-                            d="M8.80267 2.81407L8.18362 2.19501L5.72934 4.64929L3.27506 2.19501L2.65601 2.81407L5.11028 5.26835L2.65601 7.72262L3.27506 8.34168L5.72934 5.88741L8.18362 8.34168L8.80267 7.72262L6.3484 5.26835L8.80267 2.81407Z"
-                            fill="#004B7A"
-                        />
-                        </g>
-                        <defs>
-                        <filter
-                            id="filter0_d_463_1862"
-                            x="1.65601"
-                            y="1.19501"
-                            width="8.14661"
-                            height="8.14667"
-                            filterUnits="userSpaceOnUse"
-                            colorInterpolationFilters="sRGB"
-                        >
-                            <feFlood
-                            floodOpacity="0"
-                            result="BackgroundImageFix"
-                            />
-                            <feColorMatrix
-                            in="SourceAlpha"
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
-                            result="hardAlpha"
-                            />
-                            <feOffset />
-                            <feGaussianBlur stdDeviation="0.5" />
-                            <feComposite in2="hardAlpha" operator="out" />
-                            <feColorMatrix
-                            type="matrix"
-                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
-                            />
-                            <feBlend
-                            mode="normal"
-                            in2="BackgroundImageFix"
-                            result="effect1_dropShadow_463_1862"
-                            />
-                            <feBlend
-                            mode="normal"
-                            in="SourceGraphic"
-                            in2="effect1_dropShadow_463_1862"
-                            result="shape"
-                            />
-                        </filter>
-                        </defs>
-                    </svg>
-                    </button>
-                </div>
-                </>
-            ) : null}
-            <MobileHeaderNew
-                type="Main"
-                lang={params?.lang}
-                dict={params?.dict}
-                devicetype={true}
-            />
-        </div>
-        <div className="pt-4"></div>
-        <section>
+                      <feFlood
+                        floodOpacity="0"
+                        result="BackgroundImageFix"
+                      />
+                      <feColorMatrix
+                        in="SourceAlpha"
+                        type="matrix"
+                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                        result="hardAlpha"
+                      />
+                      <feOffset />
+                      <feGaussianBlur stdDeviation="0.5" />
+                      <feComposite in2="hardAlpha" operator="out" />
+                      <feColorMatrix
+                        type="matrix"
+                        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"
+                      />
+                      <feBlend
+                        mode="normal"
+                        in2="BackgroundImageFix"
+                        result="effect1_dropShadow_463_1862"
+                      />
+                      <feBlend
+                        mode="normal"
+                        in="SourceGraphic"
+                        in2="effect1_dropShadow_463_1862"
+                        result="shape"
+                      />
+                    </filter>
+                  </defs>
+                </svg>
+              </button>
+            </div>
+          </>
+        ) : null}
+        <MobileHeaderNew
+          type="Main"
+          lang={params?.lang}
+          dict={params?.dict}
+          devicetype={true}
+        />
+      </div>
+      <div className="pt-4"></div>
+      <section>
         <MainSliderMobile
-            data={sec2SliderTopImage}
-            lang={lang}
-            origin={origin}
+          data={sec2SliderTopImage}
+          lang={lang}
+          origin={origin}
         />
         <div className={containerClass}>
-            <CategoriesHomeMobile
+          <CategoriesHomeMobile
             lang={lang}
             params={secCategoryData}
             userAgent={userAgent}
             NewMedia={NewMedia2}
             devicetype={true}
-            />
+          />
         </div>
-        </section>
+      </section>
 
-          {/* TSection 2 Start */}
-          <section className="tamkeenSales_sec w-full mb-8" data-section="2">
-            <div className={`ltr:pl-4 rtl:pr-4`}>
-              <h2 className="headingHomeMain mb-4">{sec4Title}</h2>
-              <div className="tamkeenSales_btns overflow-x-auto scrollbar-hide flex items-center lg:justify-evenly 2xl:justify-start gap-x-3 md:gap-x-5 pb-3 mb-4 w-full">
-                {homepagepartonelatest?.first_five_sec?.section_four?.map(
-                  (item: any, index: any) => {
-                    return (
-                      <button
-                        key={index}
-                        onClick={() =>
-                          updateCategoryProducts(item?.category?.id, index, 1)
-                        }
-                        className={`bestProButton w-fit whitespace-nowrap px-4 py-2 selected
+      {/* TSection 2 Start */}
+      <section className="tamkeenSales_sec w-full mb-8" data-section="2">
+        <div className={`ltr:pl-4 rtl:pr-4`}>
+          <h2 className="headingHomeMain mb-4">{sec4Title}</h2>
+          <div className="tamkeenSales_btns overflow-x-auto scrollbar-hide flex items-center lg:justify-evenly 2xl:justify-start gap-x-3 md:gap-x-5 pb-3 mb-4 w-full">
+            {homepagepartonelatest?.first_five_sec?.section_four?.map(
+              (item: any, index: any) => {
+                return (
+                  <button
+                    key={index}
+                    onClick={() =>
+                      updateCategoryProducts(item?.category?.id, index, 1)
+                    }
+                    className={`bestProButton w-fit whitespace-nowrap px-4 py-2 selected
                                                 ${index == sec4SelectedIndex
-                            ? "bg-primary !text-white border-primary"
-                            : " text-primary border-gray"
-                          } 
+                        ? "bg-primary !text-white border-primary"
+                        : " text-primary border-gray"
+                      } 
                                             hover:text-white hover:bg-primary`}
-                      >
-                        {item?.category?.name ? item?.category?.name : ""}
-                      </button>
-                    );
-                  }
-                )}
+                  >
+                    {item?.category?.name ? item?.category?.name : ""}
+                  </button>
+                );
+              }
+            )}
+          </div>
+          {!isSection4Visible ? (
+            <>
+              <ProductLoopMobile
+                productData={sec4SelectedProducts}
+                lang={isArabic}
+                isMobileOrTablet={true}
+                origin={origin}
+              />
+            </>
+          ) : (
+            <div className="animate-pulse">
+              <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
+                {[...Array(5)].map((_, i) => (
+                  <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
+                ))}
               </div>
-              {!isSection4Visible ? (
-              <>
-                <ProductLoopMobile
-                  productData={sec4SelectedProducts}
-                  lang={isArabic}
-                  isMobileOrTablet={true}
-                  origin={origin}
-                />
-              </>
-              ) : (
-                <div className="animate-pulse">
-                  <div className="tamkeenSales_cardss grid xl:grid-cols-5 lg:grid-cols-4 sm:grid-cols-2 xl:gap-x-3 xl:gap-y-0 gap-x-4 gap-y-8 items-center justify-center h-[380px] md:h-[550px] lg:h-[440px] overflow-hidden">
-                    {[...Array(5)].map((_, i) => (
-                      <div className="bg-white h-[380px] md:h-[550px] lg:h-[440px] rounded-2xl" key={i}></div>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {/* New Price Section */}
-              <div className="py-8">
-                <PriceSection isArabic={isArabic} isMobileOrTablet={true} origin={origin} />
-              </div>
-              {/* New Price Section */}
             </div>
-          </section>
-          {/* Section 2 End */}
-          <MainSliderMobile data={sec5Slider} lang={lang} origin={origin} />
+          )}
+          {/* New Price Section */}
+          <div className="py-8">
+            <PriceSection isArabic={isArabic} isMobileOrTablet={true} origin={origin} />
+          </div>
+          {/* New Price Section */}
+        </div>
+      </section>
+      {/* Section 2 End */}
+      <MainSliderMobile data={sec5Slider} lang={lang} origin={origin} />
 
       {/* Section 4 Start */}
       <section
@@ -825,39 +820,39 @@ export default function Homepage({ params }: { params: any }) {
         <div ref={section8Ref} className={`${containerClass}`} data-section="8">
           {isSection8Visible ? (
             <>
-                <div className="">
-                  <Link
-                    prefetch={false}
-                    scroll={false}
-                    href={`${origin}/${lang}/${sec8Link}`}
-                  >
-                    <Image
-                      alt={sec8Image}
-                      title={sec8Image}
-                      width={0}
-                      height={0}
-                      quality={100}
-                      decoding="async"
-                      data-nimg="1"
-                      loading="lazy"
-                      className="h-auto w-full mx-auto rounded-2xl mb-4"
-                      src={sec8Image}
-                      style={{ color: "transparent" }}
-                      sizes="100vw"
-                    />
-                  </Link>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h2 className="headingHomeMobile">{sec8Heading}</h2>
-                      <p className="md:paraHomeMain text-xs mt-1 md:mt-2 line-clamp-2">
-                        {sec8Para}
-                      </p>
-                    </div>
-                    <button className="btnPrimarySpecial transition-all duration-300 ease-in-out">
-                      {sec8ButtonTitle}
-                    </button>
+              <div className="">
+                <Link
+                  prefetch={false}
+                  scroll={false}
+                  href={`${origin}/${lang}/${sec8Link}`}
+                >
+                  <Image
+                    alt={sec8Image}
+                    title={sec8Image}
+                    width={0}
+                    height={0}
+                    quality={100}
+                    decoding="async"
+                    data-nimg="1"
+                    loading="lazy"
+                    className="h-auto w-full mx-auto rounded-2xl mb-4"
+                    src={sec8Image}
+                    style={{ color: "transparent" }}
+                    sizes="100vw"
+                  />
+                </Link>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="headingHomeMobile">{sec8Heading}</h2>
+                    <p className="md:paraHomeMain text-xs mt-1 md:mt-2 line-clamp-2">
+                      {sec8Para}
+                    </p>
                   </div>
+                  <button className="btnPrimarySpecial transition-all duration-300 ease-in-out">
+                    {sec8ButtonTitle}
+                  </button>
                 </div>
+              </div>
             </>
           ) : (
             <div className="animate-pulse w-full mb-8">
@@ -948,11 +943,11 @@ export default function Homepage({ params }: { params: any }) {
             <>
               <div className="main_banner flex gap-4 w-full">
                 <div className="banner_slider w-full overflow-hidden">
-                    <MainSliderMobile
-                      data={sec11Slider}
-                      lang={lang}
-                      origin={origin}
-                    />
+                  <MainSliderMobile
+                    data={sec11Slider}
+                    lang={lang}
+                    origin={origin}
+                  />
                 </div>
               </div>
             </>
@@ -1016,85 +1011,85 @@ export default function Homepage({ params }: { params: any }) {
                 }}
               >
                 <div className="felx flex-col space-y-3 sm:w-auto w-full">
-                    <div className="overflow-hidden rounded-2xl">
-                        <Link
-                            prefetch={false}
-                            scroll={false}
-                            href={`${origin}/${lang}/${sec13Link2}`}
-                            aria-label={`${origin}/${lang}`}
-                        >
-                            <Image
-                            alt="Built in Appliances"
-                            title="Built in Appliances"
-                            width={0}
-                            height={0}
-                            decoding="async"
-                            loading="lazy"
-                            sizes="100vw"
-                            quality={100}
-                            data-nimg="1"
-                            className="h-auto w-[27rem] mx-auto rounded-2xl hover:scale-110 transform transition-transform duration-500 ease-in-out"
-                            src={sec13Image2}
-                            style={{ color: "transparent" }}
-                            />
-                        </Link>
-                    </div>
-                    <div className="overflow-hidden rounded-2xl">
-                        <Link
-                            prefetch={false}
-                            scroll={false}
-                            href={`${origin}/${lang}/${sec13Link3}`}
-                            aria-label={`${origin}/${lang}`}
-                        >
-                            <Image
-                            alt="Built in Appliances"
-                            title="Built in Appliances"
-                            width={0}
-                            height={0}
-                            decoding="async"
-                            loading="lazy"
-                            sizes="100vw"
-                            quality={100}
-                            data-nimg="1"
-                            className="h-auto w-[27rem] mx-auto rounded-2xl hover:scale-110 transform transition-transform duration-500 ease-in-out"
-                            src={sec13Image3}
-                            style={{ color: "transparent" }}
-                            />
-                        </Link>
-                    </div>
+                  <div className="overflow-hidden rounded-2xl">
+                    <Link
+                      prefetch={false}
+                      scroll={false}
+                      href={`${origin}/${lang}/${sec13Link2}`}
+                      aria-label={`${origin}/${lang}`}
+                    >
+                      <Image
+                        alt="Built in Appliances"
+                        title="Built in Appliances"
+                        width={0}
+                        height={0}
+                        decoding="async"
+                        loading="lazy"
+                        sizes="100vw"
+                        quality={100}
+                        data-nimg="1"
+                        className="h-auto w-[27rem] mx-auto rounded-2xl hover:scale-110 transform transition-transform duration-500 ease-in-out"
+                        src={sec13Image2}
+                        style={{ color: "transparent" }}
+                      />
+                    </Link>
+                  </div>
+                  <div className="overflow-hidden rounded-2xl">
+                    <Link
+                      prefetch={false}
+                      scroll={false}
+                      href={`${origin}/${lang}/${sec13Link3}`}
+                      aria-label={`${origin}/${lang}`}
+                    >
+                      <Image
+                        alt="Built in Appliances"
+                        title="Built in Appliances"
+                        width={0}
+                        height={0}
+                        decoding="async"
+                        loading="lazy"
+                        sizes="100vw"
+                        quality={100}
+                        data-nimg="1"
+                        className="h-auto w-[27rem] mx-auto rounded-2xl hover:scale-110 transform transition-transform duration-500 ease-in-out"
+                        src={sec13Image3}
+                        style={{ color: "transparent" }}
+                      />
+                    </Link>
+                  </div>
                 </div>
                 <div className="overflow-hidden rounded-2xl sm:w-auto md:w-auto">
-                    <Link
+                  <Link
                     prefetch={false}
                     scroll={false}
                     href={`${origin}/${lang}/${sec13Link1}`}
                     aria-label={`${origin}/${lang}`}
-                    >
-                        <Image
-                            alt="Built in Appliances"
-                            title="Built in Appliances"
-                            width={0}
-                            height={0}
-                            decoding="async"
-                            sizes="100vw"
-                            quality={100}
-                            loading="lazy"
-                            data-nimg="1"
-                            className="h-auto w-64 mx-auto rounded-2xl hover:scale-110 transform transition-transform duration-500 ease-in-out"
-                            src={sec13Image1}
-                            style={{ color: "transparent" }}
-                        />
-                    </Link>
+                  >
+                    <Image
+                      alt="Built in Appliances"
+                      title="Built in Appliances"
+                      width={0}
+                      height={0}
+                      decoding="async"
+                      sizes="100vw"
+                      quality={100}
+                      loading="lazy"
+                      data-nimg="1"
+                      className="h-auto w-64 mx-auto rounded-2xl hover:scale-110 transform transition-transform duration-500 ease-in-out"
+                      src={sec13Image1}
+                      style={{ color: "transparent" }}
+                    />
+                  </Link>
                 </div>
                 <button className="btnPrimarySpecial absolute ltr:left-8 rtl:right-8 bottom-4 !py-[0.5rem] !px-[1.5rem]">
-                    <Link
+                  <Link
                     prefetch={false}
                     scroll={false}
                     href={`${origin}/${lang}/${sec13ButtonLink}`}
                     aria-label={`${origin}/${lang}`}
-                    >
+                  >
                     {sec13ButtonTitle}
-                    </Link>
+                  </Link>
                 </button>
               </div>
             </>
@@ -1322,9 +1317,9 @@ export default function Homepage({ params }: { params: any }) {
             <div className="main_banner flex gap-4 w-full">
               <div className="banner_slider w-full overflow-hidden">
                 <MainSliderMobile
-                    data={sec14Slider}
-                    lang={lang}
-                    origin={origin}
+                  data={sec14Slider}
+                  lang={lang}
+                  origin={origin}
                 />
               </div>
             </div>

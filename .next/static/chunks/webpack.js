@@ -197,7 +197,7 @@
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	!function() {
-/******/ 		__webpack_require__.h = function() { return "1e07cdef1d1d927a"; }
+/******/ 		__webpack_require__.h = function() { return "9970bad4aa516cb3"; }
 /******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/global */
@@ -797,7 +797,7 @@
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.miniCss = function(chunkId, promises) {
-/******/ 			var cssChunks = {"_app-pages-browser_app_lang_components_HomePageComponents_CategoriesHomeMobile_tsx":1,"_app-pages-browser_app_lang_components_HomePageComponents_HomeStyleVideoSectionMobile_tsx":1,"_app-pages-browser_app_lang_components_HomePageComponents_ThreeImageHalfPara_tsx":1,"_app-pages-browser_app_lang_components_HomePageComponents_ProductSliderMobile_tsx-_74770":1,"_app-pages-browser_app_lang_components_HomePageComponents_BestProductsMobile_tsx":1,"_app-pages-browser_app_lang_components_HomePageComponents_ProductSliderMobile_tsx-_74771":1};
+/******/ 			var cssChunks = {"_app-pages-browser_app_lang_components_NewHomePageComp_ProductSlider_tsx":1,"_app-pages-browser_app_lang_components_NewHomePageComp_BadgeProductSlider_tsx":1,"_app-pages-browser_app_lang_components_NewHomePageComp_PriceSection_tsx":1,"_app-pages-browser_app_lang_components_NewHomePageComp_BrandSlider_tsx":1,"_app-pages-browser_app_lang_components_NewHomePageComp_BadgeProductLoop_tsx":1,"_app-pages-browser_app_lang_components_NewHomePageComp_MainSliderMobile_tsx":1,"_app-pages-browser_app_lang_components_NewHomePageComp_CategoriesHomeMobile_tsx":1,"_app-pages-browser_app_lang_components_NewHomePageComp_ProductLoopMobile_tsx":1};
 /******/ 			if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 			else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 				promises.push(installedCssChunks[chunkId] = loadStylesheet(chunkId).then(function() {

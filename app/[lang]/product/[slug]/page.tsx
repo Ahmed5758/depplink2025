@@ -4,7 +4,6 @@ import React, { useEffect, useState, Fragment, useRef, useContext } from 'react'
 import moment from 'moment'
 import Link from 'next/link'
 import Image from 'next/image'
-import Select from 'react-select'
 import dynamic from 'next/dynamic'
 import { NewMedia } from '../../api/Api'
 import { RWebShare } from "react-web-share"
@@ -15,17 +14,13 @@ import { usePathname } from "next/navigation"
 import { useRouter } from 'next-nprogress-bar';
 import { Dialog, Transition, RadioGroup } from '@headlessui/react'
 import Swal from 'sweetalert2'
-import { Tab } from '@headlessui/react';
 import withReactContent from 'sweetalert2-react-content'
 import { Disclosure } from '@headlessui/react'
-import Script from 'next/script';
 import GlobalContext from '../../GlobalContext'
-import PickupStorePopup from '../../components/PickupStorePopup';
 
 const LoginSingup = dynamic(() => import('../../components/LoginSignup'), { ssr: false })
 const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ssr: true })
 const RatingComponent = dynamic(() => import('../../components/ProductComponents/Rating'), { ssr: false })
-const ProductSliderMobile = dynamic(() => import('../../components/HomePageComponents/ProductSliderMobile'), { ssr: true })
 const ProductSliderComponent = dynamic(() => import("../../components/NewHomePageComp/ProductSlider"), { ssr: false });
 
 export default function Product({ params, searchParams }: { params: { lang: string, data: any, devicetype: any }, searchParams: any }) {
@@ -86,31 +81,9 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     const [expDelivery, setexpDelivery] = useState<any>(true)
     const [CheckexpDelivery, setCheckexpDelivery] = useState<any>(true)
 
-    // Pickup From Store
-    // const { globalStore, setglobalStore } = useContext<any>(GlobalContext);
-    // const [allStores, setallStores] = useState<any>([])
-    // const [isOpenModal, setIsOpenModal] = useState<any>(false)
-    // const [foundStore, setfoundStore] = useState<any>(false)
-    // const [storeSearch, setstoreSearch] = useState<any>('')
-
     const { updateCompare, setUpdateCompare } = useContext(GlobalContext);
     const { updateWishlist, setUpdateWishlist } = useContext(GlobalContext);
 
-
-    {/* Commented Pickup Store */ }
-    // Store Data
-    // const getStoreData = () => {
-    //     get(`pickup-from-store/${params.data?.data?.sku}/${localStorage.getItem('globalStore') ? localStorage.getItem('globalStore') : localStorage.getItem('globalcity')}/${localStorage.getItem('globalStore') ? 1 : 0}`).then((responseJson: any) => {
-    //         if (responseJson?.warehouse_single) {
-    //             setfoundStore(true)
-    //             setglobalStore(responseJson?.warehouse_single)
-    //             localStorage.setItem('globalStore', responseJson?.warehouse_single?.id)
-    //         }
-    //         if (responseJson?.warehouse) {
-    //             setallStores(responseJson?.warehouse)
-    //         }
-    //     })
-    // }
 
     const scrollTop = () => {
         if (scrollContainerRef.current) {
@@ -142,7 +115,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         if (!params?.devicetype)
             router.refresh()
     }, [params])
-    
+
     useEffect(() => {
 
         (async () => {
@@ -226,14 +199,14 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         const difference: any = end - now;
 
         if (difference <= 0) {
-        return { expired: true };
+            return { expired: true };
         }
 
         return {
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-        expired: false
+            hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+            minutes: Math.floor((difference / 1000 / 60) % 60),
+            seconds: Math.floor((difference / 1000) % 60),
+            expired: false
         };
     }
 
@@ -288,15 +261,6 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                     setWishlistProduct(true)
                 }
             }
-            // var data = {
-            // user_id: localStorage.getItem("userid"),
-            // product_id: params.data?.data?.id,
-            // }
-            // post('checkwishlistproduct', data).then((responseJson: any) => {
-            // if (responseJson?.success) {
-            // setWishlistProduct(true)
-            // }
-            // })
         }
         else {
             setWishlistProduct(false)
@@ -304,30 +268,30 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     }
 
     const isStoreOpen = (
-        openTime: string, 
-        closeTime: string, 
-        fridayOpenTime?: string, 
+        openTime: string,
+        closeTime: string,
+        fridayOpenTime?: string,
         fridayCloseTime?: string
     ) => {
         if (!openTime || !closeTime) return false;
-    
+
         const parseTime = (time: string) => {
             const [hours, minutes] = time.split(":").map(Number);
             return hours * 60 + minutes; // Convert to total minutes
         };
-    
+
         const now = new Date();
         now.setHours(now.getHours() + 2); // Add 2 hours to current time
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
         const isFriday = now.getDay() === 5; // 5 represents Friday
-    
+
         // Use Friday's timings if today is Friday and specific timings are provided
         const storeOpen = isFriday && fridayOpenTime ? parseTime(fridayOpenTime) : parseTime(openTime);
         const storeClose = isFriday && fridayCloseTime ? parseTime(fridayCloseTime) : parseTime(closeTime);
-    
+
         return currentMinutes >= storeOpen && currentMinutes <= storeClose;
     };
-    
+
 
     const checkPriceAlertProduct = () => {
         if (localStorage.getItem("userid")) {
@@ -413,16 +377,6 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                     setCompareProduct(true)
                 }
             }
-            // var data = {
-            // user_id: localStorage.getItem("userid"),
-            // product_id: params.data?.data?.id,
-            // }
-            // post('checkcompareproduct', data).then((responseJson: any) => {
-            // if (responseJson?.success) {
-            // setCompareProduct(true)
-
-            // }
-            // })
         }
         else {
             setCompareProduct(false)
@@ -1141,7 +1095,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
     const getDiscountedPrice = () => {
         var salePrice = data?.sale_price > 0 ? data?.sale_price : data?.price;
-        if(data?.promotional_price > 0) {
+        if (data?.promotional_price > 0) {
             salePrice = Math.max(
                 0,
                 Number(salePrice) - Number(data?.promotional_price)
@@ -1187,12 +1141,12 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     if (data?.flash_sale_expiry && data?.flash_sale_price) {
         var timer = calculateTimeLeft(data?.flash_sale_expiry);
         if (!timer?.expired) {
-        productFlashSalePriceStatus = 1;
-        productFlashSalePrice = data?.flash_sale_price;
-        productFlashSaleTimer = `${timer?.hours}{" "}:{" "}${timer?.minutes}{" "}:{" "}${timer?.seconds}`;
-        if (data) {
-            data.sale_price = data.flash_sale_price;
-        }
+            productFlashSalePriceStatus = 1;
+            productFlashSalePrice = data?.flash_sale_price;
+            productFlashSaleTimer = `${timer?.hours}{" "}:{" "}${timer?.minutes}{" "}:{" "}${timer?.seconds}`;
+            if (data) {
+                data.sale_price = data.flash_sale_price;
+            }
         }
     }
 
@@ -1200,10 +1154,10 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         data?.promotional_price == null ? 0 : 1; // 1 for sale, 0 for no sale This is for dummy value only
     const salePormotionText =
         salePormotionPriceSatus > 0 && productFlashSalePriceStatus == 0
-        ? isArabic
-            ? data?.promo_title_arabic
-            : data?.promo_title
-        : "";
+            ? isArabic
+                ? data?.promo_title_arabic
+                : data?.promo_title
+            : "";
 
 
     return (
@@ -1261,25 +1215,25 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         <>
                                             {data?.sale_price ?
                                                 <div className='text-[#EA4335] text-xs absolute ltr:right-0 rtl:left-0 top-0 bg-[#EA433520] md:px-3.5 px-2 py-1 rtl:rounded-tl-lg rtl:rounded-br-lg ltr:rounded-bl-lg ltr:rounded-tr-lg'>
-                                                {data?.save_type === 1 ?
-                                                    isArabic ?
-                                                        `خصم %${Math.round(((data?.price - flashCalc) * 100) / data?.price)}` :
-                                                        `OFF ${Math.round(((data?.price - flashCalc) * 100) / data?.price)} %`
-                                                    :
-                                                    isArabic ?
-                                                    <div className='flex gap-x-1 items-center'>
-                                                        {'وفر '}
-                                                        { (data?.price - flashCalc).toLocaleString('EN-US') }
-                                                        {currencySmallSymbol}
-                                                    </div> :
-                                                    <div className='flex gap-x-1 items-center'>
-                                                        {'Save '}
-                                                        { (data?.price - flashCalc).toLocaleString('EN-US') }
-                                                        {currencySmallSymbol}
-                                                    </div>
-                                                }
+                                                    {data?.save_type === 1 ?
+                                                        isArabic ?
+                                                            `خصم %${Math.round(((data?.price - flashCalc) * 100) / data?.price)}` :
+                                                            `OFF ${Math.round(((data?.price - flashCalc) * 100) / data?.price)} %`
+                                                        :
+                                                        isArabic ?
+                                                            <div className='flex gap-x-1 items-center'>
+                                                                {'وفر '}
+                                                                {(data?.price - flashCalc).toLocaleString('EN-US')}
+                                                                {currencySmallSymbol}
+                                                            </div> :
+                                                            <div className='flex gap-x-1 items-center'>
+                                                                {'Save '}
+                                                                {(data?.price - flashCalc).toLocaleString('EN-US')}
+                                                                {currencySmallSymbol}
+                                                            </div>
+                                                    }
                                                 </div>
-                                            : null}
+                                                : null}
                                         </>
                                     </div>
                                 </button>
@@ -1379,16 +1333,18 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         {getFormattedPrice(getOriginalPrice())}
                                     </span>
                                 )}
-                                {data?.promotional_price > 0 ?
-                                    <p className="text-[#DC4E4E] text-xs mt-0.5 font-bold animationImp">{isArabic ? data?.promo_title_arabic : data?.promo_title}</p>
-                                    :
-                                    null
-                                }
                             </h2>
                             {data?.quantity == 0 || data?.quantity == null ?
                                 <p className="text-[#DC4E4E] text-sm">{isArabic ? 'المنتج غير متوفر في منطقتك' : 'Out of Stock in your city'}</p>
                                 :
                                 <p className="text-primary text-xs">{isArabic ? ' متبقي' : ''} <span className="text-[#219EBC] font-bold">{data?.quantity ? data?.quantity : '0'} {isArabic ? ' قطع' : ''}</span> {isArabic ? ' فقط في المتجر' : 'Quantity left'}</p>
+                            }
+                        </div>
+                        <div>
+                            {data?.promotional_price > 0 ?
+                                <p className="text-[#DC4E4E] text-xs mt-0.5 font-bold animationImp">{isArabic ? data?.promo_title_arabic : data?.promo_title}</p>
+                                :
+                                null
                             }
                         </div>
                         <hr className='my-2 opacity-5' />
@@ -1725,14 +1681,14 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                             </div>
                         </>
                         : null}
-                {/* Up Sale Products */}
-                {upsaleproductdata?.products?.data?.length > 0 ?
-                    <>
-                        <div className='my-6 relative'>
-                        <ProductSliderComponent origin={origin} sliderHeading={isArabic ? 'المنتجات الموصى بها' : 'Recommended Products'} dict={dict.products} productDataSlider={upsaleproductdata} headingRequired={true} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic}/>
-                        </div>
-                    </>
-                    : null}
+                    {/* Up Sale Products */}
+                    {upsaleproductdata?.products?.data?.length > 0 ?
+                        <>
+                            <div className='my-6 relative'>
+                                <ProductSliderComponent origin={origin} sliderHeading={isArabic ? 'المنتجات الموصى بها' : 'Recommended Products'} dict={dict.products} productDataSlider={upsaleproductdata} headingRequired={true} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic} />
+                            </div>
+                        </>
+                        : null}
                 </div>
             </div >
 
@@ -1932,7 +1888,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                     <div className='my-6 relative'>
                         <h3 className='text-base  font-semibold'>{isArabic ? 'منـتجات مشـابهـة' : 'Related Products'}</h3>
                         <div className='mt-2 pb-2'>
-                            <ProductSliderComponent origin={origin} dict={dict.products} productDataSlider={productdata} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic}/>
+                            <ProductSliderComponent origin={origin} dict={dict.products} productDataSlider={productdata} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic} />
                         </div>
                     </div>
                     : null

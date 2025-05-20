@@ -25,6 +25,19 @@ const config: Config = {
       'red': "#EA4335",
       'greenDark': "#14AE5C",
       'specialDarkYellow': "#E89B3B",
+      'orangePrice': "#F0660C",
+    },
+    rounded: {
+      'none': '0',
+      'sm': '0.125rem',
+      'DEFAULT': '0.25rem',
+      'md': '0.375rem',
+      'lg': '0.5rem',
+      'full': '9999px',
+      'xl': '0.75rem',
+      '2xl': '1rem',
+      '3xl': '1.5rem',
+      '4xl': '2rem',
     },
     extend: {
       fontFamily: {
@@ -35,6 +48,9 @@ const config: Config = {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      },
+      boxShadow: {
+        'brandShadow': '6px -8px 15px 1px rgba(255, 255, 255, 0.8)',
       },
       animation: {
         'spin-slow': 'spin 3s linear infinite',

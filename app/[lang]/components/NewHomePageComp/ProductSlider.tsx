@@ -58,42 +58,6 @@ export default function ProductSliderComponent(props: any) {
             {props?.buttonTitle}
           </Link>
         </div>
-        {isMobileOrTablet ? null :
-          <>
-            <button ref={prevRef} className={`absolute top-1/2 translate-middle-y z-10 cursor-pointer fill-white p-2.5 left-1 md:p-3 md:left-7 bg-primary rounded-full`}>
-              <svg
-                height={isMobileOrTablet ? "18" : "22"}
-                viewBox="0 0 24 24"
-                width={isMobileOrTablet ? "18" : "22"}
-                xmlns="http://www.w3.org/2000/svg"
-                id="fi_10486749"
-                className="fill-current transform transition duration-150 ease-in-out rotate-90"
-              >
-                <path
-                  clipRule="evenodd"
-                  d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
-                  fillRule="evenodd"
-                ></path>
-              </svg>
-            </button>
-            <button ref={nextRef} className={`absolute top-1/2 translate-middle-y z-10 cursor-pointer fill-white p-2.5 right-1 md:p-3 md:right-7 bg-primary rounded-full`}>
-              <svg
-                height={isMobileOrTablet ? "18" : "22"}
-                viewBox="0 0 24 24"
-                width={isMobileOrTablet ? "18" : "22"}
-                xmlns="http://www.w3.org/2000/svg"
-                id="fi_10486750"
-                className="fill-current transform transition duration-150 ease-in-out -rotate-90"
-              >
-                <path
-                  clipRule="evenodd"
-                  d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
-                  fillRule="evenodd"
-                ></path>
-              </svg>
-            </button>
-          </>
-        }
       </div>
       <div className={`${containerClassMobile}`}>
         <Swiper
