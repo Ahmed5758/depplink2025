@@ -3,13 +3,14 @@ import { redirect } from 'next/navigation'
 import { cache } from 'react';
 import { headers,cookies } from 'next/headers'
 import next from "next";
+import { cacheKey } from '../../GlobalVar';
 
 const fetcher = cache(async (params: any) => {
     const { slug } = params;
     const cookieStore = cookies();
     const city = cookieStore.get('selectedCity')?.value || 'Jeddah';
 
-    const res = await fetch(`${Api}/product-regional-new-copy/${slug}/${city}?update19May303404`, {
+    const res = await fetch(`${Api}/product-regional-new-copy/${slug}/${city}?${cacheKey}`, {
         next: { revalidate: 86400 }, // Cache for 24 hours
     });
 

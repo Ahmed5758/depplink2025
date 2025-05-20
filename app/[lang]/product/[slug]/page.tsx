@@ -1725,15 +1725,15 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                             </div>
                         </>
                         : null}
-                </div>
                 {/* Up Sale Products */}
                 {upsaleproductdata?.products?.data?.length > 0 ?
                     <>
-                        <div className='my-6'>
-                           <ProductSliderComponent origin={origin} sliderHeading={isArabic ? 'المنتجات الموصى بها' : 'Recommended Products'} dict={dict.products} productDataSlider={upsaleproductdata} headingRequired={true} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic}/>
+                        <div className='my-6 relative'>
+                        <ProductSliderComponent origin={origin} sliderHeading={isArabic ? 'المنتجات الموصى بها' : 'Recommended Products'} dict={dict.products} productDataSlider={upsaleproductdata} headingRequired={true} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic}/>
                         </div>
                     </>
                     : null}
+                </div>
             </div >
 
             {
@@ -1929,7 +1929,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
             {/* Related Products */}
             {
                 productdata?.products?.data?.length > 0 ?
-                    <div className='my-6'>
+                    <div className='my-6 relative'>
                         <h3 className='text-base  font-semibold'>{isArabic ? 'منـتجات مشـابهـة' : 'Related Products'}</h3>
                         <div className='mt-2 pb-2'>
                             <ProductSliderComponent origin={origin} dict={dict.products} productDataSlider={productdata} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic}/>

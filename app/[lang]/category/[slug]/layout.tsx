@@ -2,6 +2,7 @@ import { get } from "../../api/ApiCalls";
 import { Api } from "../../api/Api";
 import { permanentRedirect, redirect } from 'next/navigation'
 import { headers,cookies } from 'next/headers'
+import { cacheKey } from '../../GlobalVar';
 
 type Props = {
   params: { slug: string, data: any, lang: string }
@@ -19,7 +20,7 @@ const fetcher = async (params: any, query: any = false) => {
   var data;
   const cookieStore = cookies();
   const city = cookieStore.get('selectedCity')?.value || 'Jeddah';
-  var url = `category-products-regional-new/${slug}/${city}?v=dataupdated&lang=${params.lang}`
+  var url = `category-products-regional-new/${slug}/${city}?v=dataupdated&lang=${params.lang}&${cacheKey}`;
   var result = '';
   if (query) {
     result = '&' + new URLSearchParams(query).toString();
