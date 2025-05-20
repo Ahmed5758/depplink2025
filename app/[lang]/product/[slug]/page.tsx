@@ -26,12 +26,14 @@ const LoginSingup = dynamic(() => import('../../components/LoginSignup'), { ssr:
 const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ssr: true })
 const RatingComponent = dynamic(() => import('../../components/ProductComponents/Rating'), { ssr: false })
 const ProductSliderMobile = dynamic(() => import('../../components/HomePageComponents/ProductSliderMobile'), { ssr: true })
+const ProductSliderComponent = dynamic(() => import("../../components/NewHomePageComp/ProductSlider"), { ssr: false });
 
 export default function Product({ params, searchParams }: { params: { lang: string, data: any, devicetype: any }, searchParams: any }) {
     const [dict, setDict] = useState<any>([]);
     const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(
         "left-to-right"
     );
+    const isMobileOrTablet = true;
     const [isOpen, setIsOpen] = useState<any>(false)
     const [FbtisOpen, setFbtisOpen] = useState<any>(false)
     const [imageZoom, setImageZoom] = useState<boolean>(false)
@@ -43,8 +45,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     const [PriceAlertProduct, setPriceAlertProduct] = useState<any>(false)
     const [StockAlertProduct, setStockAlertProduct] = useState<any>(false)
     const [data, setData] = useState<any>(params?.data?.data);
-    const [productdata, setProductData] = useState<any>(params?.data?.productdata?.products?.data);
-    const [upsaleproductdata, setUpSaleProductData] = useState<any>(params?.data?.upsaleproductData?.products?.data);
+    const [productdata, setProductData] = useState<any>(params?.data?.productdata);
+    const [upsaleproductdata, setUpSaleProductData] = useState<any>(params?.data?.upsaleproductData);
     const [highestviewprodata, setHighestViewProData] = useState<any>(params?.data?.highestviewedpros?.products?.data);
     const [productimage, setProductImage] = useState<any>(NewMedia + params?.data?.data?.featured_image?.image);
     const [gallerylength, setGalleryLength] = useState<any>(params?.data?.data?.gallery.length);
@@ -1725,10 +1727,10 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                         : null}
                 </div>
                 {/* Up Sale Products */}
-                {upsaleproductdata?.length > 0 ?
+                {upsaleproductdata?.products?.data?.length > 0 ?
                     <>
                         <div className='my-6'>
-                            <ProductSliderMobile origin={origin} title={isArabic ? 'المنتجات الموصى بها' : 'Recommended Products'} titleSlider={isArabic ? 'المنتجات الموصى بها' : 'Recommended Products'} lang={params.lang == 'ar' ? true : false} dict={dict.products} products={upsaleproductdata} devicetype={params?.devicetype} headingRequired={true} />
+                           <ProductSliderComponent origin={origin} sliderHeading={isArabic ? 'المنتجات الموصى بها' : 'Recommended Products'} dict={dict.products} productDataSlider={upsaleproductdata} headingRequired={true} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic}/>
                         </div>
                     </>
                     : null}
@@ -1926,11 +1928,11 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
             {/* Related Products */}
             {
-                productdata?.length > 0 ?
+                productdata?.products?.data?.length > 0 ?
                     <div className='my-6'>
                         <h3 className='text-base  font-semibold'>{isArabic ? 'منـتجات مشـابهـة' : 'Related Products'}</h3>
                         <div className='mt-2 pb-2'>
-                            <ProductSliderMobile origin={origin} lang={params.lang} dict={dict.products} products={productdata} devicetype={params?.devicetype} />
+                            <ProductSliderComponent origin={origin} dict={dict.products} productDataSlider={productdata} isMobileOrTablet={isMobileOrTablet} isArabic={isArabic}/>
                         </div>
                     </div>
                     : null

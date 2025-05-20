@@ -2335,9 +2335,41 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 	}
 
 	.specificationImagesProduct {
-		height: 18px;
-		width: 26px;
+		height: 15.5px;
+		width: 21px;
 		object-fit: contain;
 	}
-
+.headingHomeMain {
+	font-size: 1rem;
+}
+.rating_div {
+	padding-block: 3px;
+}
+.rating_div svg{
+	width: 7px;
+	height: 7px;
+}
+.afterDiscount{
+	font-size: 10px;
+}
+.offerPercent,.realPrice,.animated_orangePrice,.productDesc,.rating_div span{
+	font-size: 7px;
+}
+.productDesc{
+	line-height: normal;
+	height: 18px;
+}
+.paymentText{
+	font-size: 5px;
+}
+.prodTop_verticalImgs{
+	top: 2.7rem;
+}
+.productRedOrangeBtns button{
+	padding: 4px !important;
+}
+.productRedOrangeBtns button svg{
+	width: 10px;
+	height: 10px;
+}
 }

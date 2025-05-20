@@ -624,10 +624,13 @@ export default function product_component(props: any) {
         </div>
         <div className="proBox relative z-20 !min-h-full !rounded-2xl shadow-md">
           <div className="tamkeenProduct_card_header flex justify-between items-center px-2">
-            <div className={`flex flex-col gap-1 items-start absolute z-10 ${productBadgeInsideText ? "top-0" : "top-[12px]"} rtl:right-0 ltr:left-0`}>
+            <div
+              className={`flex flex-col sm:gap-1 gap-0 items-start absolute z-10 ${productBadgeInsideText ? "top-0" : "top-[0]"
+                } rtl:right-0 ltr:left-0`}
+            >
               {productBadgeInsideText ? (
                 <div
-                  className={`md:text-xs text-[0.55rem] font-semibold py-[.5px] md:px-[1.3rem] px-3 ltr:rounded-tl-xl ltr:rounded-br-xl rtl:rounded-bl-xl rtl:rounded-tr-xl w-fit`}
+                  className={`md:text-xs sm:text-[0.55rem] text-[0.4rem] font-semibold py-[.5px] md:px-[1.3rem] px-3 ltr:rounded-tl-xl ltr:rounded-br-xl rtl:rounded-bl-xl rtl:rounded-tr-xl w-fit`}
                   style={{
                     backgroundColor: `${productBadgeRightBackgroundColor}25`,
                     color: productBadgeRightBackgroundColor,
@@ -636,10 +639,10 @@ export default function product_component(props: any) {
                   {productBadgeInsideText}
                 </div>
               ) :
-                <div className="h-[1.2rem]"></div>
+                <div className="h-[1rem]"></div>
               }
               {productData?.totalrating > 0 ? (
-                <div className="flex items-center gap-x-1 bg-gray/10 px-2 py-1 ltr:rounded-tr-xl ltr:rounded-br-xl rtl:rounded-tl-xl rtl:rounded-bl-xl">
+                <div className="rating_div flex items-center gap-x-1 bg-gray/10 px-2 py-1 ltr:rounded-tr-xl ltr:rounded-br-xl rtl:rounded-tl-xl rtl:rounded-bl-xl">
                   <svg
                     height="12"
                     width="12"
@@ -655,7 +658,7 @@ export default function product_component(props: any) {
                 </div>
               ) : null}
             </div>
-            <div className="flex items-center gap-x-2 z-10 absolute top-3 rtl:left-3 ltr:right-3">
+            <div className="productRedOrangeBtns h-8 flex items-center gap-x-2 z-10 absolute sm:top-3 top-2 rtl:left-3 ltr:right-3">
               <button
                 className={`productSliderBtns hover:!bg-red hover:!text !p-2 transition-all duration-300 ease-in-out ${ProWishlistData.filter((item: any) => item == productData?.id)
                   .length >= 1
@@ -715,7 +718,7 @@ export default function product_component(props: any) {
               {productSpecificationImageOne || productSpecificationImageTwo || productSpecificationImageThree ||
                 productSpecificationImageFour || productSpecificationImageFive || productSpecificationImageSix ? (
                 <>
-                  <div className="flex flex-col gap-1 absolute left-0 top-14">
+                  <div className="prodTop_verticalImgs flex flex-col gap-1 absolute left-0 top-14">
                     {productSpecificationImageOne ?
                       <Image
                         src={productSpecificationImageOne}
@@ -821,7 +824,7 @@ export default function product_component(props: any) {
                 </div>
             </div>
             <div className="tamkeenProduct_card_body mb-1">
-              <h2 className="md:mb-4 mb-1 text-[0.65rem] text-start sm:text-xs 2xl:text-sm line-clamp-2 font-semibold 2xl:h-[2.5rem] h-[2rem]">
+              <h2 className="productDesc md:mb-4 mb-1 text-[0.65rem] text-start sm:text-xs 2xl:text-sm line-clamp-2 font-semibold 2xl:h-[2.5rem] h-[2rem]">
                 <span className='font-[900] after:content-["•"]'>
                   {productBrand}{" "}
                 </span>{" "}
@@ -830,7 +833,7 @@ export default function product_component(props: any) {
               <div className="px-2 pb-2 pt-1 rounded-md relative md:h-[63px] h-[56px]" style={{ backgroundColor: productBadgeBackgroundColor }}>
                 <div className="align__center">
                   <div className="">
-                    <h3 className="md:text-base text-sm font-[900] text-orangePrice">
+                    <h3 className="afterDiscount md:text-base text-sm font-[900] text-orangePrice">
                       <div className="flex gap-1 items-center">
                         {productSalePrice > 0 ?
                           <>
@@ -862,7 +865,7 @@ export default function product_component(props: any) {
                     <div className="flex items-center mt-0.5]">
                       {productSalePrice > 0 ?
                         <>
-                          <h3 className="md:text-xs text-[0.65rem] text-gray-500 line-through decoration-double decoration-red leading-3 flex items-center gap-x-0.5">
+                          <h3 className="realPrice md:text-xs text-[0.65rem] text-gray-500 line-through decoration-double decoration-red leading-3 flex items-center gap-x-0.5">
                             {productRegularPrice}
                             <svg
                               className="riyal-svg"
@@ -882,7 +885,9 @@ export default function product_component(props: any) {
                             </svg>
                           </h3>
                           <h4 className="absolute ltr:right-0 rtl:left-0 top-2">
-                            <div className={`text-[0.65rem] md:text-xs font-bold px-1 md:px-2 py-1 bg-white ltr:rounded-tl-md rtl:rounded-br-md rtl:rounded-tr-md ltr:rounded-bl-md`}>
+                            <div
+                              className={`offerPercent text-[0.65rem] md:text-xs font-bold px-1 md:px-2 py-1 bg-white ltr:rounded-tl-md rtl:rounded-br-md rtl:rounded-tr-md ltr:rounded-bl-md`}
+                            >
                               <span className="text-dark flex items-center gap-1">{productDiscountValue}{" "}{productDiscountType}</span>
                             </div>
                           </h4>
@@ -891,7 +896,7 @@ export default function product_component(props: any) {
                     </div>
                   </div>
                 </div>
-                <span className="text-orangePrice text-[0.55rem] md:text-xs font-bold animationImp">
+                <span className="animated_orangePrice text-orangePrice text-[0.55rem] md:text-xs font-bold animationImp">
                   {salePormotionText}
                 </span>
               </div>
@@ -900,7 +905,11 @@ export default function product_component(props: any) {
                   className={`rounded-md grow overflow-hidden p-1 w-full`}
                   style={{ backgroundColor: productBadgeBackgroundColor }}
                 >
-                  <h3 className={`font-bold md:text-[0.619rem] text-[0.50rem] mb-1 ${ProExtraData?.freegiftData && giftAvailableImage != null ? "" : "text-center"} line-clamp-1 overflow-hidden`}>
+                  <h3 className={`paymentText font-bold md:text-[0.619rem] text-[0.50rem] mb-1 ${ProExtraData?.freegiftData && giftAvailableImage != null
+                      ? ""
+                      : "text-center"
+                      } line-clamp-1 overflow-hidden`}
+                  >
                     {installmentMethodsText}
                   </h3>
                   <Image
