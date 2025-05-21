@@ -61,7 +61,7 @@ const TamkeenServices = (props: any) => {
                     },
                 ].map((service, index) => (
                     <div key={index}>
-                        <Link href={service?.route} aria-label={service.title} className='flex'>
+                        <Link href={service?.route} aria-label={service.title} prefetch={false} scroll={false} className='flex'>
                             <div className='flex items-center gap-2'>
                                 <Image
                                     src={service.imgSrc}
@@ -78,16 +78,6 @@ const TamkeenServices = (props: any) => {
                                 </div>
                             </div>
                         </Link>
-                        {/* <p className="para__xs">{service.description}</p> */}
-                        {/* <div className='mt-6'>
-                            <Link
-                                href={service?.route}
-                                className="readmore__btn"
-                                aria-label={service.title}
-                            >
-                                {isArabic ? 'الحصول علي الخدمة' : 'Read More Details'}
-                            </Link>
-                        </div> */}
                     </div>
                 ))}
             </div>
