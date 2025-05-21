@@ -581,7 +581,7 @@ export default function product_component(props: any) {
     }
   }
 
-  const giftAvailableImage = ProExtraData?.freegiftData?.image ? NewMedia + ProExtraData?.freegiftData?.image : null
+  const giftAvailableImage = productData?.gift_image ? productData?.gift_image : null;
 
   const productImgSkeleton: any = (
     <div className="2xl:w-[302px] xl:w-[200px] lg:w-[170px] md:w-[140px] sm:w-[240px w-[130px] 2xl:h-[302px] xl:h-[200px] lg:h-[170px] md:h-[140px] sm:h-[240px] h-[130px] bg-primary/10 animate-pulse mx-auto rounded-2xl"></div>
@@ -900,12 +900,12 @@ export default function product_component(props: any) {
                   {salePormotionText}
                 </span>
               </div>
-              <div className={`mt-1 flex items-center justify-between ${ProExtraData?.freegiftData && giftAvailableImage != null ? "gap-x-1" : ""}`}>
+              <div className={`mt-1 flex items-center justify-between ${giftAvailableImage != null ? "gap-x-1" : ""}`}>
                 <div
                   className={`rounded-md grow overflow-hidden p-1 w-full`}
                   style={{ backgroundColor: productBadgeBackgroundColor }}
                 >
-                  <h3 className={`paymentText font-bold md:text-[0.619rem] text-[0.50rem] mb-1 ${ProExtraData?.freegiftData && giftAvailableImage != null
+                  <h3 className={`paymentText font-bold md:text-[0.619rem] text-[0.50rem] mb-1 ${giftAvailableImage != null
                       ? ""
                       : "text-center"
                       } line-clamp-1 overflow-hidden`}
@@ -927,7 +927,7 @@ export default function product_component(props: any) {
                 </div>
                 <div>
                   <div className="overflow-hidden text-center rounded-md h-auto">
-                    {ProExtraData?.freegiftData && giftAvailableImage != null ?
+                    {giftAvailableImage != null ?
                       <Image
                         alt={giftAvailableText}
                         title={giftAvailableText}
@@ -937,7 +937,7 @@ export default function product_component(props: any) {
                         decoding="async"
                         data-nimg="1"
                         quality={100}
-                        className={`rounded-md h-[3.3rem] ${ProExtraData?.freegiftData && giftAvailableImage != null ? "w-14" : ""} lg:w-14 2xl:w-12`}
+                        className={`rounded-md h-[3.3rem] ${giftAvailableImage != null ? "w-14" : ""} lg:w-14 2xl:w-12`}
                         src={giftAvailableImage}
                         sizes="100vw"
                         style={{ color: "transparent" }}
