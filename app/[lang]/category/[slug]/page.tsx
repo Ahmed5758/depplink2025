@@ -286,7 +286,7 @@ export default function Category({ params, searchParams }: { params: { lang: str
           <div className="flex xl:flex-row flex-col gap-4 mt-5">
             {CatData?.productData?.products?.data?.length ?
               <div className="px-0 flex-1 py-0 ltr:xl:mr-1 rtl:xl:ml-1">
-                <div className="mb-4 flex items-center justify-between">
+                <div className="mb-4 flex items-center justify-between relative z-30">
                   <h2 className="text-base font-bold">{params.data?.productData?.products?.total} {params.lang == 'ar' ? 'منتج' : 'Products'}</h2>
                   <Select
                     styles={{
