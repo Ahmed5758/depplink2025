@@ -1241,19 +1241,21 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 <div className="mt-3">
                                     <div className="flex items-center gap-x-2 text-sm">
                                         {isArabic ? 'العلامة' : 'Brand'}:
-                                        {data?.brand?.brand_media_image ?
-                                            <Image
-                                                src={data?.brand?.brand_media_image ? NewMedia + data?.brand?.brand_media_image?.image : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png'}
-                                                alt={isArabic ? data?.brand?.name_arabic : data?.brand?.name}
-                                                title={isArabic ? data?.brand?.name_arabic : data?.brand?.name}
-                                                height={45}
-                                                width={45}
-                                                className="h-full"
-                                                loading='lazy'
-                                            />
-                                            :
-                                            <p>{isArabic ? data?.brand?.name_arabic : data?.brand?.name}</p>
-                                        }
+                                        <Link href={`${origin}/${params?.lang}/brand/${data?.brand?.slug}`} aria-label={isArabic ? data?.brand?.name_arabic : data?.brand?.name} prefetch={false} scroll={false}>
+                                            {data?.brand?.brand_media_image ?
+                                                <Image
+                                                    src={data?.brand?.brand_media_image ? NewMedia + data?.brand?.brand_media_image?.image : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png'}
+                                                    alt={isArabic ? data?.brand?.name_arabic : data?.brand?.name}
+                                                    title={isArabic ? data?.brand?.name_arabic : data?.brand?.name}
+                                                    height={45}
+                                                    width={45}
+                                                    className="h-full"
+                                                    loading='lazy'
+                                                />
+                                                :
+                                                <p>{isArabic ? data?.brand?.name_arabic : data?.brand?.name}</p>
+                                            }
+                                        </Link>
                                     </div>
                                     <small className="text-sm font-semibold">{data?.sku}</small>
                                     <h1 className="text-base text-dark font-semibold py-1.5 -mt-1.5">{isArabic ? data?.name_arabic : data?.name}</h1>
