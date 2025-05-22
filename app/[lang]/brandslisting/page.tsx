@@ -80,7 +80,7 @@ export default function AboutUs({ params }: { params: { lang: string, data: any 
                                                         aria-label={params.lang == 'ar' ? categoryData?.name_arabic : categoryData?.name}
                                                         className='text-center p-3 bg-white hover:bg-[#219EBC40] hover:fill-primary rounded-md opacity-50 hover:opacity-100'
                                                     >
-                                                        <div className="flex items-center justify-center" dangerouslySetInnerHTML={{ __html: categoryData?.icon }}></div>
+                                                        {/*  <div className="flex items-center justify-center" dangerouslySetInnerHTML={{ __html: categoryData?.icon }}></div> */}
                                                         <div className="flex items-center justify-center">
                                                             <Image
                                                                 src={categoryData?.image_link_app ? categoryData?.image_link_app : ''}
