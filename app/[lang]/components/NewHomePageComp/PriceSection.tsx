@@ -89,9 +89,9 @@ export default function PriceSectionComponent(props: any) {
                 className="swiperProductSlider !pb-8"
             >
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/under99`} aria-label={`${origin}/${lang}/under99`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/under99`} aria-label={`${origin}/${lang}/category/under99`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/99.webp"
+                            src={isArabic ? "/icons/99.webp" : "/icons/99-en.webp"}
                             width={100}
                             height={100}
                             alt=""
@@ -103,9 +103,9 @@ export default function PriceSectionComponent(props: any) {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/under-199`} aria-label={`${origin}/${lang}/under-199`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/under-199`} aria-label={`${origin}/${lang}/category/under-199`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/199.webp"
+                            src={isArabic ? "/icons/199.webp" : "/icons/199-en.webp"}
                             width={100}
                             height={100}
                             alt=""
@@ -117,9 +117,9 @@ export default function PriceSectionComponent(props: any) {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/under-499`} aria-label={`${origin}/${lang}/under-499`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/under-499`} aria-label={`${origin}/${lang}/category/under-499`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/499.webp"
+                            src={isArabic ? "/icons/499.webp" : "/icons/499-en.webp"}
                             width={100}
                             height={100}
                             alt=""
@@ -131,9 +131,9 @@ export default function PriceSectionComponent(props: any) {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/under-999`} aria-label={`${origin}/${lang}/under-999`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/under-999`} aria-label={`${origin}/${lang}/category/under-999`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/999.webp"
+                            src={isArabic ? "/icons/999.webp" : "/icons/999-en.webp"}
                             width={100}
                             height={100}
                             alt=""
@@ -145,9 +145,9 @@ export default function PriceSectionComponent(props: any) {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/under-1999`} aria-label={`${origin}/${lang}/under-1999`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/under-1999`} aria-label={`${origin}/${lang}/category/under-1999`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/1999.webp"
+                            src={isArabic ? "/icons/1999.webp" : "/icons/1999-en.webp"}
                             width={100}
                             height={100}
                             alt=""
@@ -159,9 +159,9 @@ export default function PriceSectionComponent(props: any) {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/under-3999`} aria-label={`${origin}/${lang}/under-3999`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/under-3999`} aria-label={`${origin}/${lang}/category/under-3999`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/3999.webp"
+                            src={isArabic ? "/icons/3999.webp" : "/icons/3999-en.webp"}
                             width={100}
                             height={100}
                             alt=""
@@ -173,9 +173,9 @@ export default function PriceSectionComponent(props: any) {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/under-4999`} aria-label={`${origin}/${lang}/under-4999`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/under-4999`} aria-label={`${origin}/${lang}/category/under-4999`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/4999.webp"
+                            src={isArabic ? "/icons/4999.webp" : "/icons/4999-en.webp"}
                             width={100}
                             height={100}
                             alt=""
@@ -187,9 +187,9 @@ export default function PriceSectionComponent(props: any) {
                     </Link>
                 </SwiperSlide>
                 <SwiperSlide>
-                    <Link href={`${origin}/${lang}/above-5000`} aria-label={`${origin}/${lang}/above-5000`} prefetch={false} scroll={false}>
+                    <Link href={`${origin}/${lang}/category/above-5000`} aria-label={`${origin}/${lang}/category/above-5000`} prefetch={false} scroll={false}>
                         <Image
-                            src="/icons/5000.webp"
+                            src={isArabic ? "/icons/5000.webp" : "/icons/5000-en.webp"}
                             width={100}
                             height={100}
                             alt=""
