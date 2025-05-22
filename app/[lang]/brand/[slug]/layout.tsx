@@ -1,4 +1,5 @@
 import { Api } from "../../api/Api";
+import { cacheKey } from '../../GlobalVar';
 
 type Props = {
   params: { slug: string, lang: string, data: any }
@@ -6,7 +7,7 @@ type Props = {
 
 const fetcher = async (params: any) => {
   const slug = params.slug
-  const res: any = await fetch(`${Api}/brands/${slug}`, { next: { revalidate: 86400 } })
+  const res: any = await fetch(`${Api}/brands/${slug}?${cacheKey}`, { next: { revalidate: 86400 } })
   return res.json()
 }
 

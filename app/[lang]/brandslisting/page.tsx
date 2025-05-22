@@ -12,6 +12,7 @@ const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: 
 
 export default function AboutUs({ params }: { params: { lang: string, data: any } }) {
     const [dict, setDict] = useState<any>([]);
+    const isArabic = params?.lang === "ar" ? true : false;
     const [brandsData, setBrandsData] = useState<any>([]);
     const getBrandsData = async () => {
         await get(`get-brands`).then((responseJson: any) => {
@@ -32,9 +33,14 @@ export default function AboutUs({ params }: { params: { lang: string, data: any 
             ? window.location.origin
             : '';
 
+    const titles = {
+        breadcrumbHome: isArabic ? 'الصفحة الرئيسية' : 'Home',
+        breadcrumbBrands: isArabic ? 'تسوق حسب العلامة التجارية' : 'Shop by Brands'
+    };
+
     return (
         <>
-            <MobileHeader type="Third" lang={params.lang} pageTitle={params.lang == 'ar' ? 'تسوق حسب العلامة التجارية' : `Shop By Brand's`} />
+            <MobileHeader type="Third" lang={params.lang} pageTitle={titles.breadcrumbBrands} />
 
             <div className="container md:py-4 py-16">
                 <div className="my-6">
@@ -54,10 +60,12 @@ export default function AboutUs({ params }: { params: { lang: string, data: any 
                                             alt={params.lang === 'ar' ? data?.name_arabic : data?.name}
                                             title={params.lang === 'ar' ? data?.name_arabic : data?.name}
                                             quality={100}
-                                            height={150}
-                                            width={150}
+                                            width={150} // fixed width
+                                            height={0} // allow flexible height
+                                            style={{ height: 'auto' }} // fix the warning
                                             loading='lazy'
                                             className='mx-auto'
+                                            sizes='100vw'
                                         />
                                     </Link>
                                     {data?.categories?.length ?
