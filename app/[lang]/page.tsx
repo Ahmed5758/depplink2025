@@ -462,30 +462,47 @@ export default function Homepage({ params }: { params: any }) {
       (entries) => {
         entries.forEach((entry) => {
           const sectionId = entry.target.getAttribute("data-section");
-          if (entry.isIntersecting) {
-            if (sectionId == "5") setIsSection5Visible(true);
-            if (sectionId == "6") setIsSection6Visible(true);
-            if (sectionId == "7") setIsSection7Visible(true);
-            if (sectionId == "8") setIsSection8Visible(true);
-            if (sectionId == "9") setIsSection9Visible(true);
-            if (sectionId == "10") setIsSection10Visible(true);
-            if (sectionId == "11") setIsSection11Visible(true);
-            if (sectionId == "12") setIsSection12Visible(true);
-            if (sectionId == "13") setIsSection13Visible(true);
-            if (sectionId == "14") setIsSection14Visible(true);
-            if (sectionId == "15") setIsSection15Visible(true);
-            if (sectionId == "16") setIsSection16Visible(true);
-            if (sectionId == "17") setIsSection17Visible(true);
-            if (sectionId == "18") setIsSection18Visible(true);
+          if (entry.isIntersecting && sectionId) {
+            const id = parseInt(sectionId);
 
-            observer.unobserve(entry.target); // Stop observing once loaded
+            if (id === 5) setIsSection5Visible(true);
+            if (id === 6) setIsSection6Visible(true);
+            if (id === 7) setIsSection7Visible(true);
+            if (id === 8) setIsSection8Visible(true);
+            if (id === 9) setIsSection9Visible(true);
+            if (id === 10) setIsSection10Visible(true);
+            if (id === 11) setIsSection11Visible(true);
+            if (id === 12) setIsSection12Visible(true);
+            if (id === 13) setIsSection13Visible(true);
+            if (id === 14) setIsSection14Visible(true);
+            if (id === 15) setIsSection15Visible(true);
+            if (id === 16) setIsSection16Visible(true);
+            if (id === 17) setIsSection17Visible(true);
+            if (id === 18) setIsSection18Visible(true);
+
+            //Preload next section
+            const nextId = id + 1;
+            if (nextId === 6) setIsSection6Visible(true);
+            if (nextId === 7) setIsSection7Visible(true);
+            if (nextId === 8) setIsSection8Visible(true);
+            if (nextId === 9) setIsSection9Visible(true);
+            if (nextId === 10) setIsSection10Visible(true);
+            if (nextId === 11) setIsSection11Visible(true);
+            if (nextId === 12) setIsSection12Visible(true);
+            if (nextId === 13) setIsSection13Visible(true);
+            if (nextId === 14) setIsSection14Visible(true);
+            if (nextId === 15) setIsSection15Visible(true);
+            if (nextId === 16) setIsSection16Visible(true);
+            if (nextId === 17) setIsSection17Visible(true);
+            if (nextId === 18) setIsSection18Visible(true);
+
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 1 } // Adjust threshold as needed
+      { threshold: 1 } // Less strict, triggers sooner
     );
 
-    // Observe each section
     if (section5Ref.current) observer.observe(section5Ref.current);
     if (section6Ref.current) observer.observe(section6Ref.current);
     if (section7Ref.current) observer.observe(section7Ref.current);
@@ -501,7 +518,7 @@ export default function Homepage({ params }: { params: any }) {
     if (section17Ref.current) observer.observe(section17Ref.current);
     if (section18Ref.current) observer.observe(section18Ref.current);
 
-    return () => observer.disconnect(); // Cleanup on component unmount
+    return () => observer.disconnect();
   }, []);
 
   const [bannerOneVisible, setBannerOneVisible] = useState(true);
