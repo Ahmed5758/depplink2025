@@ -81,6 +81,15 @@ export default function AboutUs({ params }: { params: { lang: string, data: any 
                                                         className='text-center p-3 bg-white hover:bg-[#219EBC40] hover:fill-primary rounded-md opacity-50 hover:opacity-100'
                                                     >
                                                         <div className="flex items-center justify-center" dangerouslySetInnerHTML={{ __html: categoryData?.icon }}></div>
+                                                        <div className="flex items-center justify-center">
+                                                            <Image
+                                                                src={categoryData?.image_link_app ? categoryData?.image_link_app : ''}
+                                                                alt={categoryData?.slug ? categoryData?.slug : 'Category Icon'}
+                                                                width={40} 
+                                                                height={40} 
+                                                                className="object-contain"
+                                                            />
+                                                        </div>
                                                         <p className='mt-3 text-xs font-[500] text-primary line-clamp-1'>{params.lang == 'ar' ? categoryData?.name_arabic : categoryData?.name}</p>
                                                     </Link>
                                                 )
