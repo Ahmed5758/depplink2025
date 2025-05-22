@@ -37,8 +37,8 @@ export default function BrandSliderOther(props: any) {
                                         height={0}
                                         width={0}
                                         loading='lazy'
-                                        className='mx-auto h-10 w-20'
-                                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                                        className='mx-auto h-auto w-28'
+                                        sizes='100vw'
                                     />
                                 </button>
                             )
