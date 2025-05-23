@@ -11,24 +11,32 @@ import 'swiper/css/pagination';
 import Link from "next/link";
 import Image from "next/image";
 import { get } from "../../api/ApiCalls";
-
-
-const ProductComponent = dynamic(
-    () => import("./product_component"),
-    { ssr: true }
-);
+import { NewMedia } from "../../api/Api";
 
 export default function PriceSectionComponent(props: any) {
     const origin = props?.origin;
     const isArabic = props?.isArabic;
     const isMobileOrTablet = props?.isMobileOrTablet;
-    const containerClass = isMobileOrTablet ? "container" : "px-[4.8rem]";
     const lang = isArabic ? "ar" : "en"
 
-    const priceHeading = isArabic ? "تسوق حسب الأسعار" : "Shop by Prices"
-    const categoryName = isArabic ? "" : ""
-    const categoryLink = "#"
-
+    const sectionData :any =  props?.data
+    const priceHeading = sectionData?.sec_nineteen_title;
+    const ImageOne = sectionData?.sec_nineteen_image_one ? NewMedia + sectionData?.sec_nineteen_image_one : '';
+    const ImageOneLink = sectionData?.sec_nineteen_image_one_link;
+    const ImageTwo = sectionData?.sec_nineteen_image_two ? NewMedia + sectionData?.sec_nineteen_image_two : '';
+    const ImageTwoLink = sectionData?.sec_nineteen_image_two_link;
+    const ImageThree = sectionData?.sec_nineteen_image_three ? NewMedia + sectionData?.sec_nineteen_image_three : '';
+    const ImageThreeLink = sectionData?.sec_nineteen_image_three_link;
+    const ImageFour = sectionData?.sec_nineteen_image_four ? NewMedia + sectionData?.sec_nineteen_image_four : '';
+    const ImageFourLink = sectionData?.sec_nineteen_image_four_link;
+    const ImageFive = sectionData?.sec_nineteen_image_five ? NewMedia + sectionData?.sec_nineteen_image_five : '';
+    const ImageFiveLink = sectionData?.sec_nineteen_image_five_link;
+    const ImageSix = sectionData?.sec_nineteen_image_six ? NewMedia + sectionData?.sec_nineteen_image_six : '';
+    const ImageSixLink = sectionData?.sec_nineteen_image_six_link;
+    const ImageSeven = sectionData?.sec_nineteen_image_seven ? NewMedia + sectionData?.sec_nineteen_image_seven : '';
+    const ImageSevenLink = sectionData?.sec_nineteen_image_seven_link;
+    const ImageEight = sectionData?.sec_nineteen_image_eight ? NewMedia + sectionData?.sec_nineteen_image_eight : '';
+    const ImageEightLink = sectionData?.sec_nineteen_image_eight_link;
 
     return (
         <div>
@@ -36,170 +44,170 @@ export default function PriceSectionComponent(props: any) {
                 <h2 className="headingHomeMain mb-5">{priceHeading}</h2>
             </div>
             <Swiper
-                spaceBetween={10}
-                slidesPerView={6}
-                breakpoints={{
-                    320: {
-                        slidesPerView: 4.2,
-                        spaceBetween: 6,
-                    },
-                    640: {
-                        slidesPerView: 4.2,
-                        spaceBetween: 6,
-                    },
-                    768: {
-                        slidesPerView: 4.2,
-                        spaceBetween: 6,
-                    },
-                    1024: {
-                        slidesPerView: 6,
-                        spaceBetween: 16,
-                    },
-                    1280: {
-                        slidesPerView: 8,
-                        spaceBetween: 16,
-                    },
-                    1650: {
-                        slidesPerView: 8,
-                        spaceBetween: 16,
-                    },
-                    1920: {
-                        slidesPerView: 8,
-                        spaceBetween: 16,
-                    },
-                }}
-                autoHeight={true}
-                centeredSlides={false}
-                autoplay={false}
-                pagination={false}
-                loop={false}
-                mousewheel={{
-                    forceToAxis: true,
-                    releaseOnEdges: true,
-                    sensitivity: 2,
-                    eventsTarget: ".swiper-wrapper", // Mousewheel events will be attached to swiper wrapper
-                }}
-                scrollbar={{
-                    draggable: true,
-                    hide: isMobileOrTablet ? false : true, // Show scrollbar
-                }}
-                freeMode={true}
-                modules={[Autoplay, Navigation, Pagination, FreeMode, Scrollbar, Mousewheel]}
-                // navigation={{ nextEl: `.arrow-left-${idRandom}`, prevEl: `.arrow-right-${idRandom}` }}
-                className="swiperProductSlider !pb-8"
-            >
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/under99`} aria-label={`${origin}/${lang}/category/under99`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/99.webp" : "/icons/99-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/under-199`} aria-label={`${origin}/${lang}/category/under-199`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/199.webp" : "/icons/199-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/under-499`} aria-label={`${origin}/${lang}/category/under-499`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/499.webp" : "/icons/499-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/under-999`} aria-label={`${origin}/${lang}/category/under-999`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/999.webp" : "/icons/999-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/under-1999`} aria-label={`${origin}/${lang}/category/under-1999`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/1999.webp" : "/icons/1999-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/under-3999`} aria-label={`${origin}/${lang}/category/under-3999`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/3999.webp" : "/icons/3999-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/under-4999`} aria-label={`${origin}/${lang}/category/under-4999`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/4999.webp" : "/icons/4999-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <Link href={`${origin}/${lang}/category/above-5000`} aria-label={`${origin}/${lang}/category/above-5000`} prefetch={false} scroll={false}>
-                        <Image
-                            src={isArabic ? "/icons/5000.webp" : "/icons/5000-en.webp"}
-                            width={100}
-                            height={100}
-                            alt=""
-                            title=""
-                            className=""
-                            sizes="100vw"
-                            quality={100}
-                        />
-                    </Link>
-                </SwiperSlide>
+                    spaceBetween={10}
+                    slidesPerView={6}
+                    breakpoints={{
+                        320: {
+                            slidesPerView: 4.2,
+                            spaceBetween: 6,
+                        },
+                        640: {
+                            slidesPerView: 4.2,
+                            spaceBetween: 6,
+                        },
+                        768: {
+                            slidesPerView: 4.2,
+                            spaceBetween: 6,
+                        },
+                        1024: {
+                            slidesPerView: 6,
+                            spaceBetween: 16,
+                        },
+                        1280: {
+                            slidesPerView: 8,
+                            spaceBetween: 16,
+                        },
+                        1650: {
+                            slidesPerView: 8,
+                            spaceBetween: 16,
+                        },
+                        1920: {
+                            slidesPerView: 8,
+                            spaceBetween: 16,
+                        },
+                    }}
+                    autoHeight={true}
+                    centeredSlides={false}
+                    autoplay={false}
+                    pagination={false}
+                    loop={false}
+                    mousewheel={{
+                        forceToAxis: true,
+                        releaseOnEdges: true,
+                        sensitivity: 2,
+                        eventsTarget: ".swiper-wrapper", // Mousewheel events will be attached to swiper wrapper
+                    }}
+                    scrollbar={{
+                        draggable: true,
+                        hide: isMobileOrTablet ? false : true, // Show scrollbar
+                    }}
+                    freeMode={true}
+                    modules={[Autoplay, Navigation, Pagination, FreeMode, Scrollbar, Mousewheel]}
+                    // navigation={{ nextEl: `.arrow-left-${idRandom}`, prevEl: `.arrow-right-${idRandom}` }}
+                    className="swiperProductSlider !pb-8"
+                >
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageOneLink}`} aria-label={`${origin}/${lang}/${ImageOneLink}`} prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageOne}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageTwoLink}`}aria-label={`${origin}/${lang}/${ImageTwoLink}`}prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageTwo}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageThreeLink}`} aria-label={`${origin}/${lang}/${ImageThreeLink}`} prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageThree}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageFourLink}`} aria-label={`${origin}/${lang}/${ImageFourLink}`} prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageFour}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageFiveLink}`} aria-label={`${origin}/${lang}/${ImageFiveLink}`} prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageFive}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageSixLink}`} aria-label={`${origin}/${lang}/${ImageSixLink}`} prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageSix}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageSevenLink}`} aria-label={`${origin}/${lang}/${ImageSevenLink}`} prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageSeven}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Link href={`${origin}/${lang}/${ImageEightLink}`} aria-label={`${origin}/${lang}/${ImageEightLink}`} prefetch={false} scroll={false}>
+                            <Image
+                                src={ImageEight}
+                                width={100}
+                                height={100}
+                                alt=""
+                                title=""
+                                className=""
+                                sizes="100vw"
+                                quality={100}
+                            />
+                        </Link>
+                    </SwiperSlide>
             </Swiper>
         </div>
     );

@@ -598,7 +598,7 @@ export default function Homepage({ params }: { params: any }) {
           )}
           {/* New Price Section */}
           <div className="py-8">
-            <PriceSection isArabic={isArabic} isMobileOrTablet={true} origin={origin} />
+            <PriceSection data={homepagepartonelatest?.first_five_sec} isArabic={isArabic} isMobileOrTablet={true} origin={origin} />
           </div>
           {/* New Price Section */}
         </div>
