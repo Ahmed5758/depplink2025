@@ -1,6 +1,3 @@
-
-import type { Metadata, ResolvingMetadata } from 'next'
-import { get } from "../api/ApiCalls";
 import { Api } from '../api/Api';
 
 type Props = {
