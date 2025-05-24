@@ -715,11 +715,15 @@ export default function product_component(props: any) {
           </div>
           <Link prefetch={false} scroll={false} href={productSlug}>
             <div className="tamkeenProduct_card_img w-full !rounded-2xl">
-              {productSpecificationImageOne || productSpecificationImageTwo || productSpecificationImageThree ||
-                productSpecificationImageFour || productSpecificationImageFive || productSpecificationImageSix ? (
+              {productSpecificationImageOne ||
+                productSpecificationImageTwo ||
+                productSpecificationImageThree ||
+                productSpecificationImageFour ||
+                productSpecificationImageFive ||
+                productSpecificationImageSix ? (
                 <>
                   <div className="prodTop_verticalImgs flex flex-col gap-1 absolute left-0 top-14">
-                    {productSpecificationImageOne ?
+                    {productSpecificationImageOne ? (
                       <Image
                         src={productSpecificationImageOne}
                         alt={`specification-${productTitle}`}
@@ -730,10 +734,10 @@ export default function product_component(props: any) {
                         height={0}
                         sizes="100vw"
                         quality={100}
-                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                        className="specificationImagesProduct w-[24px] h-[18px]"
                       />
-                      : null}
-                    {productSpecificationImageTwo ?
+                    ) : null}
+                    {productSpecificationImageTwo ? (
                       <Image
                         src={productSpecificationImageTwo}
                         alt={`specification-${productTitle}`}
@@ -744,10 +748,10 @@ export default function product_component(props: any) {
                         height={0}
                         sizes="100vw"
                         quality={100}
-                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                        className="specificationImagesProduct w-[24px] h-[18px]"
                       />
-                      : null}
-                    {productSpecificationImageThree ?
+                    ) : null}
+                    {productSpecificationImageThree ? (
                       <Image
                         src={productSpecificationImageThree}
                         alt={`specification-${productTitle}`}
@@ -758,10 +762,10 @@ export default function product_component(props: any) {
                         height={0}
                         sizes="100vw"
                         quality={100}
-                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                        className="specificationImagesProduct w-[24px] h-[18px]"
                       />
-                      : null}
-                    {productSpecificationImageFour ?
+                    ) : null}
+                    {productSpecificationImageFour ? (
                       <Image
                         src={productSpecificationImageFour}
                         alt={`specification-${productTitle}`}
@@ -772,10 +776,10 @@ export default function product_component(props: any) {
                         height={0}
                         sizes="100vw"
                         quality={100}
-                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                        className="specificationImagesProduct w-[24px] h-[18px]"
                       />
-                      : null}
-                    {productSpecificationImageFive ?
+                    ) : null}
+                    {productSpecificationImageFive ? (
                       <Image
                         src={productSpecificationImageFive}
                         alt={`specification-${productTitle}`}
@@ -786,10 +790,10 @@ export default function product_component(props: any) {
                         height={0}
                         sizes="100vw"
                         quality={100}
-                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px]"
+                        className="specificationImagesProduct w-[24px] h-[18px]"
                       />
-                      : null}
-                    {productSpecificationImageSix ?
+                    ) : null}
+                    {productSpecificationImageSix ? (
                       <Image
                         src={productSpecificationImageSix}
                         alt={`specification-${productTitle}`}
@@ -800,9 +804,9 @@ export default function product_component(props: any) {
                         height={0}
                         sizes="100vw"
                         quality={100}
-                        className="specificationImagesProduct md:w-[30px] md:h-[22px] w-[22px] h-[16px] hidden md:block"
+                        className="specificationImagesProduct w-[24px] h-[18px] hidden md:block"
                       />
-                      : null}
+                    ) : null}
                   </div>
                 </>
               ) : null}
@@ -821,7 +825,7 @@ export default function product_component(props: any) {
                   className={`mx-auto w-full max-w-[350px] sm:h-auto h-auto object-cover object-center rounded-2xl transition-opacity duration-300}`}
                   onLoadingComplete={() => setImageLoaded(true)} // Set loaded to true once the image is loaded
                 />
-                </div>
+              </div>
             </div>
             <div className="tamkeenProduct_card_body mb-1">
               <h2 className="productDesc md:mb-4 mb-1 text-[0.65rem] text-start sm:text-xs 2xl:text-sm line-clamp-2 font-semibold 2xl:h-[2.5rem] h-[2rem]">
@@ -906,9 +910,9 @@ export default function product_component(props: any) {
                   style={{ backgroundColor: productBadgeBackgroundColor }}
                 >
                   <h3 className={`paymentText font-bold md:text-[0.619rem] text-[0.50rem] mb-1 ${giftAvailableImage != null
-                      ? ""
-                      : "text-center"
-                      } line-clamp-1 overflow-hidden`}
+                    ? ""
+                    : "text-center"
+                    } line-clamp-1 overflow-hidden`}
                   >
                     {installmentMethodsText}
                   </h3>

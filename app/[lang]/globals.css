@@ -68,8 +68,8 @@ body {
 }
 
 .specificationImagesProduct {
-	height: 22px;
-	width: 30px;
+	height: 26px;
+	width: 36px;
 	object-fit: contain;
 }
 
@@ -2335,8 +2335,8 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 	}
 
 	.specificationImagesProduct {
-		height: 15.5px;
-		width: 21px;
+		height: 18px;
+		width: 24px;
 		object-fit: contain;
 	}
 
