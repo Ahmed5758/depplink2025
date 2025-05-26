@@ -152,7 +152,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             setinstallationStatus(!getInstallation() ? false : true)
             setcouponcode(getCoupon().title)
             setpaymentMethod(getPaymentMethod())
-            getCitiesData(params.lang)
+            // getCitiesData(params.lang)
             getCustomerAddressData()
             //couponApplied()
             //expressDelivery()

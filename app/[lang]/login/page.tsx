@@ -361,8 +361,8 @@ export default function Login({ params, searchParams }: {
                 }
                 // localStorage.removeItem('userCompare')
                 localStorage.removeItem('userWishlist')
-                setDiscountRule();
-                setDiscountRuleBogo();
+                // setDiscountRule();
+                // setDiscountRuleBogo();
                 get(`user-profile/${localStorage.getItem("userid")}`).then((responseJson: any) => {
                     localStorage.setItem('eMail', responseJson.user?.email.toString())
                     localStorage.setItem('fullName', responseJson.user?.full_name.toString())

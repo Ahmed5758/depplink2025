@@ -25,32 +25,32 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
     const [confirmationPopup, setConfirmationPopup] = useState<any>(false)
     const [fullName, setfullName] = useState('')
     const [discountAmount, setdiscountAmount] = useState<any>(0)
-    const getNotificationData = async () => {
-        await get(`notifications`).then((responseJson: any) => {
-            setNotificationsListing(responseJson?.data)
-        })
-    }
+    // const getNotificationData = async () => {
+    //     await get(`notifications`).then((responseJson: any) => {
+    //         setNotificationsListing(responseJson?.data)
+    //     })
+    // }
 
     useEffect(() => {
         (async () => {
             const translationdata = await getDictionary(params.lang);
             setDict(translationdata);
         })();
-        getNotificationData()
+        // getNotificationData()
         getUser()
         UserDataLocalStorage()
-        getDiscountAmount()
+        // getDiscountAmount()
     }, [params])
     
-    const getDiscountAmount = async () => {
-        if (localStorage.getItem("userid")) {
-            await get(`getCouponAmounts/${localStorage.getItem('userid')}`).then((responseJson: any) => {
-                if(responseJson?.succes == true) {
-                    setdiscountAmount(responseJson?.totalAmount)
-                }
-            })
-        }
-    }
+    // const getDiscountAmount = async () => {
+    //     if (localStorage.getItem("userid")) {
+    //         await get(`getCouponAmounts/${localStorage.getItem('userid')}`).then((responseJson: any) => {
+    //             if(responseJson?.succes == true) {
+    //                 setdiscountAmount(responseJson?.totalAmount)
+    //             }
+    //         })
+    //     }
+    // }
 
     const UserDataLocalStorage = async () => {
         if (localStorage.getItem("userid")) {
