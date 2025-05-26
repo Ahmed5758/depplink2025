@@ -23,6 +23,12 @@ import GlobalContext from "../GlobalContext";
 import { any } from "prop-types";
 const ProductLoop = dynamic(() => import("./NewHomePageComp/ProductLoop"), { ssr: false });
 
+declare global {
+  interface WindowEventMap {
+    cartDataChanged: CustomEvent;
+  }
+}
+
 export default function MobileHeaderNew(props: any) {
   const router = useRouter();
   const origin = typeof window !== "undefined" ? window.location.origin : "";
