@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react'
 import moment from 'moment'
-import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { get } from "../api/ApiCalls"
@@ -32,13 +31,15 @@ export default function Notifications({ params }: { params: { lang: string, data
     }, [params])
     return (
         <>
-                <MobileHeader type="Third"  lang={params.lang} pageTitle={params.lang === 'ar' ? 'إشعارات' : 'Notifications'} />
+            <MobileHeader type="Third" lang={params.lang} pageTitle={params.lang === 'ar' ? 'إشعارات' : 'Notifications'} />
             <div className="container py-16 md:py-4">
                 {notificationsListing?.map((data: any, i: any) => (
-                    <button onClick={() => router.push(data?.link)} className="focus-visible:outline-none bg-white shadow-md rounded-md pb-2 text-left w-full mb-3" key={data?.id+i}>
+                    <button onClick={() => router.push(data?.link)} className="focus-visible:outline-none bg-white shadow-md rounded-md pb-2 text-left w-full mb-3" key={data?.id + i}>
                         {data?.image ?
-                        <Image src={data?.image} alt={params.lang === 'ar' ? data?.title_arabic : data?.title} title={params.lang === 'ar' ? data?.title_arabic : data?.title} height={0} width={0} className="h-auto w-full rounded-tl-md rounded-tr-md" />
-                        : null}
+                            <Image src={data?.image} alt={params.lang === 'ar' ? data?.title_arabic : data?.title} title={params.lang === 'ar' ? data?.title_arabic : data?.title} height={0} width={0} className="h-auto w-full rounded-tl-md rounded-tr-md"
+                                sizes='100vw'
+                            />
+                            : null}
                         <div className="mt-3 px-2">
                             <h6 className="font-semibold text-base text-[#004B7A]">{params.lang === 'ar' ? data?.title_arabic : data?.title}</h6>
                             <small className="font-medium text-[#000000]">{params.lang === 'ar' ? data?.message_arabic : data?.message}</small>
