@@ -130,8 +130,8 @@ const removeCartItem = (key: number) => {
     var cartdata = getCart();
     cartdata.products.splice(key, 1)
     setCart(cartdata)
-    setDiscountRule()
-    setDiscountRuleBogo()
+    // setDiscountRule()
+    // setDiscountRuleBogo()
     return cartdata;
 }
 
@@ -286,8 +286,8 @@ const setCartItems = async (data: product, gift: [product], fbt: [product]) => {
     else
         cartdata.products.push(data)
     setCart(cartdata, true)
-    setDiscountRule()
-    setDiscountRuleBogo()
+    // setDiscountRule()
+    // setDiscountRuleBogo()
 }
 
 const setCartExpiry = () => {
@@ -1048,7 +1048,7 @@ const setDiscountRule = async (city: any = false) => {
             //subtotal: getSubtotal(),
             subtotal: getTotal(),
             extradata: cartdata?.extradata ? cartdata?.extradata : null,
-            discountType: 0,
+            // discountType: 0,
             device: "app",
         }
         await post('discountRule', setData).then(async (responseJson: any) => {
@@ -1060,6 +1060,10 @@ const setDiscountRule = async (city: any = false) => {
                 if (responseJson.data.bulk.length)
                     discounts = discounts.concat(responseJson.data.bulk)
                 cartdata.discounts.discuountRules = discounts
+                cartdata.products = cartdata.products.filter((e: any) => !e?.bogo)
+                if (responseJson.data.bogo.length) {
+                    cartdata.products = cartdata.products.concat(responseJson.data.bogo)
+                }
                 // setCart(cartdata)
                 // cartdata.products = cartdata.products.filter((e: any) => !e?.bogo)
 
@@ -1096,6 +1100,7 @@ const setDiscountRule = async (city: any = false) => {
 }
 
 const setDiscountRuleBogo = async (city: any = false) => {
+    return false
     var cartdata: any = getCart();
     var proid = getProductids(true)
     if (cartdata?.products?.length >= 1) {
