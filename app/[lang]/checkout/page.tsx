@@ -12,7 +12,10 @@ import { get, post } from "../api/ApiCalls";
 import { usePathname } from "next/navigation"
 import { useRouter } from 'next/navigation'
 // import { useRouter } from 'next-nprogress-bar';
-import { getCartCount, getCart, recheckcartdata, getOrderId, getSummary, setShipping, setDiscountRule, setDiscountRuleBogo, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, setWrapper, unsetWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, setExpressDelivery, getExpressDeliveryData, unsetExpressDelivery, getDoorStepData, setDoorStep, unsetDoorStep, setExtraFees, getSubtotalSale } from '../cartstorage/cart';
+import { getCartCount, getCart, recheckcartdata, getOrderId, getSummary, setShipping, setDiscountRule, setDiscountRuleBogo, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, setWrapper, unsetWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, setExpressDelivery, getExpressDeliveryData, unsetExpressDelivery, getDoorStepData, setDoorStep, unsetDoorStep, setExtraFees, getSubtotalSale, getLoyalty,
+  getLoyaltyData,
+  setLoyalty,
+  removeLoyalty } from '../cartstorage/cart';
 import moment from 'moment';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -77,6 +80,11 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     const [email, setEmail] = useState<any>(false)
     const [phoneNumber, setPhoneNumber] = useState<any>(false)
     const [fullName, setFullName] = useState<any>(false)
+
+    // loyalty work
+    const [useLoyalty, setuseLoyalty] = useState(true);
+    const [loyaltyPoints, setloyaltyPoints] = useState<any>({});
+    const [loyaltyData, setloyaltyData] = useState<any>({});
 
     const quantityInstallation = [
         { key: 1, value: '1' }
@@ -144,6 +152,11 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                 topMessageAlartDangerNew(params.lang == 'ar' ? 'هناك بعض التحديثات في سلة التسوق الخاصة بك.' : 'There is some updates in your cart.')
                 router.push(`/${params.lang}/cart`);
             }
+
+            // var points = getLoyalty()
+            var loyaltydata = await getLoyaltyData()
+            // setloyaltyPoints(points)
+            setloyaltyData(loyaltydata)
         })();
         // getUser()
         if (typeof window !== 'undefined') {
@@ -162,6 +175,13 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             getDevice()
         }
     }, [params])
+
+    useEffect(() => {
+        if(loyaltyData?.t_loyaltypoints >= 1) {
+            setupLoyalty(true)
+            setpaymentMethod('loyalty')
+        }
+    }, [loyaltyData])
 
     const getDiscountType = async () => {
         get(`getdiscounttype`).then((responseJson: any) => {
@@ -216,8 +236,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     useEffect(() => {
         if (activeTab3 == 3) {
             var paymentkey = paymentMethod == 'madapay' ? 'hyperpay' : paymentMethod
-            if (!paymentkey || !paymentstatus[paymentkey + '_status']) {
-                setActiveTab3(2)
+            if(paymentMethod != 'loyalty'){
+                if (!paymentkey || !paymentstatus[paymentkey + '_status']) {
+                    setActiveTab3(2)
+                }
             }
         }
     }, [activeTab3])
@@ -802,6 +824,41 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         },
     ];
 
+    
+    const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
+    const loyaltyAmount = loyaltyPointsDB / 100;
+    const currentLoyaltyamount = getLoyalty()?.amount || 0
+    const usableloyaltyAmount: any = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
+    const usableLoyaltyPoints = usableloyaltyAmount * 100;
+    
+    
+    // loyalty work
+    const setupLoyalty = ((e: any) => {
+    setuseLoyalty(e)
+    if(e) {
+        var data: any = {
+        id: 0,
+        title: 'Tamkeen Points',
+        title_arabic: 'نقاط تمكين',
+        amount: usableloyaltyAmount,
+        }
+        setLoyalty(data)
+        console.log('e', e)
+        if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price) {
+        console.log('set loyalty')
+        setpaymentMethod('loyalty');
+        }
+    }
+    else {
+        removeLoyalty()
+        if(paymentMethod == 'loyalty') {
+        console.log('remove loyalty')
+        setpaymentMethod(false);
+        }
+    }
+    resetCheckout()
+    })
+
     return (
         <>
             <FullPageLoader loader={loaderStatus} />
@@ -1278,7 +1335,51 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                 <div className="mt-8">
                                     <h6 className="text-[#B15533]">{params.lang == 'ar' ? 'الدفع' : 'Paying off'}</h6>
                                     <label className="text-[#004B7A] text-xs">{params.lang == 'ar' ? 'اختـار طريقة الدفع الخاصة بك' : 'Choose your payment method'}</label>
-
+                                    {loyaltyData && loyaltyData?.t_loyaltypoints >= 1 ? 
+                                        <>
+                                        {/* loyalty work */}
+                                        <div className="border bg-white border-[#219EBC] rounded-md p-3 flex flex-col items-center mb-5">
+                                            <div className="w-full mb-5">
+                                            <label className="flex items-center gap-1">
+                                                <input type="checkbox" className="form-checkbox cursor-pointer" 
+                                                checked={useLoyalty}
+                                                onChange={(e: any) => {
+                                                    setupLoyalty(e?.target.checked)
+                                                }}
+                                                />
+                                                <span className="peer-checked:text-[#1c262d] flex items-center gap-1 font-bold">{params?.lang == 'ar' ? 'ستخدمي' : 'Use my'} <span className="inline-flex items-center gap-1 text-[#1c262d]"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="15" height="15"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg> {usableLoyaltyPoints}</span> {params?.lang == 'ar' ? 'الاعتمادات' : 'credits'}</span>
+                                            </label>
+                                            {loyaltyAmount < summary?.filter((item:any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US") ? 
+                                                <p className="text-sm text-gray-500 mt-2">
+                                                {params?.lang == 'ar' ? 'رصيد متجرك لا يكفي للطلب، يرجى اختيار طريقة دفع إضافية لتغطية الرصيد المتبقي' : 'Your store credit balance is not sufficent for the oreder, please select an additional payment method to cover the balance of'}{' '}<span className="inline-flex items-center gap-1 text-[#1c262d]"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="14" height="14"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg> {summary?.filter((item:any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US")}</span>
+                                                </p>
+                                            :null}
+                                            </div>
+                                            <div className="flex justify-between items-center w-full">
+                                            <div className="flex items-center gap-4">
+                                                <img
+                                                src="\images\logo.webp"
+                                                alt="Logo"
+                                                width="120"
+                                                height="80"
+                                                className="object-contain postiion-center"
+                                                loading="lazy"
+                                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                                                />
+                                                <div>
+                                                <p className="text-sm text-gray-800 font-bold">
+                                                    {params?.lang == 'ar' ? 'نقاط تمكين' : 'Tamkeen Points'}
+                                                </p>
+                                                <p className="text-xs text-[#007714]">
+                                                    <span className="inline-flex items-center gap-1"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="15" height="15"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg></span>{' '}{usableLoyaltyPoints} {params?.lang == 'ar' ? 'تم استردادها إلى رصيد تمكين' : 'redeemed to tamkeen credits'}
+                                                </p>
+                                                </div>
+                                            </div>
+                                            </div>
+                                            {/* loyalty work */}
+                                        </div>
+                                        </>
+                                    :null}
                                     <RadioGroup value={paymentMethod} onChange={setpaymentMethod} className="mt-3">
                                         <div className="grid grid-cols-3 md:grid-cols-4 2xl:grid-cols-6 gap-x-3">
                                             {paymentmethods?.map((p: any, i) => {
@@ -1375,7 +1476,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 {/* <label className="">-</label>
                                         <label className=""> {params.lang == 'ar' ? 'الاثنين' : 'Monday'} 13/11/2023</label> */}
                                             </div>
-                                            <hr className="opacity-10 my-3" />
+                                            {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" />:null}
                                         </div>
                                         :
                                         <div className="text-sm font-medium">
@@ -1385,7 +1486,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 {/* <label className="">-</label>
                                             <label className=""> {params.lang == 'ar' ? 'الاثنين' : 'Monday'} 13/11/2023</label> */}
                                             </div>
-                                            <hr className="opacity-10 my-3" />
+                                            {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" />:null}
                                         </div>
                                     }
 
@@ -1400,140 +1501,143 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                             </div>
                                         </>
                                         : null}
-
-                                    <div className="text-sm font-medium flex items-center justify-between">
-                                        <div>
-                                            <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الدفع عن طريق' : 'Payment via'}{' '}<span className="font-bold text-[#004B7A]">{paymentMethod}</span></label>
-                                            <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] text-xs">
-                                                <label>
-                                                    {
-                                                        paymentMethod == 'tamara' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.price?.filter((element: any) => element.name == 'total')[0]?.price / 4)} per month`
-                                                            : paymentMethod == 'tabby' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
-                                                                : paymentMethod == 'madfu' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
-                                                                    : paymentMethod == 'mispay' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
-                                                                        : paymentMethod == 'clickpay' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
-                                                                            : paymentMethod == 'tasheel' ? params.lang == 'ar' ? `غدا تقسيط علي 36 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 36)} ريال في الشهر` : `Installments for 36 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 36)} per month`
-                                                                                : paymentMethod == 'madapay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Instant pay ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
-                                                                                    : paymentMethod == 'applepay' || paymentMethod == 'clickpay_applepay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Instant pay ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
-                                                                                        : paymentMethod == 'hyperpay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Instant pay ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
-                                                                                            : paymentMethod == 'cod' ? params.lang == 'ar' ? `الدفع عند الاستلام ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Paid upon delivery ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
-                                                                                                : null
-                                                    }
-                                                </label>
-                                                {currencySymbol}
+                                    {paymentMethod != 'loyalty' ? 
+                                        <>
+                                        <div className="text-sm font-medium flex items-center justify-between">
+                                            <div>
+                                                <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الدفع عن طريق' : 'Payment via'}{' '}<span className="font-bold text-[#004B7A]">{paymentMethod}</span></label>
+                                                <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] text-xs">
+                                                    <label>
+                                                        {
+                                                            paymentMethod == 'tamara' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.price?.filter((element: any) => element.name == 'total')[0]?.price / 4)} per month`
+                                                                : paymentMethod == 'tabby' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
+                                                                    : paymentMethod == 'madfu' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
+                                                                        : paymentMethod == 'mispay' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
+                                                                            : paymentMethod == 'clickpay' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 4)} per month`
+                                                                                : paymentMethod == 'tasheel' ? params.lang == 'ar' ? `غدا تقسيط علي 36 شهور بمبلغ ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 36)} ريال في الشهر` : `Installments for 36 months at an amount of ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price / 36)} per month`
+                                                                                    : paymentMethod == 'madapay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Instant pay ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
+                                                                                        : paymentMethod == 'applepay' || paymentMethod == 'clickpay_applepay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Instant pay ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
+                                                                                            : paymentMethod == 'hyperpay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Instant pay ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
+                                                                                                : paymentMethod == 'cod' ? params.lang == 'ar' ? `الدفع عند الاستلام ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}` : `Paid upon delivery ${Intl.NumberFormat('en-US').format(summary?.filter((element: any) => element.key == 'total')[0]?.price)}`
+                                                                                                    : null
+                                                        }
+                                                    </label>
+                                                    {currencySymbol}
+                                                </div>
                                             </div>
+                                            {paymentMethod == 'hyperpay' ?
+                                                <Image
+                                                    src={params.lang == 'ar' ? '/images/master.webp' : '/images/master.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'madapay' ?
+                                                <Image
+                                                    src={params.lang == 'ar' ? '/images/mada.webp' : '/images/mada.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'applepay' || paymentMethod == 'clickpay_applepay' ?
+                                                <Image
+                                                    src={params.lang == 'ar' ? '/images/applepay.webp' : '/images/applepay.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={params?.devicetype === 'mobile' ? 60 : 80}
+                                                    width={params?.devicetype === 'mobile' ? 60 : 80}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'cod' ?
+                                                <Image
+                                                    src={params.lang == 'ar' ? '/images/cod.webp' : '/images/cod.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'tabby' ?
+                                                <Image
+                                                    src={params.lang == 'ar' ? '/images/tabby-ar.webp' : '/images/tabby-en.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'madfu' ?
+                                                <Image
+                                                    src={'/images/madfu.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'mispay' ?
+                                                <Image
+                                                    src={'/images/misspay.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'clickpay' ?
+                                                <Image
+                                                    src={'/images/clickpay.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={params?.devicetype === 'mobile' ? 60 : 80}
+                                                    width={params?.devicetype === 'mobile' ? 60 : 80}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'tamara' ?
+                                                <Image
+                                                    src={params.lang == 'ar' ? '/images/tamara-ar.webp' : '/images/tamara-en.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
+                                            {paymentMethod == 'tasheel' ?
+                                                <Image
+                                                    src={params.lang == 'ar' ? '/images/baseeta.webp' : '/images/baseeta.webp'}
+                                                    alt={paymentMethod}
+                                                    title={paymentMethod}
+                                                    height={60}
+                                                    width={60}
+                                                    loading='lazy'
+                                                    className="rounded-md"
+                                                />
+                                                : null}
                                         </div>
-                                        {paymentMethod == 'hyperpay' ?
-                                            <Image
-                                                src={params.lang == 'ar' ? '/images/master.webp' : '/images/master.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'madapay' ?
-                                            <Image
-                                                src={params.lang == 'ar' ? '/images/mada.webp' : '/images/mada.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'applepay' || paymentMethod == 'clickpay_applepay' ?
-                                            <Image
-                                                src={params.lang == 'ar' ? '/images/applepay.webp' : '/images/applepay.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={params?.devicetype === 'mobile' ? 60 : 80}
-                                                width={params?.devicetype === 'mobile' ? 60 : 80}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'cod' ?
-                                            <Image
-                                                src={params.lang == 'ar' ? '/images/cod.webp' : '/images/cod.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'tabby' ?
-                                            <Image
-                                                src={params.lang == 'ar' ? '/images/tabby-ar.webp' : '/images/tabby-en.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'madfu' ?
-                                            <Image
-                                                src={'/images/madfu.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'mispay' ?
-                                            <Image
-                                                src={'/images/misspay.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'clickpay' ?
-                                            <Image
-                                                src={'/images/clickpay.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={params?.devicetype === 'mobile' ? 60 : 80}
-                                                width={params?.devicetype === 'mobile' ? 60 : 80}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'tamara' ?
-                                            <Image
-                                                src={params.lang == 'ar' ? '/images/tamara-ar.webp' : '/images/tamara-en.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                        {paymentMethod == 'tasheel' ?
-                                            <Image
-                                                src={params.lang == 'ar' ? '/images/baseeta.webp' : '/images/baseeta.webp'}
-                                                alt={paymentMethod}
-                                                title={paymentMethod}
-                                                height={60}
-                                                width={60}
-                                                loading='lazy'
-                                                className="rounded-md"
-                                            />
-                                            : null}
-                                    </div>
+                                        </>
+                                    :null}
                                 </div>
                                 {doorStepData ?
                                     <div className="mt-2 text-[#004B7A] font-regular text-xs bg-white p-3 shadow-md rounded-md border border-[#219EBC] flex items-center justify-between gap-x-4">
@@ -1575,7 +1679,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                 return (
                                     <div className="flex items-center justify-between text-sm font-medium mb-3" key={i}>
                                         <h6 className={`text-[#1C262D] capitalize`}>{params.lang === 'ar' ? s?.title_arabic : s?.title}</h6>
-                                       <span className={`flex gap-1 items-center ${s.key == 'save' || s?.key == 'discountRule' || s?.key == 'discountCoupon' ? 'text-[#20831E]' : 'text-[#004B7A]'}`}><span className="font-bold flex items-center gap-1">{s?.price?.toLocaleString('EN-US')}</span>{currencySymbol}</span>
+                                       <span className={`flex gap-1 items-center ${s.key == 'save' || s.key == "loyalty" || s?.key == 'discountRule' || s?.key == 'discountCoupon' ? 'text-[#20831E]' : 'text-[#004B7A]'}`}><span className="font-bold flex items-center gap-1">{s?.price?.toLocaleString('EN-US')}</span>{currencySymbol}</span>
                                     </div>
                                 )
                             })

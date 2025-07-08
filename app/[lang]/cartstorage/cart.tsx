@@ -55,6 +55,8 @@ interface cart {
         installation: {},
         doorstep: {}
     },
+    loyalty: discount,
+    loyalty_shipping:any,
     extradata: any,
     paymentMethod: string,
     shippingAddress: any,
@@ -77,6 +79,8 @@ const emptyCart = (): cart => ({
         wrapper: {} as fees,
         installation: {} as fees
     },
+    loyalty: {} as discount,
+    loyalty_shipping:false,
     extradata: false,
     paymentMethod: '',
     shippingAddress: false,
@@ -562,6 +566,11 @@ const getTotal = () => {
     if (getCoupon().amount) {
         total -= Number(parseFloat(getCoupon().amount).toFixed(2))
     }
+
+    if(getLoyalty().amount && getLoyalty().amount > 0){
+        total -= getLoyalty().amount
+    }
+
     if (getAdditionalDiscount().amount) {
         total -= Number(parseFloat(getAdditionalDiscount().amount).toFixed(2))
     }
@@ -625,6 +634,15 @@ const getSummary = () => {
     if (getDoorStep().amount)
         summary.push({ key: getDoorStep().title, price: Number(parseFloat(getDoorStep().amount).toFixed(2)), title: getExpressDelivery().title, title_arabic: getExpressDelivery().title_arabic })
 
+    if(getLoyalty().amount && getLoyalty().amount > 0){
+        summary.push({
+            key: 'loyalty',
+            title: getLoyalty().title,
+            title_arabic: getLoyalty().title_arabic,
+            price: '- ' + Number(parseFloat(getLoyalty().amount).toFixed(2))
+        })
+    }
+
     // if(getWrapper())
     summary.push({
         key: 'save',
@@ -640,6 +658,56 @@ const getSummary = () => {
     })
     return summary;
 }
+
+const getLoyalty = () => {
+    var cartdata: any = getCart();
+    var amountData = {} as discount;
+    if (cartdata.loyalty) {
+        amountData = cartdata.loyalty;
+    }
+    return amountData;
+}
+
+const getLoyaltyData = async () => {
+    var loyaltyData:any = false;
+    var cartdata: any = getCart();
+    var userid = localStorage.getItem("userid");
+    await get(`get-user-loyalty-data/${userid}`).then((responseJson: any) => {
+        loyaltyData = responseJson.data;
+        if(loyaltyData && loyaltyData?.shipping_charges_eligiblity){
+            cartdata.loyalty_shipping = loyaltyData.shipping_charges_eligiblity
+            var feesdata: any = {
+                id: cartdata.fees.shipping?.id,
+                title: cartdata.fees.shipping?.name,
+                title_arabic: cartdata.fees.shipping?.name_arabic,
+                amount: 0,
+            }
+            cartdata.fees.shipping = feesdata as fees
+        }
+        console.log("Loyalty Data", responseJson);
+    });
+    setCart(cartdata);
+    return loyaltyData;
+}
+
+const setLoyalty = (data: any) => {
+    var cartdata: any = getCart();
+    var amountData: any = {
+        id: data?.id,
+        title: data?.title,
+        title_arabic: data?.title_arabic,
+        amount: data?.amount,
+    }
+    cartdata.loyalty = amountData as discount;
+    setCart(cartdata);
+}
+
+const removeLoyalty = () => {
+    var cartdata: any = getCart();
+    cartdata.loyalty = {} as discount;
+    setCart(cartdata);
+}
+
 const setShipping = async (city: any = false) => {
     var cartdata = getCart();
     var proid = getProductids()
@@ -657,7 +725,7 @@ const setShipping = async (city: any = false) => {
                     id: responseJson?.data?.id,
                     title: responseJson?.data?.name,
                     title_arabic: responseJson?.data?.name_arabic,
-                    amount: responseJson?.data?.amount,
+                    amount: (cartdata?.loyalty_shipping) ? 0 : responseJson?.data?.amount,
                 }
                 cartdata.fees.shipping = feesdata as fees
                 setCart(cartdata)
@@ -1379,4 +1447,4 @@ const setExtraFees = async (paymentMethod: any = false) => {
     return cartdata;
 }
 
-export { setCartExpiry, getCartItems, setCartItems, getSubtotalSale, recheckcartdata, getCart, getCartCount, getSummary, removeCartItem, removeCartItemFbt, updateCartItemFbtQty, increaseQty, setShipping, getProductids, setDiscountRule, setDiscountRuleBogo, getShippingAddress, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, unsetWrapper, setWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, getOrderId, removeCart, getExpressDelivery, setExpressDelivery, unsetExpressDelivery, getExpressDeliveryData, getDoorStep, setDoorStep, unsetDoorStep, getDoorStepData, setExtraFees, getExtraFees, removecheckoutdata, setCart, addfbtextraitem, getExpressDeliveryCart }
+export { setCartExpiry, getCartItems, setCartItems, getSubtotalSale, recheckcartdata, getCart, getCartCount, getSummary, removeCartItem, removeCartItemFbt, updateCartItemFbtQty, increaseQty, setShipping, getProductids, setDiscountRule, setDiscountRuleBogo, getShippingAddress, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, unsetWrapper, setWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, getOrderId, removeCart, getExpressDelivery, setExpressDelivery, unsetExpressDelivery, getExpressDeliveryData, getDoorStep, setDoorStep, unsetDoorStep, getDoorStepData, setExtraFees, getExtraFees, removecheckoutdata, setCart, addfbtextraitem, getExpressDeliveryCart, getLoyalty, getLoyaltyData, setLoyalty, removeLoyalty }
