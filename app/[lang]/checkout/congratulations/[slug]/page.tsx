@@ -25,6 +25,8 @@ export default function Congratulations({ params }: { params: { lang: string, sl
     const [orderDetails, setOrderDetails] = useState<any>(params.data)
     const [DeliveryDate, setDeliveryDate] = useState(7)
 
+    const loyaltyPointCheck = params.data?.orderdata?.ordersummary.filter((item: { type: string; }) => item?.type == 'loyalty')[0]?.price >= 1 ? true : false
+
     // CURRENCY SYMBOL //
     const currencySymbol = <svg className="riyal-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="11" height="12">
         <path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path>
@@ -335,133 +337,137 @@ export default function Congratulations({ params }: { params: { lang: string, sl
                                 <div className="gap-x-2 mt-1 rtl:mt-2 text-[#004B7A]">
                                     <label className="flex gap-x-1 items-center">{Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}{' '}{currencySymbol}</label>
                                 </div>
-                                <hr className="opacity-10 my-3" />
+                                {!loyaltyPointCheck ? <hr className="opacity-10 my-3" /> : null}
                             </div>
-                            <div className="text-sm font-medium">
-                                <div className='text-sm font-medium flex items-center justify-between'>
-                                    <div>
-                                        <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الدفع عن طريق' : 'Payment via'}{' '}
-                                            <span className="font-bold text-[#004B7A]">
-                                                {
-                                                    orderDetails?.orderdata?.paymentmethod == 'tamara' ? params.lang == 'ar' ? 'تمارا' : 'Tamara'
-                                                        : orderDetails?.orderdata?.paymentmethod == 'tabby' ? params.lang == 'ar' ? 'تابي' : 'Tabby'
-                                                            : orderDetails?.orderdata?.paymentmethod == 'tasheel' ? params.lang == 'ar' ? 'بسيطه' : 'Baseeta'
-                                                                : orderDetails?.orderdata?.paymentmethod == 'madapay' ? params.lang == 'ar' ? 'بطاقات مدى' : 'Mada Card'
-                                                                    : orderDetails?.orderdata?.paymentmethod == 'applepay' ? params.lang == 'ar' ? 'آبل باي' : 'Apple Pay'
-                                                                        : orderDetails?.orderdata?.paymentmethod == 'hyperpay' ? params.lang == 'ar' ? 'البطاقات الإئتمانية' : 'Debit & Credit Card'
-                                                                            : orderDetails?.orderdata?.paymentmethod == 'cod' ? params.lang == 'ar' ? 'الدفع عند الاستلام' : 'Cash on Delivery'
-                                                                                : null
-                                                }
-                                            </span>
-                                        </label>
-                                        <div className="gap-x-2 mt-1 rtl:mt-2 text-[#004B7A]">
-                                            {orderDetails?.orderdata?.status === 5 ?
-                                                <label>{params.lang == 'ar' ? 'إلغاء الأمر' : 'Order Has been Canceled'}</label>
-                                                :
-                                                orderDetails?.orderdata?.status === 6 ?
-                                                    <label>{params.lang == 'ar' ? 'تم رد الطلب' : 'Refunded'}</label>
+                            {!loyaltyPointCheck ? 
+                                <>
+                                <div className="text-sm font-medium">
+                                    <div className='text-sm font-medium flex items-center justify-between'>
+                                        <div>
+                                            <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الدفع عن طريق' : 'Payment via'}{' '}
+                                                <span className="font-bold text-[#004B7A]">
+                                                    {
+                                                        orderDetails?.orderdata?.paymentmethod == 'tamara' ? params.lang == 'ar' ? 'تمارا' : 'Tamara'
+                                                            : orderDetails?.orderdata?.paymentmethod == 'tabby' ? params.lang == 'ar' ? 'تابي' : 'Tabby'
+                                                                : orderDetails?.orderdata?.paymentmethod == 'tasheel' ? params.lang == 'ar' ? 'بسيطه' : 'Baseeta'
+                                                                    : orderDetails?.orderdata?.paymentmethod == 'madapay' ? params.lang == 'ar' ? 'بطاقات مدى' : 'Mada Card'
+                                                                        : orderDetails?.orderdata?.paymentmethod == 'applepay' ? params.lang == 'ar' ? 'آبل باي' : 'Apple Pay'
+                                                                            : orderDetails?.orderdata?.paymentmethod == 'hyperpay' ? params.lang == 'ar' ? 'البطاقات الإئتمانية' : 'Debit & Credit Card'
+                                                                                : orderDetails?.orderdata?.paymentmethod == 'cod' ? params.lang == 'ar' ? 'الدفع عند الاستلام' : 'Cash on Delivery'
+                                                                                    : null
+                                                    }
+                                                </span>
+                                            </label>
+                                            <div className="gap-x-2 mt-1 rtl:mt-2 text-[#004B7A]">
+                                                {orderDetails?.orderdata?.status === 5 ?
+                                                    <label>{params.lang == 'ar' ? 'إلغاء الأمر' : 'Order Has been Canceled'}</label>
                                                     :
-                                                    orderDetails?.orderdata?.status === 7 ?
-                                                        <label>{params.lang == 'ar' ? 'فشل الطلب' : 'Failed'}</label>
+                                                    orderDetails?.orderdata?.status === 6 ?
+                                                        <label>{params.lang == 'ar' ? 'تم رد الطلب' : 'Refunded'}</label>
                                                         :
-                                                        orderDetails?.orderdata?.status === 8 ?
-                                                            <label>{params.lang == 'ar' ? 'في انتظار الدفع' : 'Pending For Payment'}</label>
+                                                        orderDetails?.orderdata?.status === 7 ?
+                                                            <label>{params.lang == 'ar' ? 'فشل الطلب' : 'Failed'}</label>
                                                             :
-                                                            <label>
-                                                                {
-                                                                    orderDetails?.orderdata?.paymentmethod == 'tamara' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} per month`
-                                                                        : orderDetails?.orderdata?.paymentmethod == 'tabby' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} per month`
-                                                                            : orderDetails?.orderdata?.paymentmethod == 'tasheel' ? params.lang == 'ar' ? `غدا تقسيط علي 36 شهور بمبلغ ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 36)} ريال في الشهر` : `Installments for 36 months at an amount of SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 36)} per month`
-                                                                                : orderDetails?.orderdata?.paymentmethod == 'madapay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Instant pay SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
-                                                                                    : orderDetails?.orderdata?.paymentmethod == 'applepay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Instant pay SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
-                                                                                        : orderDetails?.orderdata?.paymentmethod == 'hyperpay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Instant pay SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
-                                                                                            : orderDetails?.orderdata?.paymentmethod == 'cod' ? params.lang == 'ar' ? `الدفع عند الاستلام ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Paid upon delivery SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
-                                                                                                : null
-                                                                }
-                                                                {currencySymbol}
-                                                            </label>
-                                            }
+                                                            orderDetails?.orderdata?.status === 8 ?
+                                                                <label>{params.lang == 'ar' ? 'في انتظار الدفع' : 'Pending For Payment'}</label>
+                                                                :
+                                                                <label>
+                                                                    {
+                                                                        orderDetails?.orderdata?.paymentmethod == 'tamara' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} per month`
+                                                                            : orderDetails?.orderdata?.paymentmethod == 'tabby' ? params.lang == 'ar' ? `غدا تقسيط علي 4 شهور بمبلغ ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} ريال في الشهر` : `Installments for 4 months at an amount of SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 4)} per month`
+                                                                                : orderDetails?.orderdata?.paymentmethod == 'tasheel' ? params.lang == 'ar' ? `غدا تقسيط علي 36 شهور بمبلغ ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 36)} ريال في الشهر` : `Installments for 36 months at an amount of SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price / 36)} per month`
+                                                                                    : orderDetails?.orderdata?.paymentmethod == 'madapay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Instant pay SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
+                                                                                        : orderDetails?.orderdata?.paymentmethod == 'applepay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Instant pay SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
+                                                                                            : orderDetails?.orderdata?.paymentmethod == 'hyperpay' ? params.lang == 'ar' ? `الدفع النقدي ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Instant pay SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
+                                                                                                : orderDetails?.orderdata?.paymentmethod == 'cod' ? params.lang == 'ar' ? `الدفع عند الاستلام ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}` : `Paid upon delivery SR ${Intl.NumberFormat('en-US').format(orderDetails?.orderdata?.ordersummary.filter((element: any) => element.type == 'total')[0]?.price)}`
+                                                                                                    : null
+                                                                    }
+                                                                    {currencySymbol}
+                                                                </label>
+                                                }
+                                            </div>
                                         </div>
+                                        {orderDetails?.orderdata?.paymentmethod == 'hyperpay' ?
+                                            <Image
+                                                src={params.lang == 'ar' ? '/images/master.webp' : '/images/master.webp'}
+                                                alt={orderDetails?.orderdata?.paymentmethod}
+                                                title={orderDetails?.orderdata?.paymentmethod}
+                                                height={60}
+                                                width={60}
+                                                loading='lazy'
+                                                className="rounded-md"
+                                            />
+                                            : null}
+                                        {orderDetails?.orderdata?.paymentmethod == 'madapay' ?
+                                            <Image
+                                                src={params.lang == 'ar' ? '/images/mada.webp' : '/images/mada.webp'}
+                                                alt={orderDetails?.orderdata?.paymentmethod}
+                                                title={orderDetails?.orderdata?.paymentmethod}
+                                                height={60}
+                                                width={60}
+                                                loading='lazy'
+                                                className="rounded-md"
+                                            />
+                                            : null}
+                                        {orderDetails?.orderdata?.paymentmethod == 'applepay' ?
+                                            <Image
+                                                src={params.lang == 'ar' ? '/images/applepay.webp' : '/images/applepay.webp'}
+                                                alt={orderDetails?.orderdata?.paymentmethod}
+                                                title={orderDetails?.orderdata?.paymentmethod}
+                                                height={60}
+                                                width={60}
+                                                loading='lazy'
+                                                className="rounded-md"
+                                            />
+                                            : null}
+                                        {orderDetails?.orderdata?.paymentmethod == 'cod' ?
+                                            <Image
+                                                src={params.lang == 'ar' ? '/images/cod.webp' : '/images/cod.webp'}
+                                                alt={orderDetails?.orderdata?.paymentmethod}
+                                                title={orderDetails?.orderdata?.paymentmethod}
+                                                height={60}
+                                                width={60}
+                                                loading='lazy'
+                                                className="rounded-md"
+                                            />
+                                            : null}
+                                        {orderDetails?.orderdata?.paymentmethod == 'tabby' ?
+                                            <Image
+                                                src={params.lang == 'ar' ? '/images/tabby-ar.webp' : '/images/tabby-en.webp'}
+                                                alt={orderDetails?.orderdata?.paymentmethod}
+                                                title={orderDetails?.orderdata?.paymentmethod}
+                                                height={60}
+                                                width={60}
+                                                loading='lazy'
+                                                className="rounded-md"
+                                            />
+                                            : null}
+                                        {orderDetails?.orderdata?.paymentmethod == 'tamara' ?
+                                            <Image
+                                                src={params.lang == 'ar' ? '/images/tamara-ar.webp' : '/images/tamara-en.webp'}
+                                                alt={orderDetails?.orderdata?.paymentmethod}
+                                                title={orderDetails?.orderdata?.paymentmethod}
+                                                height={60}
+                                                width={60}
+                                                loading='lazy'
+                                                className="rounded-md"
+                                            />
+                                            : null}
+                                        {orderDetails?.orderdata?.paymentmethod == 'tasheel' ?
+                                            <Image
+                                                src={params.lang == 'ar' ? '/images/baseeta.webp' : '/images/baseeta.webp'}
+                                                alt={orderDetails?.orderdata?.paymentmethod}
+                                                title={orderDetails?.orderdata?.paymentmethod}
+                                                height={60}
+                                                width={60}
+                                                loading='lazy'
+                                                className="rounded-md"
+                                            />
+                                            : null}
                                     </div>
-                                    {orderDetails?.orderdata?.paymentmethod == 'hyperpay' ?
-                                        <Image
-                                            src={params.lang == 'ar' ? '/images/master.webp' : '/images/master.webp'}
-                                            alt={orderDetails?.orderdata?.paymentmethod}
-                                            title={orderDetails?.orderdata?.paymentmethod}
-                                            height={60}
-                                            width={60}
-                                            loading='lazy'
-                                            className="rounded-md"
-                                        />
-                                        : null}
-                                    {orderDetails?.orderdata?.paymentmethod == 'madapay' ?
-                                        <Image
-                                            src={params.lang == 'ar' ? '/images/mada.webp' : '/images/mada.webp'}
-                                            alt={orderDetails?.orderdata?.paymentmethod}
-                                            title={orderDetails?.orderdata?.paymentmethod}
-                                            height={60}
-                                            width={60}
-                                            loading='lazy'
-                                            className="rounded-md"
-                                        />
-                                        : null}
-                                    {orderDetails?.orderdata?.paymentmethod == 'applepay' ?
-                                        <Image
-                                            src={params.lang == 'ar' ? '/images/applepay.webp' : '/images/applepay.webp'}
-                                            alt={orderDetails?.orderdata?.paymentmethod}
-                                            title={orderDetails?.orderdata?.paymentmethod}
-                                            height={60}
-                                            width={60}
-                                            loading='lazy'
-                                            className="rounded-md"
-                                        />
-                                        : null}
-                                    {orderDetails?.orderdata?.paymentmethod == 'cod' ?
-                                        <Image
-                                            src={params.lang == 'ar' ? '/images/cod.webp' : '/images/cod.webp'}
-                                            alt={orderDetails?.orderdata?.paymentmethod}
-                                            title={orderDetails?.orderdata?.paymentmethod}
-                                            height={60}
-                                            width={60}
-                                            loading='lazy'
-                                            className="rounded-md"
-                                        />
-                                        : null}
-                                    {orderDetails?.orderdata?.paymentmethod == 'tabby' ?
-                                        <Image
-                                            src={params.lang == 'ar' ? '/images/tabby-ar.webp' : '/images/tabby-en.webp'}
-                                            alt={orderDetails?.orderdata?.paymentmethod}
-                                            title={orderDetails?.orderdata?.paymentmethod}
-                                            height={60}
-                                            width={60}
-                                            loading='lazy'
-                                            className="rounded-md"
-                                        />
-                                        : null}
-                                    {orderDetails?.orderdata?.paymentmethod == 'tamara' ?
-                                        <Image
-                                            src={params.lang == 'ar' ? '/images/tamara-ar.webp' : '/images/tamara-en.webp'}
-                                            alt={orderDetails?.orderdata?.paymentmethod}
-                                            title={orderDetails?.orderdata?.paymentmethod}
-                                            height={60}
-                                            width={60}
-                                            loading='lazy'
-                                            className="rounded-md"
-                                        />
-                                        : null}
-                                    {orderDetails?.orderdata?.paymentmethod == 'tasheel' ?
-                                        <Image
-                                            src={params.lang == 'ar' ? '/images/baseeta.webp' : '/images/baseeta.webp'}
-                                            alt={orderDetails?.orderdata?.paymentmethod}
-                                            title={orderDetails?.orderdata?.paymentmethod}
-                                            height={60}
-                                            width={60}
-                                            loading='lazy'
-                                            className="rounded-md"
-                                        />
-                                        : null}
                                 </div>
-                            </div>
+                                </>
+                            :null}
                         </div>
                     </div>
                     <div className="w-full md:w-1/2 2xl:w-1/3 text-right ltr:text-left">
