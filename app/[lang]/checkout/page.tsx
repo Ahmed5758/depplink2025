@@ -828,35 +828,35 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
     const loyaltyAmount = loyaltyPointsDB / 100;
     const currentLoyaltyamount = getLoyalty()?.amount || 0
-    const usableloyaltyAmount: any = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
+    var usableloyaltyAmount:any = false;
+    if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price)
+        usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
+    else
+        usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price);
     const usableLoyaltyPoints = usableloyaltyAmount * 100;
-    
     
     // loyalty work
     const setupLoyalty = ((e: any) => {
-    setuseLoyalty(e)
-    if(e) {
-        var data: any = {
-        id: 0,
-        title: 'Tamkeen Points',
-        title_arabic: 'نقاط تمكين',
-        amount: usableloyaltyAmount,
+        setuseLoyalty(e)
+        if(e) {
+            var data: any = {
+                id: 0,
+                title: 'Tamkeen Points',
+                title_arabic: 'نقاط تمكين',
+                amount: usableloyaltyAmount,
+            }
+            setLoyalty(data)
+            if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price) {
+                setpaymentMethod('loyalty');
+            }
         }
-        setLoyalty(data)
-        console.log('e', e)
-        if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price) {
-        console.log('set loyalty')
-        setpaymentMethod('loyalty');
+        else {
+            removeLoyalty()
+            if(paymentMethod == 'loyalty') {
+                setpaymentMethod(false);
+            }
         }
-    }
-    else {
-        removeLoyalty()
-        if(paymentMethod == 'loyalty') {
-        console.log('remove loyalty')
-        setpaymentMethod(false);
-        }
-    }
-    resetCheckout()
+        resetCheckout()
     })
 
     return (
