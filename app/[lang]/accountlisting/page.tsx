@@ -218,9 +218,9 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                             {
                                 <>
                                 {params.lang == 'ar' ? "لديك" : "You have"} 
-                                <span className="h-5 font-bold text-blue-500 number-animation">
-                                <span className="font-bold text-blue-500 inline-flex">{parseInt(loyaltyAmount)?.toLocaleString('EN-US')}</span>
-                                <span className='text-center'>{parseInt(loyaltyPoints)?.toLocaleString('EN-US')}</span>
+                                <span className="h-3.5 font-bold text-blue-500 number-animation items-center">
+                                <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyAmount)?.toLocaleString('EN-US')}</span>
+                                <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyPoints)?.toLocaleString('EN-US')}</span>
                                 </span> {params.lang == 'ar' ? "في محفظتك." : "in your wallet."} 
                                 </>
                             }
