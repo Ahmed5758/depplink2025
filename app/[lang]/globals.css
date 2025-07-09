@@ -2387,3 +2387,65 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 	height: 10px;
 }
 }
+
+/* Animation slide up */
+.number-animation {
+	display: inline-flex;
+	position: relative;
+	overflow: hidden;
+	font-variant-numeric: tabular-nums; /* consistent number widths */
+}
+
+.number-animation-inner {
+	display: inline-block;
+	position: relative;
+	height: 100%;
+}
+
+.number-animation span {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	white-space: nowrap;
+	animation: slideUp 4s infinite;
+	transform: translateX(-50%) translateY(100%);
+	opacity: 0;
+}
+
+.number-animation span:nth-child(1) {
+	animation-delay: 0s;
+}
+
+.number-animation span:nth-child(2) {
+	animation-delay: 2s;
+}
+
+.number-animation::after {
+	content: '100'; /* max width example */
+	visibility: hidden;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+@keyframes slideUp {
+	0% {
+	transform:translateX(-50%)  translateY(100%);
+	opacity: 0;
+	}
+	10% {
+	transform:translateX(-50%)  translateY(0);
+	opacity: 1;
+	}
+	40% {
+	transform:translateX(-50%)  translateY(0);
+	opacity: 1;
+	}
+	50% {
+	transform:translateX(-50%)  translateY(-100%);
+	opacity: 0;
+	}
+	100% {
+	transform:translateX(-50%)  translateY(-100%);
+	opacity: 0;
+	}
+}
