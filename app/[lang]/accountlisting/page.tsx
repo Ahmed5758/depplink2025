@@ -10,6 +10,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { Dialog, Transition } from '@headlessui/react'
+import { getLoyalty, getLoyaltyData } from '../cartstorage/cart';
 
 const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: true })
 
@@ -25,6 +26,9 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
     const [confirmationPopup, setConfirmationPopup] = useState<any>(false)
     const [fullName, setfullName] = useState('')
     const [discountAmount, setdiscountAmount] = useState<any>(0)
+    const [loyaltyData, setloyaltyData] = useState<any>({});
+    const [loyaltyPoints, setloyaltyPoints] = useState<any>(0);
+    const [loyaltyAmount, setloyaltyAmount] = useState<any>(0);
     // const getNotificationData = async () => {
     //     await get(`notifications`).then((responseJson: any) => {
     //         setNotificationsListing(responseJson?.data)
@@ -35,6 +39,8 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
         (async () => {
             const translationdata = await getDictionary(params.lang);
             setDict(translationdata);
+            var loyaltydata = await getLoyaltyData()
+            setloyaltyData(loyaltydata)
         })();
         // getNotificationData()
         getUser()
@@ -51,6 +57,13 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
     //         })
     //     }
     // }
+
+    useEffect(() => {
+        const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
+        const loyaltyAmount = loyaltyPointsDB / 100;
+        setloyaltyPoints(loyaltyPointsDB)
+        setloyaltyAmount(loyaltyAmount)
+    }, [loyaltyData])
 
     const UserDataLocalStorage = async () => {
         if (localStorage.getItem("userid")) {
@@ -201,7 +214,17 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                 <Link href={`${origin}/${params?.lang}/`} className="border-b border-[#9CA4AB50] px-4 py-3 flex items-center justify-between text-[#004B7A] fill-[#004B7A]">
                     <div className="flex items-center gap-x-2">
                         <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width={23} fill="#004B7A"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M0 0h48v48H0z" fill="none"></path> <g id="Shopicon"> <path d="M40,14h-8V4L4,14v26c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V18C44,15.8,42.2,14,40,14z M36,29c0,1.105-0.895,2-2,2 c-1.105,0-2-0.895-2-2c0-1.105,0.895-2,2-2C35.105,27,36,27.895,36,29z M28,9.676V14H15.893L28,9.676z"></path> </g> </g></svg>
-                        <h2 className="text-sm font-semibold">{params.lang == 'ar' ? `لديك ${parseInt(discountAmount)?.toLocaleString('EN-US')} في محفظتك.` :  `You have ${parseInt(discountAmount)?.toLocaleString('EN-US')} in your wallet.`}</h2>
+                        <h2 className="text-sm font-semibold">
+                            {
+                                <>
+                                {params.lang == 'ar' ? "لديك" : "You have"} 
+                                <span className="h-5 font-bold text-blue-500 number-animation">
+                                <span className="font-bold text-blue-500 inline-flex">{parseInt(loyaltyAmount)?.toLocaleString('EN-US')}</span>
+                                <span className='text-center'>{parseInt(loyaltyPoints)?.toLocaleString('EN-US')}</span>
+                                </span> {params.lang == 'ar' ? "في محفظتك." : "in your wallet."} 
+                                </>
+                            }
+                        </h2>
                     </div>
                     <svg height="26" viewBox="0 0 24 24" width="26" className="rotate-180" xmlns="http://www.w3.org/2000/svg" id="fi_2722991"><g id="_17" data-name="17"><path d="m15 19a1 1 0 0 1 -.71-.29l-6-6a1 1 0 0 1 0-1.41l6-6a1 1 0 0 1 1.41 1.41l-5.29 5.29 5.29 5.29a1 1 0 0 1 -.7 1.71z"></path></g></svg>
                 </Link>
