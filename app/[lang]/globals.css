@@ -2421,7 +2421,7 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 }
 
 .number-animation::after {
-	content: '10000'; /* max width example */
+	content: '1000'; /* max width example */
 	visibility: hidden;
 	overflow: hidden;
 	white-space: nowrap;
