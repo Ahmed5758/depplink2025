@@ -833,7 +833,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
     else
         usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price);
-    const usableLoyaltyPoints = usableloyaltyAmount * 100;
+    const usableLoyaltyPoints = (usableloyaltyAmount * 100).toLocaleString('en-US');
     
     // loyalty work
     const setupLoyalty = ((e: any) => {
@@ -1332,54 +1332,80 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         </div>
                                     }
                                 </div>
-                                <div className="mt-8">
-                                    <h6 className="text-[#B15533]">{params.lang == 'ar' ? 'الدفع' : 'Paying off'}</h6>
-                                    <label className="text-[#004B7A] text-xs">{params.lang == 'ar' ? 'اختـار طريقة الدفع الخاصة بك' : 'Choose your payment method'}</label>
-                                    {loyaltyData && loyaltyData?.t_loyaltypoints >= 1 ? 
+                               <h6 className="text-[#B15533] mt-8">
+                                {params.lang == "ar" ? "الدفع" : "Paying off"}
+                                </h6>
+                                <div className="text-[#004B7A] text-xs">
+                                {params.lang == "ar"
+                                    ? "اختـار طريقة الدفع الخاصة بك"
+                                    : "Choose your payment method"}
+                                </div>
+                                <div className="mt-4">
+                                    {loyaltyData && loyaltyData?.t_loyaltypoints >= 1 ?
                                         <>
                                         {/* loyalty work */}
-                                        <div className="border bg-white border-[#219EBC] rounded-md p-3 flex flex-col items-center mb-5">
-                                            <div className="w-full mb-5">
-                                            <label className="flex items-center gap-1">
-                                                <input type="checkbox" className="form-checkbox cursor-pointer" 
-                                                checked={useLoyalty}
-                                                onChange={(e: any) => {
-                                                    setupLoyalty(e?.target.checked)
-                                                }}
-                                                />
-                                                <span className="peer-checked:text-[#1c262d] flex items-center gap-1 font-bold">{params?.lang == 'ar' ? 'ستخدمي' : 'Use my'} <span className="inline-flex items-center gap-1 text-[#1c262d]"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="15" height="15"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg> {usableLoyaltyPoints}</span> {params?.lang == 'ar' ? 'الاعتمادات' : 'credits'}</span>
-                                            </label>
-                                            {loyaltyAmount < summary?.filter((item:any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US") ? 
-                                                <p className="text-sm text-gray-500 mt-2">
-                                                {params?.lang == 'ar' ? 'رصيد متجرك لا يكفي للطلب، يرجى اختيار طريقة دفع إضافية لتغطية الرصيد المتبقي' : 'Your store credit balance is not sufficent for the oreder, please select an additional payment method to cover the balance of'}{' '}<span className="inline-flex items-center gap-1 text-[#1c262d]"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="14" height="14"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg> {summary?.filter((item:any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US")}</span>
-                                                </p>
-                                            :null}
-                                            </div>
-                                            <div className="flex justify-between items-center w-full">
-                                            <div className="flex items-center gap-4">
-                                                <img
-                                                src="\images\logo.webp"
-                                                alt="Logo"
-                                                width="120"
-                                                height="80"
-                                                className="object-contain postiion-center"
-                                                loading="lazy"
-                                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                                                />
-                                                <div>
-                                                <p className="text-sm text-gray-800 font-bold">
-                                                    {params?.lang == 'ar' ? 'نقاط تمكين' : 'Tamkeen Points'}
-                                                </p>
-                                                <p className="text-xs text-[#007714]">
-                                                    <span className="inline-flex items-center gap-1"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="15" height="15"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg></span>{' '}{usableLoyaltyPoints} {params?.lang == 'ar' ? 'تم استردادها إلى رصيد تمكين' : 'redeemed to tamkeen credits'}
-                                                </p>
+                                        <button onClick={() => setupLoyalty(!useLoyalty)} type="button" className="border bg-white border-[#219EBC80] rounded-md flex flex-col items-center mb-5 text-sm w-full text-left">
+                                            <div className="w-full bg-primary p-3 rounded-t-md text-white">
+                                            <div className="flex items-center gap-2">
+                                                <div
+                                                className="focus-visible:outline-none bg-primary border-0 bg-transparent"
+                                                onClick={() => setupLoyalty(!useLoyalty)}
+                                                >
+                                                {useLoyalty ?
+                                                    <div
+                                                    className="border-[#219EBC] text-white bg-[#219EBC] h-5 w-5 rounded-full">
+                                                    <div className="flex-1 items-center justify-center">
+                                                        <div className="shrink-0 text-white">
+                                                        <CheckIcon className="h-5 w-5" />
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                    :
+                                                    <div className="border-[#219EBC] text-white bg-white h-5 w-5 rounded-full"></div>
+                                                }
                                                 </div>
+
+                                                <label className="flex items-center gap-1 font-bold">
+                                                <span className="flex items-center gap-1 peer-checked:text-[#1c262d]">
+                                                    {params?.lang === "ar" ? "إجمالي النقاط" : "Total Points"}: {usableLoyaltyPoints}
+                                                </span>
+                                                </label>
                                             </div>
+                                            {loyaltyAmount < summary?.filter((item: any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US") ?
+                                                <p className="text-sm text-gray-500 mt-2">
+                                                {params?.lang == 'ar' ? 'رصيد متجرك لا يكفي للطلب، يرجى اختيار طريقة دفع إضافية لتغطية الرصيد المتبقي' : 'Your store credit balance is not sufficent for the oreder, please select an additional payment method to cover the balance of'}{' '}<span className="inline-flex items-center gap-1 text-[#1c262d]"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="13"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg>
+                                                    {summary?.filter((item: any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US")}
+                                                </span>
+                                                </p>
+                                                : null}
+                                            </div>
+                                            <div className="p-3 w-full">
+                                            <p className="text-sm text-gray-800 font-bold">{params?.lang == 'ar' ? 'نقاط تمكين' : 'Tamkeen Points'}</p>
+                                            <p className="text-xs text-[#007714]">
+                                                {/* <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="13"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg> */}
+                                                {/* </span>{' '}{usableLoyaltyPoints}  */}
+                                                {params?.lang === 'ar' ? (
+                                                <>
+                                                    التحويل إلى رصيد تمكين باستخدام حسابك المرتبط
+                                                    <strong className="font-bold">
+                                                    {`+966 ${phoneNumber?.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3")}`}
+                                                    </strong>
+                                                </>
+                                                ) : (
+                                                <>
+                                                    Convert to tamkeen credits using your&nbsp;
+                                                    <strong className="font-bold">
+                                                    {`+966 ${phoneNumber?.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3")}`}
+                                                    </strong>
+                                                    &nbsp;linked account
+                                                </>
+                                                )}
+                                            </p>
                                             </div>
                                             {/* loyalty work */}
-                                        </div>
+                                        </button>
                                         </>
-                                    :null}
+                                     : null}
                                     <RadioGroup value={paymentMethod} onChange={setpaymentMethod} className="mt-3">
                                         <div className="grid grid-cols-3 md:grid-cols-4 2xl:grid-cols-6 gap-x-3">
                                             {paymentmethods?.map((p: any, i) => {
