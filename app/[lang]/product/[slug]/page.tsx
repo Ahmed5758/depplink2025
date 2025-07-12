@@ -142,10 +142,12 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     }
 
     useEffect(() => {
-        pushGTMEvent({
-            type: 'view_item_list',
-            products: params?.data?.upsaleproductData?.products?.data,
-        });
+        if(params?.data?.upsaleproductData?.products?.data){
+            pushGTMEvent({
+                type: 'view_item_list',
+                products: params?.data?.upsaleproductData?.products?.data,
+            });
+        }
 
         pushGTMEvent({
             type: 'view_item',
@@ -185,8 +187,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
             currency: "SAR",
             platform: detectPlatform(),
             ...(isList && {
-                item_list_id: localStorage.getItem('item_list_id') ?? "",
-                item_list_name: localStorage.getItem('item_list_name') ?? ""
+                item_list_id: localStorage.getItem('item_list_id') ?? "5000",
+                item_list_name: localStorage.getItem('item_list_name') ?? "direct"
             }),
             ecommerce: {
                 items: productArray.map((item: any, index: number) => {
@@ -224,8 +226,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                         item_category2: item_category2 ?? "",
                         item_category3: item_category3 ?? "",
                         ...(!isList && {
-                            item_list_id: localStorage.getItem('item_list_id') ?? "",
-                            item_list_name: localStorage.getItem('item_list_name') ?? ""
+                            item_list_id: localStorage.getItem('item_list_id') ?? "5000",
+                            item_list_name: localStorage.getItem('item_list_name') ?? "direct"
                         }),
                         index,
                         quantity: sqty,
