@@ -11,6 +11,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { post } from "../../api/ApiCalls"
 import { useUserAgent } from 'next-useragent'
 import shoppingCart from "../../../../public/json/NoProductsFound.json"
+import { NewMedia } from '../../api/Api';
 
 const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ssr: true })
 const BrandSliderOther = dynamic(() => import('../../components/BrandSliderOther'), { ssr: true })
@@ -44,6 +45,94 @@ export default function Category({ params, searchParams }: { params: { lang: str
   const isMobileOrTablet = true;
   const path = usePathname();
   const [loaderStatus, setLoaderStatus] = useState<any>(false)
+
+
+  function calculateTimeLeft(endTime: any) {
+    const now: any = new Date();
+    const end: any = new Date(endTime);
+    const difference: any = end - now;
+
+    if (difference <= 0) {
+      return { expired: true };
+    }
+
+    return {
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+      expired: false
+    };
+  }
+
+  function detectPlatform() {
+    if (window.Android) return "Android-WebView";
+    if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+    if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+    return "Desktop";
+  }
+
+  const googleGTMList = () => {
+    // Push to GTM's dataLayer
+    const productDataGTM = params?.data?.productData?.products?.data
+    if (typeof window !== 'undefined' && window.dataLayer && productDataGTM?.length) {
+      // Clear previous ecommerce object
+      window.dataLayer.push({ ecommerce: null });
+      const totalPrice = productDataGTM.reduce((sum: number, item: { flash_sale_price?: number; sale_price?: number; price: number; }) => {
+        const itemPrice = item.flash_sale_price ?? item.sale_price ?? item.price;
+        return sum + (itemPrice || 0);
+      }, 0);
+      // Push GTM-compatible event
+      window.dataLayer.push({
+        event: "view_item_list",
+        value: totalPrice,
+        currency: "SAR",
+        platform: detectPlatform(),
+        item_list_name: isArabic ? params?.data?.category?.name_arabic : params?.data?.category?.name,
+        item_list_id: String(params?.data?.category?.id ?? ''), // Added item_list_id
+        ecommerce: {
+          items: productDataGTM.map((item: any, index: number) => {
+            const getOriginalPrice = () => {
+              if (!item?.flash_sale_price && !item?.sale_price) return item?.price;
+              return item?.price;
+            };
+            const getDiscountedPrice = () => {
+              let salePrice = item?.sale_price > 0 ? item?.sale_price : item?.price;
+              if (item?.promotional_price > 0) {
+                salePrice = Math.max(0, Number(salePrice) - Number(item?.promotional_price));
+              }
+              if (item?.flash_sale_expiry && item?.flash_sale_price) {
+                const timer = calculateTimeLeft(item?.flash_sale_expiry);
+                if (!timer?.expired) {
+                  salePrice = item?.flash_sale_price;
+                }
+              }
+
+              return salePrice;
+            };
+
+            const discountPrice = item?.price - getDiscountedPrice();
+            return {
+              item_id: item?.sku,
+              item_name: isArabic ? item?.name_arabic : item?.name,
+              price: Number(getDiscountedPrice()),
+              shelf_price: Number(getOriginalPrice()),
+              discount: Number(discountPrice ?? 0),
+              currency: "SAR",
+              item_brand: isArabic ? item?.brand?.name_arabic : item?.brand?.name,
+              item_image_link: `${NewMedia}${item?.featured_image?.image}`,
+              item_link: `${origin}/${isArabic ? 'ar' : 'en'}/product/${item?.slug}`,
+              item_availability: "in stock",
+              index: index,
+              quantity: 1,
+              id: item?.sku
+            }
+          })
+        }
+      });
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -143,6 +232,7 @@ export default function Category({ params, searchParams }: { params: { lang: str
     if (searchParams?.notifications?.length) {
       notificationCount()
     }
+    googleGTMList()
   }, [params])
 
   const notificationCount = () => {

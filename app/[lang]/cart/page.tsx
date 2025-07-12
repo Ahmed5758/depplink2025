@@ -61,6 +61,7 @@ export default function Cart({ params }: { params: { lang: string } }) {
     const [storeSearch, setstoreSearch] = useState<any>('')
     const [storeUpdateStatus, setstoreUpdateStatus] = useState<any>(false)
     const { updateWishlist, setUpdateWishlist } = useContext(GlobalContext);
+    const [gtmEventPushed, setGtmEventPushed] = useState<any>(false);
     const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(
             "left-to-right"
         );
@@ -125,8 +126,11 @@ export default function Cart({ params }: { params: { lang: string } }) {
     }, [params])
 
     useEffect(() => {
-        dataLayers()
-    }, [cartData])
+        if(cartData?.products && !gtmEventPushed){
+            pushGTMEvent()
+            setGtmEventPushed(true)
+        }
+    },[cartData?.products, gtmEventPushed])
 
 
     const getDiscountType = async () => {
@@ -134,6 +138,52 @@ export default function Cart({ params }: { params: { lang: string } }) {
             setDiscountType(responseJson?.data?.discount_type)
         })
     }
+
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
+
+    const pushGTMEvent = () => {
+        if (typeof window === 'undefined' || !window.dataLayer) return;
+
+        const isList = 'view_cart';
+        const productArray = Array.isArray(cartData.products) ? cartData.products : [];
+        if (!productArray.length) return;
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+            event: isList,
+            value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price), // sum of prices
+            currency: "SAR", // currency
+            platform: detectPlatform(),
+            ecommerce: {
+                items: productArray.map((item: any, index: number) => {
+                    const price = item?.bogo === 1 ? 0 : (item?.price > 0 ? Number(item?.price) : Number(item?.regular_price));
+                    const discountPrice: any = item?.regular_price - price;
+                    return {
+                        item_id: item?.sku,
+                        item_name: params.lang == 'ar' ? item?.name_arabic : item?.name,
+                        item_brand: params.lang == 'ar' ? item?.brand?.name_arabic : item?.brand?.name,
+                        item_image_link: `${item?.image}`,
+                        item_link: `${origin}/${params.lang == 'ar' ? 'ar' : 'en'}/${item?.slug}`,
+                        price: Number(price),
+                        shelf_price: Number(item?.regular_price),
+                        discount: Number(discountPrice),
+                        item_availability: "in stock",
+                        item_list_id: item?.item_list_id ?? "50000",
+                        item_list_name: item?.item_list_name ?? "direct",
+                        index: index + 1,
+                        quantity: item?.quantity ?? 1,
+                        id: item?.sku,
+                    }
+                }),
+            },
+        });
+    };
 
     const dataLayers = () => {
         window.dataLayer = window.dataLayer || [];
@@ -224,6 +274,7 @@ export default function Cart({ params }: { params: { lang: string } }) {
     }
 
     const updateQty = async (qty: any, key: any) => {
+        setGtmEventPushed(false)
         setLoaderStatus(true)
         if (cartData && cartData.products && cartData.products[key] && cartData.products[key].fbt && cartData.products[key].fbt.length >= 1) {
             const fbtArray = cartData.products[key].fbt;

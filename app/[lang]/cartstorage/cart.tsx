@@ -24,6 +24,8 @@ interface product {
     express: boolean,
     express_qty: number,
     express_total_qty: number,
+    item_list_id: string,
+    item_list_name: string,
 }
 
 interface fees {

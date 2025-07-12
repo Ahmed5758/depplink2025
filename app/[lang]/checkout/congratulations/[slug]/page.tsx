@@ -33,14 +33,119 @@ export default function Congratulations({ params }: { params: { lang: string, sl
         <path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path>
     </svg>;
 
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
+
     useEffect(() => {
         fbAPi()
         getGTM()
         if (orderDetails?.arabyads_check) {
             getArabyads()
         }
-
         getSnapCode()
+        
+        //gtm code
+        const orderId = params.data?.orderdata?.id || [];
+        const alreadyTracked = localStorage.getItem('purchaseTracked');
+        // If already tracked, do not fire again
+        if (alreadyTracked == String(orderId)) return;
+        const products = params.data?.orderdata?.details || [];
+        const couponName = params.data?.coupon || [];
+        const totalValue = params.data?.total || [];
+        const shippingItem = params?.data?.orderdata?.ordersummary?.find((item: any) => item.type == "shipping");
+        const shippingPrice = shippingItem ? Number(shippingItem.price) : 0;
+        const paymentmethod = params?.data?.orderdata?.paymentmethod;
+        //user profile
+        const storedProfile = localStorage.getItem('userProfileData');
+        let userProfileAtt = storedProfile ? JSON.parse(storedProfile) : {};
+        const userEmail = localStorage.getItem('eMail') || '';
+        const userPhone: any = `966${localStorage.getItem('phoneNumber') || ''}`;
+
+        const newRevenue = Number(totalValue);
+        userProfileAtt.total_purchases = (userProfileAtt.total_purchases || 0) + 1;
+        userProfileAtt.total_revenue = (userProfileAtt.total_revenue || 0) + newRevenue;
+        userProfileAtt.last_purchase_date = moment().locale('en').format('DD-MM-YYYY hh:mm A');
+        localStorage.setItem('userProfileData', JSON.stringify(userProfileAtt));
+        const fullName = localStorage.getItem('fullName');
+        const [firstname] = fullName?.trim().split(' ') || [];
+        const selectedProducts: any = products?.map((product: any) => {
+            const categories: any = product?.product_data?.productcategory ?? [];
+            const item_category: any = categories[0] ? (params?.lang === 'ar' ? categories[0].name_arabic ?? categories[0].name : categories[0].name) : "";
+            const item_category2: any = categories[1] ? (params?.lang === 'ar' ? categories[1].name_arabic ?? categories[1].name : categories[1].name) : "";
+            const item_category3: any = categories[2] ? (params?.lang === 'ar' ? categories[2].name_arabic ?? categories[2].name : categories[2].name) : "";
+            const discountPrice = product?.product_data?.price - product?.total;
+            return {
+                item_name: params?.lang === 'ar' ? (product?.product_data?.name_arabic ?? "") : (product?.product_data?.name ?? ""),
+                item_id: product?.product_data?.sku ?? "",
+                item_brand: params?.lang === 'ar' ? (product?.product_data?.brand?.name_arabic ?? "") : (product?.product_data?.brand?.name ?? ""),
+                item_category,
+                item_category2,
+                item_category3,
+                quantity: Number(product?.quantity ?? 0),
+                item_image_link: `${NewMedia}${product?.product_data?.featured_image?.image}`,
+                item_link: `${origin}/${params?.lang}/product/${product?.product_data?.slug ?? ""}`,
+                item_availability: "in stock",
+                shelf_price: Number(product?.product_data?.price ?? 0),
+                price: Number(product?.total) ?? 0,
+                discount: Number(discountPrice ?? 0),
+                item_list_id: localStorage.getItem('item_list_id') ?? "5000",
+                item_list_name: localStorage.getItem('item_list_name') ?? "direct",
+            };
+        }) ?? [];
+        const email: any = localStorage.getItem('eMail') || "";
+        const phoneNumber: any = `+996${localStorage.getItem('phoneNumber') || ""}`;
+        var SHA256 = require("crypto-js/sha256");
+        var encryptedEmail = SHA256(email);
+        var splittedfinalEmail = encryptedEmail.words.join("");
+        var finalEmail = splittedfinalEmail.split("-");
+
+        var encryptedPhone = SHA256(phoneNumber);
+        var splittedfinalPhone = encryptedPhone.words.join("");
+        var finalPhone = splittedfinalPhone.split("-");
+
+        var wind: any = typeof window !== "undefined" ? window.dataLayer : "";
+        wind = wind || [];
+        wind.push({ ecommerce: null });  // Clear the previous ecommerce object.
+        wind.push({
+            event: "purchase",
+            email: email,
+            phone: phoneNumber,
+            hashed_email: finalEmail.join(""),
+            hashed_phone: finalPhone.join(""),
+            platform: detectPlatform(),
+            ecommerce: {
+                transaction_id: String(orderId),
+                affiliation: "Online Store",
+                value: Number(totalValue),
+                payment_type: paymentmethod,
+                tax: 0,
+                shipping: shippingPrice,
+                currency: "SAR",
+                coupon: couponName,
+                items: selectedProducts
+            }
+        });
+        const userProfileAttributes = {
+            event: "global_variables",
+            platform: detectPlatform(),
+            account_creation_date: moment(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            user_id: String(userProfileAtt?.backend_user_id ?? ''),
+            email: userEmail ?? '',
+            phone: userPhone ?? '',
+            last_purchase_date: moment(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            store_language: userProfileAtt?.store_language ?? 'ar',
+            total_purchases: Number(userProfileAtt?.total_purchases ?? 0),
+            total_revenue: Number(userProfileAtt?.total_revenue ?? 0),
+            user_data_source: detectPlatform(),
+        };
+        wind.push(userProfileAttributes);
+        localStorage.setItem('purchaseTracked', String(orderId));
     }, [params]);
 
     useEffect(() => {

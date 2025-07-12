@@ -23,6 +23,28 @@ const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ss
 const RatingComponent = dynamic(() => import('../../components/ProductComponents/Rating'), { ssr: false })
 const ProductSliderComponent = dynamic(() => import("../../components/NewHomePageComp/ProductSlider"), { ssr: false });
 
+type GTMEventType =
+    | 'view_item_list'
+    | 'select_item'
+    | 'view_item'
+    | 'add_to_cart'
+    | 'remove_from_cart';
+
+interface ProductItem {
+    name: string;
+    slug: string;
+    price: number;
+    sale_price?: number;
+    brand: { name: string; name_arabic?: string };
+    featured_image: { image: string };
+    id: string | number;
+}
+
+interface PushGTMEventProps {
+    type: GTMEventType;
+    products: ProductItem | ProductItem[]; // can be one or many
+}
+
 export default function Product({ params, searchParams }: { params: { lang: string, data: any, devicetype: any }, searchParams: any }) {
     const [dict, setDict] = useState<any>([]);
     const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(
@@ -84,6 +106,14 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     const { updateCompare, setUpdateCompare } = useContext(GlobalContext);
     const { updateWishlist, setUpdateWishlist } = useContext(GlobalContext);
 
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
 
     const scrollTop = () => {
         if (scrollContainerRef.current) {
@@ -112,9 +142,111 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     }
 
     useEffect(() => {
+        pushGTMEvent({
+            type: 'view_item_list',
+            products: params?.data?.upsaleproductData?.products?.data,
+        });
+
+        pushGTMEvent({
+            type: 'view_item',
+            products: params?.data?.data, // single product
+        });
         if (!params?.devicetype)
             router.refresh()
     }, [params])
+
+    const breadcrumbs: any = params?.data?.breadcrumbs ?? [];
+    const item_category: any = breadcrumbs[0] ? (isArabic ? breadcrumbs[0]?.name_arabic : breadcrumbs[0]?.name) : "";
+    const item_category2: any = breadcrumbs[1] ? (isArabic ? breadcrumbs[1]?.name_arabic : breadcrumbs[1]?.name) : "";
+    const item_category3: any = breadcrumbs[2] ? (isArabic ? breadcrumbs[2]?.name_arabic : breadcrumbs[2]?.name) : "";
+
+
+    const handleGTMAddToCart = () => {
+        pushGTMEvent({
+            type: 'add_to_cart',
+            products: params?.data?.data, // single product,
+        });
+    };
+
+    const pushGTMEvent = ({
+        type,
+        products,
+    }: PushGTMEventProps) => {
+        if (typeof window === 'undefined' || !window.dataLayer) return;
+
+        const isList = type === 'view_item_list';
+        const productArray = Array.isArray(products) ? products : [products];
+        if (!productArray.length) return;
+
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+            event: type,
+            value: Number(getDiscountedPrice()),
+            currency: "SAR",
+            platform: detectPlatform(),
+            ...(isList && {
+                item_list_id: localStorage.getItem('item_list_id') ?? "",
+                item_list_name: localStorage.getItem('item_list_name') ?? ""
+            }),
+            ecommerce: {
+                items: productArray.map((item: any, index: number) => {
+                    const getOriginalPrice = () => {
+                        if (!item?.flash_sale_price && !item?.sale_price) return item?.price;
+                        return item?.price;
+                    };
+                    const getDiscountedPrice = () => {
+                        let salePrice = item?.sale_price > 0 ? item?.sale_price : item?.price;
+                        if (item?.promotional_price > 0) {
+                            salePrice = Math.max(0, Number(salePrice) - Number(item?.promotional_price));
+                        }
+                        if (item?.flash_sale_expiry && item?.flash_sale_price) {
+                            const timer = calculateTimeLeft(item?.flash_sale_expiry);
+                            if (!timer?.expired) {
+                                salePrice = item?.flash_sale_price;
+                            }
+                        }
+
+                        return salePrice;
+                    };
+
+                    const discountPrice = item?.price - getDiscountedPrice();
+                    return {
+                        item_id: item?.sku ?? "",
+                        item_name: isArabic ? item?.name_arabic : item?.name,
+                        item_brand: isArabic ? item?.brand?.name_arabic : item?.brand?.name,
+                        item_image_link: `${NewMedia}${item?.featured_image?.image}`,
+                        item_link: `${origin}/${isArabic ? 'ar' : 'en'}/${item?.slug}`,
+                        price: Number(getDiscountedPrice()),
+                        shelf_price: Number(getOriginalPrice()),
+                        discount: Number(discountPrice ?? 0),
+                        item_availability: "in stock",
+                        item_category: item_category ?? "",
+                        item_category2: item_category2 ?? "",
+                        item_category3: item_category3 ?? "",
+                        ...(!isList && {
+                            item_list_id: localStorage.getItem('item_list_id') ?? "",
+                            item_list_name: localStorage.getItem('item_list_name') ?? ""
+                        }),
+                        index,
+                        quantity: sqty,
+                        id: item?.sku ?? "",
+                    }
+                }),
+            },
+        });
+    };
+
+    useEffect(() => {
+        const newId = localStorage.getItem('item_list_id') ?? '';
+        const newName = localStorage.getItem('item_list_name') ?? '';
+
+        if (newId && newName && params?.data?.data) {
+            pushGTMEvent({
+                type: 'select_item',
+                products: params?.data?.data,
+            });
+        }
+    }, [params?.data?.data]);
 
     useEffect(() => {
 
@@ -669,7 +801,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         getCriteoAddToCart()
     }
     const buyNow = () => {
-        addDataLayer()
+        // addDataLayer()
         var discountpricevalue: any = 0;
         var addtionaldiscount: any = 0;
         var discounttype: any = 0;
@@ -748,7 +880,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         });
     }
     const addToCart = () => {
-        addDataLayer()
+        // addDataLayer()
 
         // Express delivery display
         if (extraData && extraData?.expressdeliveryData) {
@@ -805,6 +937,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                 discounted_amount: discountpricevalue,
                 discounttype: discounttype,
                 addtionaldiscount: addtionaldiscount,
+                item_list_id: localStorage.getItem('item_list_id') ?? '5000',
+                item_list_name: localStorage.getItem('item_list_name') ?? 'direct',
             }
 
             var gifts: any = false
@@ -832,7 +966,9 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                         discounted_amount: amount,
                         slug: element.productdetail?.slug,
                         pre_order: 0,
-                        pre_order_day: false
+                        pre_order_day: false,
+                        item_list_id: localStorage.getItem('item_list_id') ?? '5000',
+                        item_list_name: localStorage.getItem('item_list_name') ?? 'direct',
                     }
                     gifts.push(giftitem)
                 }
@@ -870,6 +1006,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                 discounted_amount: discountpricevalue,
                 discounttype: discounttype,
                 addtionaldiscount: addtionaldiscount,
+                item_list_id: localStorage.getItem('item_list_id') ?? '5000',
+                item_list_name: localStorage.getItem('item_list_name') ?? 'direct',
             }
 
             var gifts: any = false
@@ -898,7 +1036,9 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                             discounted_amount: amount,
                             slug: element.productdetail?.slug,
                             pre_order: 0,
-                            pre_order_day: false
+                            pre_order_day: false,
+                            item_list_id: localStorage.getItem('item_list_id') ?? '5000',
+                            item_list_name: localStorage.getItem('item_list_name') ?? 'direct',
                         }
                         gifts.push(giftitem)
                     }
@@ -957,6 +1097,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
             discounted_amount: discountpricevalue,
             discounttype: discounttype,
             addtionaldiscount: addtionaldiscount,
+            item_list_id: localStorage.getItem('item_list_id') ?? '5000',
+            item_list_name: localStorage.getItem('item_list_name') ?? 'direct',
         }
         var gifts: any = false;
         var fbt_false: any = false;
@@ -1936,6 +2078,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 }
                                 else {
                                     addToCart()
+                                    handleGTMAddToCart()
                                 }
                             }}
                                 className="btn border focus-visible:outline-none border-[#004B7A] bg-[#004B7A] p-2.5 rounded-md w-full text-white fill-white flex items-center justify-center font-medium gap-x-2">
@@ -1973,6 +2116,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         }
                                         else {
                                             addToCart()
+                                            handleGTMAddToCart()
                                         }
                                     }}
                                         className="btn border focus-visible:outline-none border-[#004B7A] bg-[#004B7A] p-2.5 rounded-md w-full text-white fill-white flex items-center justify-center font-medium gap-x-2">
@@ -2237,6 +2381,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                                                 }
                                                                 else {
                                                                     addToCart()
+                                                                    handleGTMAddToCart()
                                                                 }
                                                                 // addToCart()
                                                             } else {
@@ -2390,6 +2535,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                                                         onClick={() => {
                                                                             addToCart()
                                                                             setFbtisOpen(false)
+                                                                            handleGTMAddToCart()
                                                                         }} className="focus-visible:outline-none btn border border-[#004B7A] bg-[#004B7A] p-3 rounded-md w-[50%] text-white fill-white flex items-center justify-center font-medium gap-x-2">
                                                                         {addToCartLoading ?
                                                                             <svg height="24" viewBox="0 0 24 24" className="animate-spin h-6 w-6 mr-3 fill-white" width="24" xmlns="http://www.w3.org/2000/svg" id="fi_7235860"><path d="m12 22c5.421 0 10-4.579 10-10h-2c0 4.337-3.663 8-8 8s-8-3.663-8-8c0-4.336 3.663-8 8-8v-2c-5.421 0-10 4.58-10 10 0 5.421 4.579 10 10 10z"></path></svg>

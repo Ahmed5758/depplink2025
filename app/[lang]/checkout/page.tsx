@@ -70,6 +70,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     const [loaderStatus, setLoaderStatus] = useState<any>(true)
     const [errormsg, setErrorMsg] = useState<any>('')
     const [changeAddressPopup, setchangeAddressPopup] = useState(false)
+    const [webEngageStatus, setWebEngageStatus] = useState(false);
     const [checkTermCondition, setCheckTermCondition] = useState(false)
 
 
@@ -137,6 +138,134 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         }
         else {
             router.push(`/${params.lang}/login?type=checkout`)
+        }
+    }
+
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
+
+    const setGTMBBeginCheckout = () => {
+        var wind: any = typeof window !== "undefined" ? window.dataLayer : "";
+        wind = wind || [];
+        wind.push({ ecommerce: null }); // Clear the previous ecommerce object.
+        // Add product details
+        const selectedProducts: any = checkoutData?.products?.map((product: any, index: number) => {
+        const quantity: any = product?.quantity ?? 0;
+        const price: any = product?.bogo == 1
+            ? 0
+            : product?.price > 0
+            ? Number(product?.price)
+            : Number(product?.regular_price);
+        const discountPrice = product?.regular_price - product?.price;
+        return {
+            "item_id": product?.sku ?? "",
+            "item_name": params?.lang == 'ar' ? (product?.name_arabic ?? "") : (product?.name ?? ""),
+            "item_availability": "in stock",
+            "item_brand": params?.lang == 'ar' ? (product?.brand?.name_arabic ?? "") : (product?.brand?.name ?? ""),
+            "item_image_link": product?.image ?? "",
+            "item_link": `${origin}/${params?.lang}/product/${product?.slug ?? ""}`,
+            "item_list_id": product?.item_list_id ?? "50000",
+            "item_list_name": product?.item_list_name ?? "direct",
+            "price": Number(price),
+            "shelf_price": Number(product?.regular_price ?? 0),
+            "discount": Number(discountPrice),
+            "index": index,
+            "quantity": Number(quantity),
+            "bogo": product?.bogo ?? 0,
+            "id": product?.sku ?? "",
+        };
+        }) ?? [];
+
+        const neweventValue: any = selectedProducts?.filter((product: any) => product.bogo != 1)?.reduce((acc: number, product: any) => {
+        return acc + (product.quantity * product.price);
+        }, 0);
+
+        const fullNameRaw = localStorage.getItem('fullName') || "";
+        const fullName = fullNameRaw?.trim();
+        const [firstname = "", ...lastParts] = fullName ? fullName.split(' ') : [];
+        const lastname = lastParts.join(' ');
+
+        const email: any = localStorage.getItem('eMail') || "";
+        const phoneNumber: any = `+996${localStorage.getItem('phoneNumber') || ""}`;
+        var SHA256 = require("crypto-js/sha256");
+        var encryptedEmail = SHA256(email);
+        var splittedfinalEmail = encryptedEmail.words.join("");
+        var finalEmail = splittedfinalEmail.split("-");
+
+        var encryptedPhone = SHA256(phoneNumber);
+        var splittedfinalPhone = encryptedPhone.words.join("");
+        var finalPhone = splittedfinalPhone.split("-");
+        wind.push({
+        event: "begin_checkout",
+        value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price),
+        currency: "SAR",
+        platform: detectPlatform(),
+        email: email,
+        phone: phoneNumber,
+        hashed_email: finalEmail.join(""),
+        hashed_phone: finalPhone.join(""),
+        customerTotalOrderValue: summary?.filter((element: any) => element.key == 'total')[0]?.price, //total of all checkout item price
+        customerFirstName: firstname ?? "", //If name has been captured at this step
+        customerLastName: lastname ?? "",
+        ecommerce: {
+            items: selectedProducts,
+        }
+        });
+    }
+
+    const pushGTMEvent = ({
+        type
+      }: any) => {
+        if (typeof window === 'undefined' || !window.dataLayer) return;
+        const isList = type === 'add_shipping_info';
+        var wind: any = typeof window !== "undefined" ? window.dataLayer : "";
+        wind = wind || [];
+        wind.push({ ecommerce: null }); // Clear the previous ecommerce object.
+        // Add product details
+        const selectedProducts: any = checkoutData?.products?.map((product: any, index: number) => {
+          const quantity: any = product?.quantity ?? 0;
+          const price: any = product?.sale_price > 0 ? product?.sale_price : product?.price ?? 0;
+          const discountPrice = product?.regular_price - product?.price;
+          return {
+            "item_id": product?.sku ?? "",
+            "item_name": params?.lang == 'ar' ? (product?.name_arabic ?? "") : (product?.name ?? ""),
+            "currency": "SAR",
+            "item_brand": params?.lang == 'ar' ? (product?.brand?.name_arabic ?? "") : (product?.brand?.name ?? ""),
+            "index": index,
+            "quantity": Number(quantity),
+            "item_list_id": product?.item_list_id ?? "50000",
+            "item_list_name": product?.item_list_name ?? "direct",
+            "price": Number(price),
+            "shelf_price": Number(product?.regular_price ?? 0),
+            "discount": Number(discountPrice ?? 0),
+            "item_availability": "in stock",
+            "item_image_link": product?.image ?? "",
+            "item_link": `${origin}/${params?.lang}/product/${product?.slug ?? ""}`,
+          };
+        }) ?? [];
+        if (isList) {
+          wind.push({
+            event: "add_shipping_info",
+            currency: "SAR",    ///Currency code of you S
+            platform: detectPlatform(),
+            value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price),
+            items: selectedProducts,
+          });
+        } else {
+          wind.push({
+            event: "add_payment_info",
+            currency: "SAR",    ///Currency code of you S
+            platform: detectPlatform(),
+            value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price),
+            payment_type: paymentMethod == 'madapay' ? 'hyperpay' : paymentMethod,
+            items: selectedProducts,
+          });
         }
     }
 
@@ -234,15 +363,32 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     }, [paymentMethod])
 
     useEffect(() => {
-        if (activeTab3 == 3) {
-            var paymentkey = paymentMethod == 'madapay' ? 'hyperpay' : paymentMethod
-            if(paymentMethod != 'loyalty'){
-                if (!paymentkey || !paymentstatus[paymentkey + '_status']) {
-                    setActiveTab3(2)
-                }
-            }
+        if (activeTab3 == 2) {
+          pushGTMEvent({
+            type: "add_shipping_info",
+          });
         }
-    }, [activeTab3])
+        if (activeTab3 == 3) {
+          pushGTMEvent({
+            type: "add_payment_info",
+          });
+    
+          var paymentkey = paymentMethod == "madapay" ? "hyperpay" : paymentMethod;
+          // if (paymentMethod != 'loyalty') {
+            if (!paymentkey || !paymentstatus[paymentkey + "_status"]) {
+              setActiveTab3(2);
+            }
+          // }
+    
+        }
+      }, [activeTab3]);
+
+    useEffect(() => {
+        if (!webEngageStatus && checkoutData?.products?.length) {
+            setGTMBBeginCheckout();
+            setWebEngageStatus(true);
+        }
+    }, [webEngageStatus, checkoutData?.products]);
 
     const getDevice = () => {
         var deviceType: any = params.devicetype;

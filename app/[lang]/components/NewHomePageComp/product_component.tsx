@@ -18,6 +18,8 @@ export default function product_component(props: any) {
   const isMobileOrTablet = props?.isMobileOrTablet;
   var productData: any = props?.productData;
   const [isImageLoaded, setImageLoaded] = useState(false);
+  const gtmNewListId = props?.gtmColumnItemListId;
+  const gtmNewListName = props?.gtmColumnItemListName;
   // const [isImageLoaded, setImageLoaded] = useState(false);
 
   function calculateTimeLeft(endTime: any) {
@@ -463,6 +465,8 @@ export default function product_component(props: any) {
         discounted_amount: discountpricevalue,
         discounttype: discounttype,
         addtionaldiscount: addtionaldiscount,
+        item_list_id: gtmNewListId ?? '50000',
+        item_list_name: gtmNewListName ?? 'direct',
       }
       var gifts: any = false
       if (ProExtraData?.freegiftData) {
@@ -488,7 +492,9 @@ export default function product_component(props: any) {
             discounted_amount: amount,
             slug: element.productdetail?.slug,
             pre_order: 0,
-            pre_order_day: false
+            pre_order_day: false,
+            item_list_id: gtmNewListId ?? '50000',
+            item_list_name: gtmNewListName ?? 'direct',
           }
           gifts.push(giftitem)
         }
@@ -531,6 +537,8 @@ export default function product_component(props: any) {
         discounted_amount: discountpricevalue,
         discounttype: discounttype,
         addtionaldiscount: addtionaldiscount,
+        item_list_id: gtmNewListId ?? '50000',
+        item_list_name: gtmNewListName ?? 'direct',
       }
       var gifts: any = false
       if (ProExtraData?.freegiftData) {
@@ -559,7 +567,9 @@ export default function product_component(props: any) {
                 discounted_amount: amount,
                 slug: element.productdetail?.slug,
                 pre_order: 0,
-                pre_order_day: false
+                pre_order_day: false,
+                item_list_id: gtmNewListId ?? '50000',
+                item_list_name: gtmNewListName ?? 'direct',
               }
               gifts.push(giftitem)
             }
@@ -586,6 +596,74 @@ export default function product_component(props: any) {
   const productImgSkeleton: any = (
     <div className="2xl:w-[302px] xl:w-[200px] lg:w-[170px] md:w-[140px] sm:w-[240px w-[130px] 2xl:h-[302px] xl:h-[200px] lg:h-[170px] md:h-[140px] sm:h-[240px] h-[130px] bg-primary/10 animate-pulse mx-auto rounded-2xl"></div>
   );
+
+  function detectPlatform() {
+    if (window.Android) return "Android-WebView";
+    if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+    if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+    return "Desktop";
+  }
+
+  const pushGTMEvent = (eventName: string) => {
+    if (typeof window !== 'undefined' && window.dataLayer) {
+      // Clear previous ecommerce data
+      window.dataLayer.push({ ecommerce: null });
+      const getOriginalPrice = () => {
+        if (!productData?.flash_sale_price && !productData?.sale_price) return productData?.price;
+        return productData?.price;
+      };
+      const getDiscountedPrice = () => {
+        let salePrice = productData?.sale_price > 0 ? productData?.sale_price : productData?.price;
+        if (productData?.promotional_price > 0) {
+          salePrice = Math.max(0, Number(salePrice) - Number(productData?.promotional_price));
+        }
+        if (productData?.flash_sale_expiry && productData?.flash_sale_price) {
+          const timer = calculateTimeLeft(productData?.flash_sale_expiry);
+          if (!timer?.expired) {
+            salePrice = productData?.flash_sale_price;
+          }
+        }
+
+        return salePrice;
+      };
+
+      const discountPrice = productData?.price - getDiscountedPrice();
+      // Push new ecommerce event
+      window.dataLayer.push({
+        event: eventName,
+        platform: detectPlatform(),
+        event_value: Number(getDiscountedPrice()), // sum of prices
+        currency: "SAR", // currency
+        ecommerce: {
+          items: [
+            {
+              item_id: productData?.sku,
+              item_name: productTitle,
+              price: Number(getDiscountedPrice()),
+              item_brand: productBrand,
+              item_image_link: productFeaturedImage,
+              item_link: productSlug,
+              item_list_id: gtmNewListId ?? "50000",
+              item_list_name: gtmNewListName ?? "direct",
+              shelf_price: Number(getOriginalPrice()),
+              discount: Number(discountPrice ?? 0),
+              item_availability: "in stock",
+              index: productData?.id,
+              quantity: 1,
+              id: productData?.sku,
+            }
+          ]
+        }
+      });
+    }
+  };
+
+  const handleGTMAddToCart = () => {
+    pushGTMEvent('add_to_cart');
+  };
+
   return (
     <>
       <div className="tamkeenProduct_card relative w-full h-fit">
@@ -966,6 +1044,7 @@ export default function product_component(props: any) {
                 else {
                   addToCart(productData.id, 0, true, true)
                 }
+                handleGTMAddToCart()
               }}
             >
               {buttonTextCheckout}
@@ -981,6 +1060,7 @@ export default function product_component(props: any) {
                 else {
                   addToCart(productData.id, 0, true)
                 }
+                handleGTMAddToCart()
               }}
             >
               <svg width={isMobileOrTablet ? "16" : "24"} height={isMobileOrTablet ? "16" : "24"} viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">

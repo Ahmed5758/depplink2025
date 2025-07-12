@@ -7,6 +7,7 @@ import { getDictionary } from "../dictionaries"
 import { Switch, RadioGroup } from '@headlessui/react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation';
+import moment from 'moment';
 
 const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: true })
 
@@ -26,6 +27,7 @@ export default function Setting({ params }: { params: { lang: string, data: any,
 
     const changeLang = (lang: string) => {
         var url = path.replace(`/${params.lang}`, `/${lang}`);
+        setGtmUserProfileAttr(lang)
         router.push(`/${lang}`)
         router.refresh()
     };
@@ -106,6 +108,51 @@ export default function Setting({ params }: { params: { lang: string, data: any,
             </svg>
         )
     }
+
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
+
+    const setGtmUserProfileAttr = (lang: any) => {
+    var wind: any = typeof window !== "undefined" ? window.dataLayer : "";
+    wind = wind || [];
+
+    try {
+        const storedProfile = localStorage.getItem('userProfileData');
+        let userProfileAtt = storedProfile ? JSON.parse(storedProfile) : {};
+        const newLanguage = lang || 'ar'; // Default to 'ar' if lang is not provided
+        userProfileAtt = {
+        ...userProfileAtt,
+        store_language: newLanguage
+        };
+        const fullName = localStorage.getItem('fullName');
+        const userEmail = localStorage.getItem('eMail');
+        const userPhone: any = `966${localStorage.getItem('phoneNumber')}`;
+        const [firstname, ...lastname] = fullName?.trim().split(' ') || [];
+        const platform = detectPlatform()
+        localStorage.setItem('userProfileData', JSON.stringify(userProfileAtt));
+        wind.push({
+            event: "global_variables",
+            account_creation_date: moment(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            user_id : String(userProfileAtt?.backend_user_id ?? ''),
+            email : userEmail ?? '',
+            phone : userPhone ?? '',
+            last_purchase_date: moment(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            store_language: userProfileAtt?.store_language ?? 'ar',
+            total_purchases: userProfileAtt?.total_purchases ?? 0,
+            total_revenue : userProfileAtt?.total_revenue ?? 0,
+            user_data_source : platform,
+            platform: platform
+        });
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+    }
+    };
 
     return (
         <>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { NewMedia2 } from "./api/Api";
+import { NewMedia, NewMedia2 } from "./api/Api";
 import { userAgent } from "next/server";
 import { get } from "./api/ApiCalls";
 
@@ -42,6 +42,11 @@ export default function Homepage({ params }: { params: any }) {
   const [sec6SelectedIndex, setSec6SelectedIndex] = useState(0);
   const [sec6SelectedCategory, setSec6SelectedCategory] = useState<any>(null);
   const [sec6SelectedProducts, setSec6SelectedProducts] = useState<any>([]);
+  // Add this near your other state variables
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+  const sectionProductsMap = useRef<Record<string, any[]>>({});
+  const [gtmNewItemListId, setgtmNewItemListId] = useState<string | null>(null);
+  const [gtmNewItemListName, setgtmNewItemListName] = useState<string | null>(null);
 
   useEffect(() => {
     if (
@@ -66,12 +71,214 @@ export default function Homepage({ params }: { params: any }) {
     }
   }, [params, homepagepartonelatest, homepageparttwolatest]);
 
+  function calculateTimeLeft(endTime: any) {
+      const now: any = new Date();
+      const end: any = new Date(endTime);
+      const difference: any = end - now;
+  
+      if (difference <= 0) {
+        return { expired: true };
+      }
+  
+      return {
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+        expired: false
+      };
+    }
+    function detectPlatform() {
+      if (window.Android) return "Android-WebView";
+      if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+      if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+      return "Desktop";
+    }
+  
+    useEffect(() => {
+      const allProducts: any[] = [];
+  
+      // 1. Section One
+      const partOne: any = homepagepartonelatest?.first_five_sec;
+      const secFour: any = partOne?.section_four[0]?.products ?? [];
+  
+      // 2. Section Two
+      const secSix: any = homepageparttwolatest?.six_eleven_sec?.section_six[0]?.products || [];
+      const secNine: any = homepageparttwolatest?.six_eleven_sec?.section_nine?.products?.data || [];
+      const secTen: any = homepageparttwolatest?.six_eleven_sec?.section_ten?.products?.data || [];
+  
+      // 3. Section Three
+      const partThree: any = homepagepartthreelatest?.twelve_seventeen_sec || {};
+      const secTwelve: any = partThree?.sec_twelve_products?.products?.data || {};
+      const secFifteen: any = partThree?.sec_fifteen_products?.products?.data || [];
+      const secSixteen: any = partThree?.sec_sixteen_products?.products?.data || [];
+      const secSeventeen: any = partThree?.sec_seventeen_products?.products?.data || [];
+      // allProducts.push(...secFour, ...secSix, ...secNine, ...secTen, ...secTwelve, ...secFifteen, ...secSixteen, ...secSeventeen);
+      // const uniqueProducts: any = Array.from(new Map(allProducts.map(p => [p.id, p])).values());
+  
+      // Push to GTM's dataLayer
+      if (typeof window !== 'undefined' && window.dataLayer && activeSection) {
+        const sectionProducts = sectionProductsMap.current[activeSection] || [];
+  
+        if (sectionProducts.length === 0) return;
+      }
+  
+    }, [activeSection, isArabic, homepagepartonelatest]);
+
   const [isSection4Visible, setIsSection4Visible] = useState(false);
   const [isSection6NewVisible, setIsSection6NewVisible] = useState(false);
+  const handleIntersection = (entry: IntersectionObserverEntry) => {
+    const sectionId = entry.target.getAttribute("data-section");
+    const sectionIdKey = entry.target.getAttribute('data-section-id');
+
+    // Handle existing visibility states
+    if (entry.isIntersecting && sectionId) {
+      const id = parseInt(sectionId);
+
+      if (id === 5) setIsSection5Visible(true);
+      if (id === 6) setIsSection6Visible(true);
+      if (id === 7) setIsSection7Visible(true);
+      if (id === 8) setIsSection8Visible(true);
+      if (id === 9) setIsSection9Visible(true);
+      if (id === 10) setIsSection10Visible(true);
+      if (id === 11) setIsSection11Visible(true);
+      if (id === 12) setIsSection12Visible(true);
+      if (id === 13) setIsSection13Visible(true);
+      if (id === 14) setIsSection14Visible(true);
+      if (id === 15) setIsSection15Visible(true);
+      if (id === 16) setIsSection16Visible(true);
+      if (id === 17) setIsSection17Visible(true);
+      if (id === 18) setIsSection18Visible(true);
+
+      // Preload next section
+      const nextId = id + 1;
+      if (nextId === 6) setIsSection6Visible(true);
+      if (nextId === 7) setIsSection7Visible(true);
+      if (nextId === 8) setIsSection8Visible(true);
+      if (nextId === 9) setIsSection9Visible(true);
+      if (nextId === 10) setIsSection10Visible(true);
+      if (nextId === 11) setIsSection11Visible(true);
+      if (nextId === 12) setIsSection12Visible(true);
+      if (nextId === 13) setIsSection13Visible(true);
+      if (nextId === 14) setIsSection14Visible(true);
+      if (nextId === 15) setIsSection15Visible(true);
+      if (nextId === 16) setIsSection16Visible(true);
+      if (nextId === 17) setIsSection17Visible(true);
+      if (nextId === 18) setIsSection18Visible(true);
+    }
+
+    // DataLayer tracking
+    if (sectionIdKey && entry.intersectionRatio > 0.5) {
+      const { sectionName, itemListId, products } = getSectionData(sectionIdKey);
+
+      if (products.length > 0 && window.dataLayer) {
+        // Clear previous ecommerce object
+        window.dataLayer.push({ ecommerce: null });
+
+        // Sum all prices of section products
+        const totalPrice = products.reduce((sum: number, item: { flash_sale_price?: number; sale_price?: number; price: number; }) => {
+          const itemPrice = item.flash_sale_price ?? item.sale_price ?? item.price;
+          return sum + (itemPrice || 0);
+        }, 0);
+        localStorage.setItem('item_list_id', String(itemListId))
+        localStorage.setItem('item_list_name', sectionName)
+        setgtmNewItemListId(String(itemListId))
+        setgtmNewItemListName(sectionName)
+        // Push GTM-compatible event
+        window.dataLayer.push({
+          event: "view_item_list",
+          value: totalPrice,
+          currency: "SAR",
+          platform: detectPlatform(),
+          item_list_name: sectionName,
+          item_list_id: String(itemListId),
+          ecommerce: {
+            items: products.map((item: any, index: number) => {
+              const getOriginalPrice = () => {
+                if (!item?.flash_sale_price && !item?.sale_price) return item?.price;
+                return item?.price;
+              };
+              const getDiscountedPrice = () => {
+                let salePrice = item?.sale_price > 0 ? item?.sale_price : item?.price;
+                if (item?.promotional_price > 0) {
+                  salePrice = Math.max(0, Number(salePrice) - Number(item?.promotional_price));
+                }
+                if (item?.flash_sale_expiry && item?.flash_sale_price) {
+                  const timer = calculateTimeLeft(item?.flash_sale_expiry);
+                  if (!timer?.expired) {
+                    salePrice = item?.flash_sale_price;
+                  }
+                }
+                return salePrice;
+              };
+
+              const discountPrice = item?.price - getDiscountedPrice();
+              return {
+                item_id: item?.sku,
+                item_name: isArabic ? item?.name_arabic : item?.name,
+                price: Number(getDiscountedPrice()),
+                shelf_price: Number(getOriginalPrice()),
+                discount: Number(discountPrice ?? 0),
+                currency: "SAR",
+                item_brand: isArabic ? item?.brand?.name_arabic : item?.brand?.name,
+                item_image_link: `${NewMedia}${item?.featured_image?.image}`,
+                item_link: `${origin}/${isArabic ? 'ar' : 'en'}/product/${item?.slug}`,
+                item_availability: "in stock",
+                index: index,
+                quantity: 1,
+                id: item?.sku
+              }
+            })
+          }
+        });
+      }
+    }
+  };
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => handleIntersection(entry));
+      },
+      { threshold: [0.5], rootMargin: '0px 0px -30% 0px' }
+    );
+
+    observerRef.current = observer;
+
+    // Observe all sections
+    const allSections = [
+      section5Ref, section6Ref, section7Ref, section8Ref,
+      section9Ref, section10Ref, section11Ref, section12Ref,
+      section14Ref, section15Ref, section16Ref, section17Ref, section18Ref
+    ];
+
+    allSections.forEach(ref => {
+      if (ref.current) observer.observe(ref.current);
+    });
+
+    // Observe product sections
+    const productSections = [
+      'section4', 'section6', 'section9', 'section10',
+      'section12', 'section15', 'section16', 'section17'
+    ];
+
+    productSections.forEach(sectionId => {
+      const element = document.querySelector(`[data-section-id="${sectionId}"]`);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [activeSection, isArabic, homepagepartonelatest, homepageparttwolatest,
+    sec4SelectedCategory, sec6SelectedCategory, sec4SelectedProducts, sec6SelectedProducts]);
+
   const updateCategoryProducts = async (
     rowId: any,
     categoryIndex: any,
-    type: any
+    type: any,
   ) => {
     try {
       if (type == 1) setIsSection4Visible(true);
@@ -86,10 +293,50 @@ export default function Homepage({ params }: { params: any }) {
         setSec6SelectedIndex(categoryIndex);
         setSec6SelectedProducts(selectedProducts);
         setIsSection6NewVisible(false);
+        var catName = homepageparttwolatest?.six_eleven_sec?.section_six?.filter((item: any) => item?.category?.id == rowId)[0]
+        setSec6SelectedCategory(catName?.category)
+        // Trigger dataLayer push for section6 category change
+        setActiveSection('section6');
+        // Manually trigger the observer for section6
+        const sectionElement = document.querySelector('[data-section-id="section6"]');
+        if (sectionElement && observerRef.current) {
+          // Create a mock entry
+          const mockEntry = {
+            target: sectionElement,
+            isIntersecting: true,
+            intersectionRatio: 1,
+            boundingClientRect: sectionElement.getBoundingClientRect(),
+            intersectionRect: sectionElement.getBoundingClientRect(),
+            rootBounds: null,
+            time: performance.now()
+          } as IntersectionObserverEntry;
+
+          handleIntersection(mockEntry);
+        }
       } else {
         setSec4SelectedIndex(categoryIndex);
         setSec4SelectedProducts(selectedProducts);
         setIsSection4Visible(false);
+        var catName = homepagepartonelatest?.first_five_sec?.section_four?.filter((item: any) => item?.category?.id == rowId)[0]
+        setSec4SelectedCategory(catName?.category)
+        // Trigger dataLayer push for section4 category change
+        setActiveSection('section4');
+        // Manually trigger the observer for section4
+        const sectionElement = document.querySelector('[data-section-id="section4"]');
+        if (sectionElement && observerRef.current) {
+          // Create a mock entry
+          const mockEntry = {
+            target: sectionElement,
+            isIntersecting: true,
+            intersectionRatio: 1,
+            boundingClientRect: sectionElement.getBoundingClientRect(),
+            intersectionRect: sectionElement.getBoundingClientRect(),
+            rootBounds: null,
+            time: performance.now()
+          } as IntersectionObserverEntry;
+
+          handleIntersection(mockEntry);
+        }
       }
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -522,6 +769,100 @@ export default function Homepage({ params }: { params: any }) {
 
     return () => observer.disconnect();
   }, []);
+
+  // Initialize section-products mapping
+  useEffect(() => {
+    sectionProductsMap.current = {
+      'section4': sec4SelectedProducts,
+      'section6': sec6SelectedProducts,
+      'section9': sec9Products?.products?.data || [],
+      'section10': sec10Products?.products?.data || [],
+      'section12': sec12Products?.products?.data || [],
+      'section15': sec15Products?.products?.data || [],
+      'section16': sec16Products?.products?.data || [],
+      'section17': sec17Products?.products?.data || [],
+    };
+  }, [
+    sec4SelectedProducts,
+    sec6SelectedProducts,
+    sec9Products,
+    sec10Products,
+    sec12Products,
+    sec15Products,
+    sec16Products,
+    sec17Products
+  ]);
+
+  function getSectionData(sectionId: string) {
+    const secNew = sectionId.replace('section', '');
+    // Handle section3 with category names
+    if (sectionId === 'section4') {
+      const category = sec4SelectedCategory?.name || sec4SelectedCategory?.name_arabic;
+      return {
+        sectionName: `${homepageparttwolatest?.first_five_sec?.sec_four_title || 'Latest Products'} - ${category}`,
+        itemListId: `${secNew}_${sec4SelectedCategory?.id || 'default'}`,
+        products: sec4SelectedProducts
+      };
+    }
+
+    // Handle section6 with category names
+    if (sectionId === 'section6') {
+      const category = sec6SelectedCategory?.name || sec6SelectedCategory?.name_arabic;
+      return {
+        sectionName: `${homepageparttwolatest?.six_eleven_sec?.sec_six_title || 'Special Offers'} - ${category}`,
+        itemListId: `${secNew}_${sec6SelectedCategory?.id || 'default'}`,
+        products: sec6SelectedProducts
+      };
+    }
+
+    // Default section handling
+    return {
+      // sectionName: isArabic ? getArabicTitle(sectionId) : getEnglishTitle(sectionId),
+      sectionName: getEnglishTitle(sectionId),
+      itemListId: secNew, // Use section ID as item_list_id for other sections
+      products: getSectionProducts(sectionId)
+    };
+  }
+
+  function getEnglishTitle(sectionId: string): string {
+    switch (sectionId) {
+      // case 'section3':
+      //   return homepagepartonelatest?.first_five_sec?.sec_three_title || 'Section 3';
+      case 'section4':
+        return homepagepartonelatest?.first_five_sec?.sec_four_title || 'Latest Products';
+      case 'section6':
+        return homepageparttwolatest?.six_eleven_sec?.sec_six_title || 'Special Offers';
+      case 'section9':
+        return homepageparttwolatest?.six_eleven_sec?.sec_nine_title || 'Tamkeen Sales';
+      case 'section10':
+        return homepageparttwolatest?.six_eleven_sec?.sec_ten_title || 'Best Sellers';
+      case 'section12':
+        return homepagepartthreelatest?.twelve_seventeen_sec?.sec_twelve_title || 'Featured';
+      case 'section15':
+        return homepagepartthreelatest?.twelve_seventeen_sec?.sec_fifteen_title || 'Today\'s Deals';
+      case 'section16':
+        return homepagepartthreelatest?.twelve_seventeen_sec?.sec_sixteen_title || 'New Arrivals';
+      case 'section17':
+        return homepagepartthreelatest?.twelve_seventeen_sec?.sec_seventeen_title || 'Our Picks';
+      default:
+        return 'Products';
+    }
+  }
+
+  function getSectionProducts(sectionId: string): any[] {
+    switch (sectionId) {
+      // case 'section3': return homepagepartonelatest?.first_five_sec?.section_four || [];
+      case 'section4': return sec4SelectedProducts;
+      case 'section6': return sec6SelectedProducts;
+      case 'section9': return sec9Products?.products?.data || [];
+      case 'section10': return sec10Products?.products?.data || [];
+      case 'section12': return sec12Products?.products?.data || [];
+      case 'section15': return sec15Products?.products?.data || [];
+      case 'section16': return sec16Products?.products?.data || [];
+      case 'section17': return sec17Products?.products?.data || [];
+      default: return [];
+    }
+  }
 
   const [bannerOneVisible, setBannerOneVisible] = useState(true);
 

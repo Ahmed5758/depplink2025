@@ -1,6 +1,6 @@
 "use client"; // This is a client component 👈🏽
 
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import 'moment/locale/ar'
 import moment from 'moment'
 import Link from 'next/link'
@@ -9,7 +9,7 @@ import dynamic from 'next/dynamic'
 import { getDictionary } from "../../../dictionaries";
 import { usePathname } from "next/navigation"
 import { useRouter } from 'next-nprogress-bar';
-import { NewMedia } from '../../../api/Api';
+import { AdminApi, NewMedia } from '../../../api/Api';
 import { get, post } from "../../../api/ApiCalls";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -28,6 +28,18 @@ export default function AddressDetails({ params }: { params: { lang: string, dat
     const [addRating, setAddRating] = useState<any>([]);
     const [addTitle, setAddTitle] = useState<any>([]);
     const [addReview, setAddReview] = useState<any>([]);
+    const [uploadModal, setUploadModal] = useState<any>(false);
+    const isArabic = params.lang === 'ar';
+    const lang = params?.lang ?? 'ar';
+    const [userData, setUserData] = useState<any>([]);
+    const [facebookLink, setFacebookLink] = useState<any>('');
+    const [tiktokLink, setTiktokLink] = useState<any>('');
+    const [instagramLink, setInstagramLink] = useState<any>('');
+    const [youtubeLink, setYoutubeLink] = useState<any>('');
+    const [twitterLink, setTwitterLink] = useState<any>('');
+    const [categoryData, setCategoryData] = useState<any>([]);
+    const [filteredUsers, setFilteredUsers] = useState<any>([]);
+    const [selectedCategoryId, setSelectedCategoryId] = useState<any>(null);
 
     // CURRENCY SYMBOL //
     const currencySymbol = <svg className="riyal-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="11" height="12">
@@ -122,6 +134,133 @@ export default function AddressDetails({ params }: { params: { lang: string, dat
         typeof window !== 'undefined' && window.location.origin
             ? window.location.origin
             : '';
+
+    const validateLinks = (): boolean => {
+        const newErrors: any = {};           
+
+        if (facebookLink && (!facebookLink.includes('facebook.com'))) {
+            newErrors.facebook_link = isArabic
+                ? "يجب أن يكون رابط الفيسبوك رابطاً صالحاً"
+                : "Must be a valid Facebook URL";
+        }
+        if (twitterLink && (!twitterLink.includes('twitter.com'))) {
+            newErrors.twitter_link = isArabic
+                ? "يجب أن يكون رابط تويتر رابطاً صالحاً"
+                : "Must be a valid Twitter URL";
+        }
+        if (tiktokLink && (!tiktokLink.includes('tiktok.com'))) {
+            newErrors.tiktok_link = isArabic
+                ? "يجب أن يكون رابط تيك توك رابطاً صالحاً"
+                : "Must be a valid Tiktok URL";
+        }
+        if (instagramLink && (!instagramLink.includes('instagram.com'))) {
+            newErrors.instagram_link = isArabic
+                ? "يجب أن يكون رابط انستاجرام رابطاً صالحاً"
+                : "Must be a valid Instagram URL";
+        }
+
+        // Validate YouTube Link
+        if (youtubeLink && (!youtubeLink.includes('youtube.com'))) {
+            newErrors.youtube_link = isArabic
+                ? "يجب أن يكون رابط يوتيوب رابطاً صالحاً"
+                : "Must be a valid Youtube URL";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length == 0;
+    };
+
+    const extractImageName = (imageUrl: any): any => {
+        return imageUrl?.includes("new-media/") ? imageUrl?.split("new-media/")[1] : imageUrl;
+    };
+
+    const [ugcVideo, setUgcVideo] = useState<any>(null);
+    const videoRef: any = useRef(null);
+    const videoSectionRef: any = useRef(null);
+
+    const saveUGCData = async () => {
+        if (localStorage.getItem('userid')) {
+            if (!facebookLink && !tiktokLink && !instagramLink && !twitterLink && !youtubeLink) {
+                topMessageAlartDanger('Please add data.')
+                return false;
+            }
+            if (!validateLinks()) return false;
+
+            var sendData = {
+                user_id: localStorage.getItem('userid'),
+                facebook_link: facebookLink,
+                tiktok_link: tiktokLink,
+                instagram_link: instagramLink,
+                twitter_link: twitterLink,
+                youtube_link: youtubeLink,
+                video_link: extractImageName(ugcVideo),
+            }
+            await post(`marketing/ugc-store`, sendData).then((responseJson: any) => {
+                topMessageAlartSuccess('Success! Your UGC Created successfully.!')
+                // getUGCData()
+                setUgcVideo(null)
+                if (videoRef) {
+                    videoRef.current = null;
+                }
+                if (videoSectionRef) {
+                    videoSectionRef.current = null;
+                }
+            }).finally(() => {
+                setUploadModal(false)
+                setFacebookLink('')
+                setTiktokLink('')
+                setInstagramLink('')
+                setYoutubeLink('')
+                setTwitterLink('')
+                setErrors({
+                    facebook_link: null,
+                    twitter_link: null,
+                    tiktok_link: null,
+                    instagram_link: null,
+                    youtube_link: null,
+                });
+            })
+        } else {
+            router.push(`/${params.lang}`)
+        }
+    }
+
+    const [errors, setErrors] = useState<any>({
+        facebook_link: '',
+        twitter_link: '',
+        tiktok_link: '',
+        instagram_link: '',
+        youtube_link: '',
+    });
+
+    useEffect(() => {
+        if (videoRef.current) {
+            videoRef.current.load();
+        }
+    }, [ugcVideo])
+
+    const handleVideoUpload = async (event: any) => {
+        const formData: any = new FormData();
+        var head:{
+            'Content-Type': 'multipart/form-data'
+        }
+        formData.append('file', event.target.files[0]);
+        const data = await fetch(AdminApi + 'productmedia-video', {
+            method: "post",
+            // headers: head,
+            body: formData,
+        });
+        const uploadedImage = await data.json();
+        if (uploadedImage.success === true) {
+            topMessageAlartSuccess(isArabic ? 'تم رفع الفيديو بنجاح' : 'Video uploaded successfully')
+            setUgcVideo(NewMedia + uploadedImage?.id)
+        } 
+        else if(uploadedImage.success === false && uploadedImage.message) { 
+            topMessageAlartDanger((isArabic ? 'خطأ: ' : 'Error: ') + uploadedImage.message)
+        }
+        else {
+            console.log("Error Found");
+        }
+    }
 
     return (
         <>
@@ -670,6 +809,191 @@ export default function AddressDetails({ params }: { params: { lang: string, dat
                                             <button onClick={() => SubmitReview()}
                                                 className="focus-visible:outline-none btn border border-[#004B7A] bg-[#004B7A] p-2.5 rounded-md w-full text-white fill-white font-medium">
                                                 {params.lang == 'ar' ? 'الغاء الطلب' : "Add Review's"}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition>
+            {/* UGC Modal */}
+            <Transition appear show={uploadModal} as={Fragment}>
+                <Dialog as="div" open={uploadModal} onClose={() => setUploadModal(false)}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter="ease-out duration-300"
+                        enterFrom="opacity-0"
+                        enterTo="opacity-100"
+                        leave="ease-in duration-200"
+                        leaveFrom="opacity-100"
+                        leaveTo="opacity-0"
+                    >
+                        <div className="fixed inset-0" />
+                    </Transition.Child>
+                    <div className="fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto">
+                        <div className="flex items-start justify-center min-h-screen px-4">
+                            <Transition.Child
+                                as={Fragment}
+                                enter="ease-out duration-300"
+                                enterFrom="opacity-0 scale-95"
+                                enterTo="opacity-100 scale-100"
+                                leave="ease-in duration-200"
+                                leaveFrom="opacity-100 scale-100"
+                                leaveTo="opacity-0 scale-95"
+                            >
+                                <Dialog.Panel as="div" className="panel bg-white border-0 p-0 rounded-lg overflow-hidden my-20 w-full max-w-2xl text-black">
+                                    <div className="flex bg-[#fbfbfb] items-center justify-between px-5 py-3">
+                                        <h5 className="font-bold text-base">{isArabic ? 'رفع فيديو جديد' : 'Upload New Video'}</h5>
+                                        <button onClick={() => setUploadModal(false)} type="button" className="text-white-dark hover:text-dark">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="1.5"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div className="p-5 space-y-4">
+                                    {ugcVideo &&
+                                    <video ref={videoRef} controls={false} muted autoPlay loop className="w-full h-60 rounded-md">
+                                        <source src={ugcVideo} />
+                                    </video> }
+                                        <div className='bg-gray/30 p-10 rounded-md'>
+                                            <div className='text-center p-2 rounded-md w-64 mx-auto'>
+                                                <button className="btn_primaryCustomXS"
+                                                onClick={() => videoSectionRef.current?.click()}
+                                                >
+                                                    <input
+                                                        type="file"
+                                                        accept="video/mp4, video/avi, video/mov"
+                                                        style={{ display: 'none' }} // Hide the file input
+                                                        ref={videoSectionRef}
+                                                        onChange={(e) => handleVideoUpload(e)} // Handle file selection
+                                                    />
+                                                    {isArabic ? 'رفع فيديو' : 'Update Video'}
+                                                </button>
+                                                </div>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <div>
+                                                <div className='text-xs font-semibold flex items-center gap-x-2 border border-primary/25 rounded-md'>
+                                                    <div className='bg-primary p-2 rounded-l-md disabled:bg-primary/25'>
+                                                        <svg id="fi_3128208" enableBackground="new 0 0 100 100" height="20" viewBox="0 0 100 100" width="20" xmlns="http://www.w3.org/2000/svg"><g id="_x30_1._Facebook" className="fill-white hover:fill-secondary"><path id="Icon_11_" d="m40.4 55.2c-.3 0-6.9 0-9.9 0-1.6 0-2.1-.6-2.1-2.1 0-4 0-8.1 0-12.1 0-1.6.6-2.1 2.1-2.1h9.9c0-.3 0-6.1 0-8.8 0-4 .7-7.8 2.7-11.3 2.1-3.6 5.1-6 8.9-7.4 2.5-.9 5-1.3 7.7-1.3h9.8c1.4 0 2 .6 2 2v11.4c0 1.4-.6 2-2 2-2.7 0-5.4 0-8.1.1-2.7 0-4.1 1.3-4.1 4.1-.1 3 0 5.9 0 9h11.6c1.6 0 2.2.6 2.2 2.2v12.1c0 1.6-.5 2.1-2.2 2.1-3.6 0-11.3 0-11.6 0v32.6c0 1.7-.5 2.3-2.3 2.3-4.2 0-8.3 0-12.5 0-1.5 0-2.1-.6-2.1-2.1 0-10.5 0-32.4 0-32.7z"></path></g></svg>
+                                                    </div>
+                                                    <div className='w-full p-2'>
+                                                        {/* <label>{isArabic ? 'فيسبوك' : 'Facebook'}</label> */}
+                                                        <input
+                                                            value={facebookLink}
+                                                            placeholder={isArabic ? 'فيسبوك' : 'Enter link here...'}
+                                                            onChange={(e) => setFacebookLink(e.target.value)}
+                                                            className={`w-full bg-white text-xs font-normal text-black outline-none focus:ring-transparent
+                                                        ${errors.facebook_link ? 'border-[#ff0000]' : 'border-white-light focus:border-primary dark:focus:border-primary'}`}
+                                                            type="text"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {errors.facebook_link && <p className="text-[#ff0000] text-xs mt-1">{errors.facebook_link}</p>}
+                                            </div>
+
+                                            <div>
+                                                <div className='text-xs font-semibold flex items-center gap-x-2 border border-primary/25 rounded-md'>
+                                                    <div className='bg-primary p-2 rounded-l-md disabled:bg-primary/25'>
+                                                        <svg id="fi_3046120" enableBackground="new 0 0 512 512" height="20" viewBox="0 0 512 512" width="20" xmlns="http://www.w3.org/2000/svg" className="fill-white hover:fill-secondary"><g><path d="m480.32 128.39c-29.22 0-56.18-9.68-77.83-26.01-24.83-18.72-42.67-46.18-48.97-77.83-1.56-7.82-2.4-15.89-2.48-24.16h-83.47v228.08l-.1 124.93c0 33.4-21.75 61.72-51.9 71.68-8.75 2.89-18.2 4.26-28.04 3.72-12.56-.69-24.33-4.48-34.56-10.6-21.77-13.02-36.53-36.64-36.93-63.66-.63-42.23 33.51-76.66 75.71-76.66 8.33 0 16.33 1.36 23.82 3.83v-62.34-22.41c-7.9-1.17-15.94-1.78-24.07-1.78-46.19 0-89.39 19.2-120.27 53.79-23.34 26.14-37.34 59.49-39.5 94.46-2.83 45.94 13.98 89.61 46.58 121.83 4.79 4.73 9.82 9.12 15.08 13.17 27.95 21.51 62.12 33.17 98.11 33.17 8.13 0 16.17-.6 24.07-1.77 33.62-4.98 64.64-20.37 89.12-44.57 30.08-29.73 46.7-69.2 46.88-111.21l-.43-186.56c14.35 11.07 30.04 20.23 46.88 27.34 26.19 11.05 53.96 16.65 82.54 16.64v-60.61-22.49c.02.02-.22.02-.24.02z"></path></g></svg>
+                                                    </div>
+                                                    <div className='w-full p-2'>
+                                                        {/* <label>{isArabic ? 'فيسبوك' : 'Facebook'}</label> */}
+                                                        <input
+                                                            value={tiktokLink}
+                                                            placeholder={isArabic ? 'فيسبوك' : 'Enter link here...'}
+                                                            onChange={(e) => setTiktokLink(e.target.value)}
+                                                            className={`w-full bg-white text-xs font-normal text-black outline-none focus:ring-transparent
+                                                        ${errors.tiktok_link ? 'border-[#ff0000]' : 'border-white-light focus:border-primary dark:focus:border-primary'}`}
+                                                            type="text"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {errors.tiktok_link && <p className="text-[#ff0000] text-xs mt-1">{errors.tiktok_link}</p>}
+                                            </div>
+
+                                            <div>
+                                                <div className='text-xs font-semibold flex items-center gap-x-2 border border-primary/25 rounded-md'>
+                                                    <div className='bg-primary p-2 rounded-l-md disabled:bg-primary/25'>
+                                                        <svg id="fi_2111491" enableBackground="new 0 0 24 24" height="18" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg" className="fill-white hover:fill-secondary"><path d="m12.004 5.838c-3.403 0-6.158 2.758-6.158 6.158 0 3.403 2.758 6.158 6.158 6.158 3.403 0 6.158-2.758 6.158-6.158 0-3.403-2.758-6.158-6.158-6.158zm0 10.155c-2.209 0-3.997-1.789-3.997-3.997s1.789-3.997 3.997-3.997 3.997 1.789 3.997 3.997c.001 2.208-1.788 3.997-3.997 3.997z"></path><path d="m16.948.076c-2.208-.103-7.677-.098-9.887 0-1.942.091-3.655.56-5.036 1.941-2.308 2.308-2.013 5.418-2.013 9.979 0 4.668-.26 7.706 2.013 9.979 2.317 2.316 5.472 2.013 9.979 2.013 4.624 0 6.22.003 7.855-.63 2.223-.863 3.901-2.85 4.065-6.419.104-2.209.098-7.677 0-9.887-.198-4.213-2.459-6.768-6.976-6.976zm3.495 20.372c-1.513 1.513-3.612 1.378-8.468 1.378-5 0-7.005.074-8.468-1.393-1.685-1.677-1.38-4.37-1.38-8.453 0-5.525-.567-9.504 4.978-9.788 1.274-.045 1.649-.06 4.856-.06l.045.03c5.329 0 9.51-.558 9.761 4.986.057 1.265.07 1.645.07 4.847-.001 4.942.093 6.959-1.394 8.453z"></path><circle cx="18.406" cy="5.595" r="1.439"></circle></svg>
+                                                    </div>
+                                                    <div className='w-full p-2'>
+                                                        {/* <label>{isArabic ? 'إنستغرام' : 'Instagram'}</label> */}
+                                                        <input
+                                                            value={instagramLink}
+                                                            placeholder={isArabic ? 'فيسبوك' : 'Enter link here...'}
+                                                            onChange={(e) => setInstagramLink(e.target.value)}
+                                                            className={`w-full bg-white text-xs font-normal text-black outline-none focus:ring-transparent 
+                                                        ${errors.instagram_link ? 'border-[#ff0000]' : 'border-white-light focus:border-primary dark:focus:border-primary'}`}
+                                                            type="text"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {errors.instagram_link && <p className="text-[#ff0000] text-xs mt-1">{errors.instagram_link}</p>}
+                                            </div>
+
+                                            <div>
+                                                <div className='text-xs font-semibold flex items-center gap-x-2 border border-primary/25 rounded-md'>
+                                                    <div className='bg-primary p-2 rounded-l-md disabled:bg-primary/25'>
+                                                        <svg id="fi_3128212" enableBackground="new 0 0 100 100" height="18" viewBox="0 0 100 100" width="20" xmlns="http://www.w3.org/2000/svg" className="fill-white hover:fill-secondary"><path id="_x30_4.Twitter" d="m89.9 25.2c-3 1.3-6.1 2.2-9.4 2.6 3.4-2 6-5.2 7.2-9.1-3.2 1.9-6.7 3.2-10.4 4-3-3.2-7.3-5.2-12-5.2-9.1 0-16.4 7.4-16.4 16.4 0 1.3.1 2.5.4 3.7-13.6-.6-25.6-7.2-33.7-17.1-5.8 10.4.7 19 5 21.9-2.6 0-5.2-.8-7.4-2 0 8.1 5.7 14.8 13.1 16.3-1.6.5-5.2.8-7.4.3 2.1 6.5 8.2 11.3 15.3 11.4-5.6 4.4-13.8 7.9-24.3 6.8 7.3 4.7 15.9 7.4 25.2 7.4 30.2 0 46.6-25 46.6-46.6 0-.7 0-1.4-.1-2.1 3.4-2.5 6.2-5.4 8.3-8.7z"></path></svg>
+                                                    </div>
+                                                    <div className='w-full p-2'>
+                                                        {/* <label>{isArabic ? 'تويتر' : 'Twitter'}</label> */}
+                                                        <input
+                                                            value={twitterLink}
+                                                            placeholder={isArabic ? 'فيسبوك' : 'Enter link here...'}
+                                                            onChange={(e) => setTwitterLink(e.target.value)}
+                                                            className={`w-full bg-white text-xs font-normal text-black outline-none focus:ring-transparent 
+                                                        ${errors.twitter_link ? 'border-[#ff0000]' : 'border-white-light focus:border-primary dark:focus:border-primary'}`}
+                                                            type="text"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {errors.twitter_link && <p className="text-[#ff0000] text-xs mt-1">{errors.twitter_link}</p>}
+                                            </div>
+
+                                            <div>
+                                                <div className='text-xs font-semibold flex items-center gap-x-2 border border-primary/25 rounded-md'>
+                                                    <div className='bg-primary p-2 rounded-l-md disabled:bg-primary/25'>
+                                                        <svg height="20" viewBox="-21 -117 682.66672 682" width="20" xmlns="http://www.w3.org/2000/svg" id="fi_1384028" className="fill-white hover:fill-secondary"><path d="m626.8125 64.035156c-7.375-27.417968-28.992188-49.03125-56.40625-56.414062-50.082031-13.703125-250.414062-13.703125-250.414062-13.703125s-200.324219 0-250.40625 13.183593c-26.886719 7.375-49.03125 29.519532-56.40625 56.933594-13.179688 50.078125-13.179688 153.933594-13.179688 153.933594s0 104.378906 13.179688 153.933594c7.382812 27.414062 28.992187 49.027344 56.410156 56.410156 50.605468 13.707031 250.410156 13.707031 250.410156 13.707031s200.324219 0 250.40625-13.183593c27.417969-7.378907 49.03125-28.992188 56.414062-56.40625 13.175782-50.082032 13.175782-153.933594 13.175782-153.933594s.527344-104.382813-13.183594-154.460938zm-370.601562 249.878906v-191.890624l166.585937 95.945312zm0 0"></path></svg>
+                                                    </div>
+                                                    <div className='w-full p-2'>
+                                                        {/* <label>{isArabic ? 'يوتيوب' : 'Youtube'}</label> */}
+                                                        <input
+                                                            value={youtubeLink}
+                                                            placeholder={isArabic ? 'فيسبوك' : 'Enter link here...'}
+                                                            onChange={(e) => setYoutubeLink(e.target.value)}
+                                                            className={`w-full bg-white text-xs font-normal text-black outline-none focus:ring-transparent 
+                                                        ${errors.youtube_link ? 'border-[#ff0000]' : 'border-white-light focus:border-primary dark:focus:border-primary'}`}
+                                                            type="text"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                {errors.youtube_link && <p className="text-[#ff0000] text-xs mt-1">{errors.youtube_link}</p>}
+                                            </div>
+                                        </div>
+                                        <div className='flex justify-end mt-14'>
+                                            <button
+                                                type="button"
+                                                onClick={async () => {
+                                                    const isValid: any = await saveUGCData();
+                                                    if (isValid) setUploadModal(false);
+                                                }}
+                                                className="focus-visible:outline-none bg-[#004B7A] border border-[#004B7A] hover:bg-[#00446f] hover:border-[#00446f] text-white rounded-md px-5 py-2 text-sm font-medium">
+                                                {isArabic ? 'حفظ' : 'Save'}
                                             </button>
                                         </div>
                                     </div>
