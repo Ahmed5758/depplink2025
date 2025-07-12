@@ -195,6 +195,15 @@ export default function Register({ params, searchParams }: {
         })
     }
 
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
+
     const Register = () => {
         var data = {
             phone_number: phoneNumWithoutDash,
@@ -223,6 +232,38 @@ export default function Register({ params, searchParams }: {
                 setUpdateCompare(updateCompare == 0 ? 1 : 0)
                 // params.onClose()
                 topMessageAlartSuccess(dict?.login.Register)
+                const status = responseJson?.error
+                    ? `Signup Failed: ${responseJson.error.message || 'Unknown error'}`
+                    : 'Signup Success';
+
+                let genUserId = localStorage.getItem('webengageUserId');
+
+                // Generate new userId if not present
+                if (!genUserId) {
+                    genUserId = crypto.randomUUID();
+                    localStorage.setItem('webengageUserId', genUserId);
+                }
+
+                // Now always push event (not inside the if block anymore)
+                window.dataLayer = window.dataLayer || [];
+
+                const gender = genderStatus === 1 ? 'male' : 'female';
+                const fullName = responseJson.userNew?.full_name?.toString() || '';
+                const [first_name, ...lastNameParts] = fullName.trim().split(' ');
+                const last_name = lastNameParts.join(' ');
+
+                window.dataLayer.push({
+                    event: 'sign_up',
+                    platform: detectPlatform(),
+                    gender,
+                    email: responseJson.userNew?.email?.toString() || '',
+                    phone: `966${responseJson.userNew?.phone_number?.toString() || ''}`,
+                    user_id: genUserId, // ✅ Now uses stable UUID
+                    status, // Or dynamically set based on API response
+                    method: 'otp',
+                    first_name,
+                    last_name
+                });
                 if (searchParams?.type) {
                     router.push('/' + params.lang + '/' + searchParams?.type, { scroll: false })
                 }

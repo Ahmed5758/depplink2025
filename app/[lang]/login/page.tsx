@@ -336,6 +336,15 @@ export default function Login({ params, searchParams }: {
         
     }
 
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
+
     const CheckOtp = () => {
         var dataotp = {
             phone_number: phoneNumber,
@@ -384,6 +393,55 @@ export default function Login({ params, searchParams }: {
                     setUpdateOrder(updateOrder == 0 ? 1 : 0)
                     setUpdateWishlist(updateWishlist == 0 ? 1 : 0)
                     setUpdateCompare(updateCompare == 0 ? 1 : 0)
+                    // Generate and store new userId if not present
+                    const fullName = responseJson.user?.full_name?.toString() || '';
+                    const [firstname, ...lastnameParts] = fullName?.trim().split(' ') || [];
+                    const lastname = lastnameParts.join(' ');
+
+                    var wind: any = typeof window !== "undefined" ? window.dataLayer : "";
+                    wind = wind || [];
+                    // if (!genUserId) {
+                    let genUserId = crypto.randomUUID();
+                    // localStorage.setItem('webengageUserId', genUserId);
+                    const gender = responseJson.user?.gender === 1 ? 'male' : 'female';
+
+                    wind.push({
+                        event: 'login',
+                        platform: detectPlatform(),
+                        gender: gender,
+                        email: responseJson.user?.email?.toString() || '',
+                        phone: `966${responseJson.user?.phone_number?.toString() || ''}`,
+                        user_id: genUserId, // Use generated UUID as userId
+                        status: status, // Or "Login Success"
+                        method: 'otp_login', // Can be "email", "gmail", "fb", etc.
+                        first_name: firstname,
+                        last_name: lastname
+                    });
+                    const userEmail = responseJson.user?.email?.toString() || '';
+                    const userPhone: any = `966${responseJson.user?.phone_number?.toString() || ''}`;
+                    const userProfileAtt: any = {
+                        "account_creation_date": responseJson?.user_webengage_data?.account_creation_date ? moment(responseJson?.user_webengage_data?.account_creation_date).locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        "backend_user_id": `${responseJson?.user_webengage_data?.backend_user_id ?? ''}`,
+                        "last_purchase_date": responseJson?.user_webengage_data?.last_purchase_date ? moment(responseJson.user_webengage_data?.last_purchase_date).locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        "store_language": responseJson?.user_webengage_data?.store_language ?? 'ar',
+                        "total_purchases": responseJson?.user_webengage_data?.total_purchases ?? 0,
+                        "total_revenue": responseJson?.user_webengage_data?.total_revenue ?? 0,
+                        "user_data_source": detectPlatform ?? 'desktop'
+                    };
+                    wind.push({
+                        event: "global_variables",
+                        account_creation_date: moment(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        user_id: String(userProfileAtt?.backend_user_id ?? ''),
+                        email: userEmail ?? '',
+                        phone: userPhone ?? '',
+                        last_purchase_date: moment(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        store_language: userProfileAtt?.store_language ?? 'ar',
+                        total_purchases: Number(userProfileAtt?.total_purchases ?? 0),
+                        total_revenue: Number(userProfileAtt?.total_revenue ?? 0),
+                        user_data_source: detectPlatform(),
+                        platform: detectPlatform()
+                    });
+                    localStorage.setItem('userProfileData', JSON.stringify(userProfileAtt));
                 })
                 if (searchParams?.type) {
                     router.push('/' + params.lang + '/' + searchParams?.type, { scroll: false })
