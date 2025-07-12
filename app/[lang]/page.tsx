@@ -799,7 +799,7 @@ export default function Homepage({ params }: { params: any }) {
     if (sectionId === 'section4') {
       const category = sec4SelectedCategory?.name || sec4SelectedCategory?.name_arabic;
       return {
-        sectionName: `${homepageparttwolatest?.first_five_sec?.sec_four_title || 'Latest Products'} - ${category}`,
+        sectionName: `${homepagepartonelatest?.first_five_sec?.sec_four_title || 'Latest Products'} - ${category}`,
         itemListId: `${secNew}_${sec4SelectedCategory?.id || 'default'}`,
         products: sec4SelectedProducts
       };
