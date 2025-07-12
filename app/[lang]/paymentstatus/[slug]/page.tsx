@@ -51,6 +51,28 @@ export default function PaymentStatus({ params, searchParams }: { params: { lang
 
     }
 
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Desktop";
+    }
+
+    const pushGTMEvent = () => {
+    if (typeof window === 'undefined' || !window.dataLayer) return;
+        window.dataLayer.push({ ecommerce: null });
+
+        window.dataLayer.push({
+            event: "Payment_failed",
+            platform: detectPlatform(),
+            method: paymentmethod,
+            reason: "insufficent balance", // currency
+            
+        });
+    }
+
     const submitProcess = async () => {
         // console.log('paymentmethod',paymentmethod)
         // console.log('type',type)
@@ -61,6 +83,7 @@ export default function PaymentStatus({ params, searchParams }: { params: { lang
                     await setpaymentid(searchParams.id)
                 }
                 else {
+                    pushGTMEvent();
                     router.push(`/${params.lang}/checkout`);
                 }
             })
@@ -70,6 +93,7 @@ export default function PaymentStatus({ params, searchParams }: { params: { lang
                 await setpaymentid(searchParams?.tranRef)
             }
             else {
+                pushGTMEvent();
                 router.push(`/${params.lang}/checkout`);
             }
         }
@@ -79,12 +103,14 @@ export default function PaymentStatus({ params, searchParams }: { params: { lang
                     await setpaymentid(responseJson.id)
                 } 
                 else {
+                    pushGTMEvent();
                     router.push(`/${params.lang}/checkout`);
                 }
             })
         }
         else {
             if (type != 'success') {
+                pushGTMEvent();
                 router.push(`/${params.lang}/checkout`);
             }
             else {
