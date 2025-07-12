@@ -10,6 +10,7 @@ import { Api } from './api/Api';
 import { headers, cookies } from 'next/headers'
 import { cacheKey } from './GlobalVar'
 import LayoutWrapper from './LayoutWrapper'
+import GTM from './components/GTM'
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -67,6 +68,9 @@ export default async function RootLayout({ children, params }: { children: React
 
   return (
     <html lang={params?.lang} dir={params.lang == 'ar' ? 'rtl' : 'ltr'} className='nprogress-busy'>
+      <head>
+        <GTM />
+      </head>
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
         <Providers>
           <LayoutWrapper homepageProps={homepageProps}>
