@@ -43,8 +43,8 @@ export default function Congratulations({ params }: { params: { lang: string, sl
     }
 
     useEffect(() => {
-        fbAPi()
-        getGTM()
+        // fbAPi()
+        // getGTM()
         if (orderDetails?.arabyads_check) {
             getArabyads()
         }
