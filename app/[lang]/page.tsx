@@ -896,7 +896,7 @@ export default function Homepage({ params }: { params: any }) {
       </section>
 
       {/* TSection 2 Start */}
-      <section className="tamkeenSales_sec w-full mb-8" data-section="2">
+      <section className="tamkeenSales_sec w-full mb-8" data-section="4" data-section-id="section4">
         <div className={`ltr:pl-4 rtl:pr-4`}>
           <h2 className="headingHomeMain mb-4">{sec4Title}</h2>
           <div className="tamkeenSales_btns overflow-x-auto scrollbar-hide flex items-center lg:justify-evenly 2xl:justify-start gap-x-3 md:gap-x-5 pb-3 mb-4 w-full">
@@ -955,8 +955,9 @@ export default function Homepage({ params }: { params: any }) {
       <section
         className="bg-primary py-8 rounded-b-[3rem] lg:mb-14 mb-8  relative shadow-lg overflow-hidden"
         data-section="6"
+        data-section-id="section6"
       >
-        <div ref={section6Ref} className={`${containerClassMobile}`} data-section="6">
+        <div ref={section6Ref} className={`${containerClassMobile}`} data-section="6" data-section-id="section6">
           {isSection6Visible ? (
             <>
               <h2 className="headingHomeMain bg-white mb-2 w-fit p-3 rounded-bl-lg rounded-br-lg -mt-8">
@@ -1152,6 +1153,7 @@ export default function Homepage({ params }: { params: any }) {
         ref={section9Ref}
         className="tamkeenSales_sec w-full xl:mb-10 mb-8 relative overflow-hidden"
         data-section="9"
+        data-section-id="section9"
       >
         {isSection9Visible ? (
           <>
@@ -1186,6 +1188,7 @@ export default function Homepage({ params }: { params: any }) {
         ref={section10Ref}
         className="bg-[#F2FAFF] xl:pb-8 lg:pb-5 pb-3 mb-8 relative overflow-hidden"
         data-section="10"
+        data-section-id="section10"
       >
         {isSection10Visible ? (
           <>
@@ -1250,6 +1253,7 @@ export default function Homepage({ params }: { params: any }) {
         ref={section12Ref}
         className="tamkeenSales_sec w-full xl:mb-10 mb-8 relative overflow-hidden"
         data-section="12"
+        data-section-id="section12"
       >
         {isSection12Visible ? (
           <>
@@ -1400,6 +1404,7 @@ export default function Homepage({ params }: { params: any }) {
         ref={section15Ref}
         className="tamkeenSales_sec w-full lg:mb-10 mb-8 relative overflow-hidden"
         data-section="15"
+        data-section-id="section15"
       >
         {isSection15Visible ? (
           <>
@@ -1566,6 +1571,7 @@ export default function Homepage({ params }: { params: any }) {
         ref={section16Ref}
         className="tamkeenSales_sec w-full lg:mb-10 mb-8 relative overflow-hidden"
         data-section="16"
+        data-section-id="section16"
       >
         {isSection16Visible ? (
           <>
@@ -1628,6 +1634,7 @@ export default function Homepage({ params }: { params: any }) {
         ref={section17Ref}
         className="tamkeenSales_sec w-full lg:mb-10 mb-8 relative overflow-hidden"
         data-section="17"
+        data-section-id="section17"
       >
         {isSection17Visible ? (
           <>
