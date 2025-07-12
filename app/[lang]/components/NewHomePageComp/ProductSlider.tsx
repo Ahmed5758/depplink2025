@@ -26,6 +26,8 @@ export default function ProductSliderComponent(props: any) {
   const containerClassMobile = isMobileOrTablet ? "ltr:pl-4 rtl:pr-4" : "px-20";
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const gtmNewListId = props?.gtmColumnItemListId;
+  const gtmNewListName = props?.gtmColumnItemListName;
 
   const [ProExtraData, setProExtraData] = useState<any>([])
 
@@ -130,7 +132,7 @@ export default function ProductSliderComponent(props: any) {
         >
           {productDataSlider?.map((productSlider: any, productSliderID: number) => (
             <SwiperSlide key={productSliderID}>
-              <ProductComponent productData={productSlider} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} ProExtraData={ProExtraData[productSlider?.id]} />
+              <ProductComponent productData={productSlider} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} ProExtraData={ProExtraData[productSlider?.id]} gtmColumnItemListId={gtmNewListId} gtmColumnItemListName={gtmNewListName}/>
             </SwiperSlide>
           ))}
         </Swiper>

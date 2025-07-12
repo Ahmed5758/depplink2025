@@ -21,6 +21,8 @@ export default function BadgeProductSlider(props: any) {
   const productDataSlider = props?.productDataSlider;
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const gtmNewListId = props?.gtmColumnItemListId;
+  const gtmNewListName = props?.gtmColumnItemListName;
 
   return (
     <>
@@ -83,7 +85,7 @@ export default function BadgeProductSlider(props: any) {
                   {productSliderID + 1}
                 </span>
               </div>
-              <ProductComponent productData={productSlider} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} />
+              <ProductComponent productData={productSlider} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} gtmColumnItemListId={gtmNewListId} gtmColumnItemListName={gtmNewListName}/>
             </div>
           </SwiperSlide>
         ))}

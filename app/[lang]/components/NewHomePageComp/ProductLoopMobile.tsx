@@ -25,6 +25,8 @@ export default function ProductLoopMobile(props: any) {
     const containerClass = isMobileOrTablet ? "container" : "px-[4.8rem]";
     const prevRef = useRef<HTMLButtonElement>(null);
     const nextRef = useRef<HTMLButtonElement>(null);
+    const gtmNewListId = props?.gtmColumnItemListId;
+    const gtmNewListName = props?.gtmColumnItemListName;
 
     useEffect(() => {
         if (props?.productData) {
@@ -112,7 +114,7 @@ export default function ProductLoopMobile(props: any) {
             >
                 {productData?.map((productData: any, i: number) => (
                     <SwiperSlide key={i}>
-                        <ProductComponent productData={productData} key={i} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} ProExtraData={ProExtraData[productData?.id]} />
+                        <ProductComponent productData={productData} key={i} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} ProExtraData={ProExtraData[productData?.id]} gtmColumnItemListId={gtmNewListId} gtmColumnItemListName={gtmNewListName}/>
                     </SwiperSlide>
                 ))}
             </Swiper>

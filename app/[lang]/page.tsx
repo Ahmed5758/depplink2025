@@ -928,6 +928,8 @@ export default function Homepage({ params }: { params: any }) {
                 lang={isArabic}
                 isMobileOrTablet={true}
                 origin={origin}
+                gtmColumnItemListId={gtmNewItemListId}
+                gtmColumnItemListName={gtmNewItemListName}
               />
             </>
           ) : (
@@ -987,6 +989,8 @@ export default function Homepage({ params }: { params: any }) {
                       isArabic={isArabic}
                       isMobileOrTablet={true}
                       origin={origin}
+                      gtmColumnItemListId={gtmNewItemListId}
+                      gtmColumnItemListName={gtmNewItemListName}
                     />
                   )}
                 </>
@@ -1159,6 +1163,8 @@ export default function Homepage({ params }: { params: any }) {
               isArabic={isArabic}
               isMobileOrTablet={true}
               origin={origin}
+              gtmColumnItemListId={gtmNewItemListId}
+              gtmColumnItemListName={gtmNewItemListName}
             />
           </>
         ) : (
@@ -1191,6 +1197,8 @@ export default function Homepage({ params }: { params: any }) {
               isArabic={isArabic}
               isMobileOrTablet={true}
               origin={origin}
+              gtmColumnItemListId={gtmNewItemListId}
+              gtmColumnItemListName={gtmNewItemListName}
             />
           </>
         ) : (
@@ -1253,6 +1261,8 @@ export default function Homepage({ params }: { params: any }) {
               isArabic={isArabic}
               isMobileOrTablet={true}
               origin={origin}
+              gtmColumnItemListId={gtmNewItemListId}
+              gtmColumnItemListName={gtmNewItemListName}
             />
           </>
         ) : (
@@ -1401,6 +1411,8 @@ export default function Homepage({ params }: { params: any }) {
               isArabic={isArabic}
               isMobileOrTablet={true}
               origin={origin}
+              gtmColumnItemListId={gtmNewItemListId}
+              gtmColumnItemListName={gtmNewItemListName}
             />
           </>
         ) : (
@@ -1565,6 +1577,8 @@ export default function Homepage({ params }: { params: any }) {
               isArabic={isArabic}
               isMobileOrTablet={true}
               origin={origin}
+              gtmColumnItemListId={gtmNewItemListId}
+              gtmColumnItemListName={gtmNewItemListName}
             />
           </>
         ) : (
@@ -1625,6 +1639,8 @@ export default function Homepage({ params }: { params: any }) {
               isArabic={isArabic}
               isMobileOrTablet={true}
               origin={origin}
+              gtmColumnItemListId={gtmNewItemListId}
+              gtmColumnItemListName={gtmNewItemListName}
             />
           </>
         ) : (
