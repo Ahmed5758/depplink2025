@@ -1228,7 +1228,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                                                 <RadioGroup.Label as="p" className={`text-sm font-bold  mb-3 text-white`}>
                                                                                     {addressData?.filter((item: any) => item?.id == addressid)[0]?.make_default == 1 ? params.lang == 'ar' ? 'الــمنـــزل' : 'Home' : params.lang == 'ar' ? 'مكتب' : 'Office'}
                                                                                     {addressData?.filter((item: any) => item?.id == addressid)[0]?.make_default == 1 ?
-                                                                                        <span className={`px-2 py-1 bg-[#219EBC30] text-xs rounded-sm text-[#219EBC] ml-2 rtl:mr-2 text-white bg-[#FFFFFF30]`}>{params.lang == 'ar' ? 'العنوان الرئيسي' : 'Primary Address'}</span>
+                                                                                        <span className={`px-2 py-1 bg-[#219EBC30] text-xs rounded-sm text-[#219EBC] ml-2 rtl:mr-2`}>{params.lang == 'ar' ? 'العنوان الرئيسي' : 'Primary Address'}</span>
                                                                                         : null}
                                                                                 </RadioGroup.Label>
                                                                                 <p className={`mt-1 text-xs text-white`}>{addressData?.filter((item: any) => item?.id == addressid)[0]?.address}</p>
