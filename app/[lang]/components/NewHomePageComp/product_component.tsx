@@ -598,12 +598,12 @@ export default function product_component(props: any) {
   );
 
   function detectPlatform() {
-    if (window.Android) return "Android-WebView";
-    if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+    if (window.Android) return "Android";
+    if (window.webkit?.messageHandlers?.iosBridge) return "iOS";
     var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
-    if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
-    return "Desktop";
+    if (/android/i.test(userAgent)) return "Android";
+    if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS";
+    return "Web";
   }
 
   const pushGTMEvent = (eventName: string) => {
