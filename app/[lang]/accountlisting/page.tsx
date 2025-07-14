@@ -10,7 +10,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { Dialog, Transition } from '@headlessui/react'
-import { getLoyalty, getLoyaltyData } from '../cartstorage/cart';
+// import { getLoyalty, getLoyaltyData } from '../cartstorage/cart';
 
 const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: true })
 
@@ -39,8 +39,8 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
         (async () => {
             const translationdata = await getDictionary(params.lang);
             setDict(translationdata);
-            var loyaltydata = await getLoyaltyData()
-            setloyaltyData(loyaltydata)
+            // var loyaltydata = await getLoyaltyData()
+            // setloyaltyData(loyaltydata)
         })();
         // getNotificationData()
         getUser()
@@ -58,12 +58,12 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
     //     }
     // }
 
-    useEffect(() => {
-        const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
-        const loyaltyAmount = loyaltyPointsDB / 100;
-        setloyaltyPoints(loyaltyPointsDB)
-        setloyaltyAmount(loyaltyAmount)
-    }, [loyaltyData])
+    // useEffect(() => {
+    //     const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
+    //     const loyaltyAmount = loyaltyPointsDB / 100;
+    //     setloyaltyPoints(loyaltyPointsDB)
+    //     setloyaltyAmount(loyaltyAmount)
+    // }, [loyaltyData])
 
     const UserDataLocalStorage = async () => {
         if (localStorage.getItem("userid")) {
@@ -217,9 +217,10 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                         <h2 className="text-sm font-semibold">
                             {
                                 <>
-                                {params.lang == 'ar' ? "لديك" : "You have"} 
-                                <span className="h-3.5 font-bold text-blue-500 number-animation items-center">
-                                <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyAmount)?.toLocaleString('EN-US')}</span>
+                                {params.lang == 'ar' ? "لديك" : "You have"} {" "}
+                                {/* <span className="h-3.5 font-bold text-blue-500 number-animation items-center"> */}
+                                <span className="h-3.5 font-bold text-blue-500 items-center">
+                                {/* <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyAmount)?.toLocaleString('EN-US')}</span> */}
                                 <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyPoints)?.toLocaleString('EN-US')}</span>
                                 </span> {params.lang == 'ar' ? "في محفظتك." : "in your wallet."} 
                                 </>
