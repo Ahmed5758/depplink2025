@@ -12,10 +12,12 @@ import { get, post } from "../api/ApiCalls";
 import { usePathname } from "next/navigation"
 import { useRouter } from 'next/navigation'
 // import { useRouter } from 'next-nprogress-bar';
-import { getCartCount, getCart, recheckcartdata, getOrderId, getSummary, setShipping, setDiscountRule, setDiscountRuleBogo, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, setWrapper, unsetWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, setExpressDelivery, getExpressDeliveryData, unsetExpressDelivery, getDoorStepData, setDoorStep, unsetDoorStep, setExtraFees, getSubtotalSale, getLoyalty,
-  getLoyaltyData,
-  setLoyalty,
-  removeLoyalty } from '../cartstorage/cart';
+import { getCartCount, getCart, recheckcartdata, getOrderId, getSummary, setShipping, setDiscountRule, setDiscountRuleBogo, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, setWrapper, unsetWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, setExpressDelivery, getExpressDeliveryData, unsetExpressDelivery, getDoorStepData, setDoorStep, unsetDoorStep, setExtraFees, getSubtotalSale, 
+//     getLoyalty,
+//   getLoyaltyData,
+//   setLoyalty,
+//   removeLoyalty 
+} from '../cartstorage/cart';
 import moment from 'moment';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -283,9 +285,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             }
 
             // var points = getLoyalty()
-            var loyaltydata = await getLoyaltyData()
+            // var loyaltydata = await getLoyaltyData()
             // setloyaltyPoints(points)
-            setloyaltyData(loyaltydata)
+            // setloyaltyData(loyaltydata)
         })();
         // getUser()
         if (typeof window !== 'undefined') {
@@ -305,12 +307,12 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         }
     }, [params])
 
-    useEffect(() => {
-        if(loyaltyData?.t_loyaltypoints >= 1) {
-            setupLoyalty(true)
-            setpaymentMethod('loyalty')
-        }
-    }, [loyaltyData])
+    // useEffect(() => {
+    //     if(loyaltyData?.t_loyaltypoints >= 1) {
+    //         setupLoyalty(true)
+    //         setpaymentMethod('loyalty')
+    //     }
+    // }, [loyaltyData])
 
     const getDiscountType = async () => {
         get(`getdiscounttype`).then((responseJson: any) => {
@@ -971,39 +973,39 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     ];
 
     
-    const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
-    const loyaltyAmount = loyaltyPointsDB / 100;
-    const currentLoyaltyamount = getLoyalty()?.amount || 0
-    var usableloyaltyAmount:any = false;
-    if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price)
-        usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
-    else
-        usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price);
-    const usableLoyaltyPoints = (usableloyaltyAmount * 100).toLocaleString('en-US');
+    // const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
+    // const loyaltyAmount = loyaltyPointsDB / 100;
+    // const currentLoyaltyamount = getLoyalty()?.amount || 0
+    // var usableloyaltyAmount:any = false;
+    // if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price)
+    //     usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
+    // else
+    //     usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price);
+    // const usableLoyaltyPoints = (usableloyaltyAmount * 100).toLocaleString('en-US');
     
     // loyalty work
-    const setupLoyalty = ((e: any) => {
-        setuseLoyalty(e)
-        if(e) {
-            var data: any = {
-                id: 0,
-                title: 'Tamkeen Points',
-                title_arabic: 'نقاط تمكين',
-                amount: usableloyaltyAmount,
-            }
-            setLoyalty(data)
-            if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price) {
-                setpaymentMethod('loyalty');
-            }
-        }
-        else {
-            removeLoyalty()
-            if(paymentMethod == 'loyalty') {
-                setpaymentMethod(false);
-            }
-        }
-        resetCheckout()
-    })
+    // const setupLoyalty = ((e: any) => {
+    //     setuseLoyalty(e)
+    //     if(e) {
+    //         var data: any = {
+    //             id: 0,
+    //             title: 'Tamkeen Points',
+    //             title_arabic: 'نقاط تمكين',
+    //             amount: usableloyaltyAmount,
+    //         }
+    //         setLoyalty(data)
+    //         if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price) {
+    //             setpaymentMethod('loyalty');
+    //         }
+    //     }
+    //     else {
+    //         removeLoyalty()
+    //         if(paymentMethod == 'loyalty') {
+    //             setpaymentMethod(false);
+    //         }
+    //     }
+    //     resetCheckout()
+    // })
 
     return (
         <>
@@ -1487,10 +1489,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                     : "Choose your payment method"}
                                 </div>
                                 <div className="mt-4">
-                                    {loyaltyData && loyaltyData?.t_loyaltypoints >= 1 ?
-                                        <>
+                                    {/* {loyaltyData && loyaltyData?.t_loyaltypoints >= 1 ?
+                                        <> */}
                                         {/* loyalty work */}
-                                        <button onClick={() => setupLoyalty(!useLoyalty)} type="button" className="border bg-white border-[#219EBC80] rounded-md flex flex-col items-center mb-5 text-sm w-full text-left">
+                                        {/* <button onClick={() => setupLoyalty(!useLoyalty)} type="button" className="border bg-white border-[#219EBC80] rounded-md flex flex-col items-center mb-5 text-sm w-full text-left">
                                             <div className="w-full bg-primary p-3 rounded-t-md text-white">
                                             <div className="flex items-center gap-2">
                                                 <div
@@ -1527,10 +1529,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                             </div>
                                             <div className="p-3 w-full">
                                             <p className="text-sm text-gray-800 font-bold">{params?.lang == 'ar' ? 'نقاط تمكين' : 'Tamkeen Points'}</p>
-                                            <p className="text-xs text-[#007714]">
+                                            <p className="text-xs text-[#007714]"> */}
                                                 {/* <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="13"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg> */}
                                                 {/* </span>{' '}{usableLoyaltyPoints}  */}
-                                                {params?.lang === 'ar' ? (
+                                                {/* {params?.lang === 'ar' ? (
                                                 <>
                                                     التحويل إلى رصيد تمكين باستخدام حسابك المرتبط
                                                     <strong className="font-bold">
@@ -1547,12 +1549,15 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 </>
                                                 )}
                                             </p>
-                                            </div>
+                                            </div> */}
                                             {/* loyalty work */}
-                                        </button>
+                                        {/* </button>
                                         </>
-                                     : null}
-                                    <RadioGroup value={paymentMethod} onChange={setpaymentMethod} className="mt-3">
+                                     : null} */}
+                                    <RadioGroup value={paymentMethod} onChange={setpaymentMethod} className="mt-3"
+                                    //  disabled={paymentMethod == 'loyalty' ? true : false}
+                                    disabled={false}
+                                    >
                                         <div className="grid grid-cols-3 md:grid-cols-4 2xl:grid-cols-6 gap-x-3">
                                             {paymentmethods?.map((p: any, i) => {
                                                 if (paymentstatus[p.key + '_status'] || (p.key == 'madapay' && paymentstatus['hyperpay_status'])) {
@@ -1648,7 +1653,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 {/* <label className="">-</label>
                                         <label className=""> {params.lang == 'ar' ? 'الاثنين' : 'Monday'} 13/11/2023</label> */}
                                             </div>
-                                            {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" />:null}
+                                             <hr className="opacity-10 my-3" />
+                                            {/* {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" /> : null} */}
                                         </div>
                                         :
                                         <div className="text-sm font-medium">
@@ -1658,7 +1664,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 {/* <label className="">-</label>
                                             <label className=""> {params.lang == 'ar' ? 'الاثنين' : 'Monday'} 13/11/2023</label> */}
                                             </div>
-                                            {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" />:null}
+                                            <hr className="opacity-10 my-3" />
+                                            {/* {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" /> : null} */}
                                         </div>
                                     }
 
@@ -1673,8 +1680,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                             </div>
                                         </>
                                         : null}
-                                    {paymentMethod != 'loyalty' ? 
-                                        <>
+                                    {/* {paymentMethod != 'loyalty' ? 
+                                        <> */}
                                         <div className="text-sm font-medium flex items-center justify-between">
                                             <div>
                                                 <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الدفع عن طريق' : 'Payment via'}{' '}<span className="font-bold text-[#004B7A]">{paymentMethod}</span></label>
@@ -1808,8 +1815,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 />
                                                 : null}
                                         </div>
-                                        </>
-                                    :null}
+                                        {/* </>
+                                    :null} */}
                                 </div>
                                 {doorStepData ?
                                     <div className="mt-2 text-[#004B7A] font-regular text-xs bg-white p-3 shadow-md rounded-md border border-[#219EBC] flex items-center justify-between gap-x-4">
@@ -1851,7 +1858,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                 return (
                                     <div className="flex items-center justify-between text-sm font-medium mb-3" key={i}>
                                         <h6 className={`text-[#1C262D] capitalize`}>{params.lang === 'ar' ? s?.title_arabic : s?.title}</h6>
-                                       <span className={`flex gap-1 items-center ${s.key == 'save' || s.key == "loyalty" || s?.key == 'discountRule' || s?.key == 'discountCoupon' ? 'text-[#20831E]' : 'text-[#004B7A]'}`}><span className="font-bold flex items-center gap-1">{s?.price?.toLocaleString('EN-US')}</span>{currencySymbol}</span>
+                                       <span className={`flex gap-1 items-center ${s.key == 'save' || 
+                                        // s.key == "loyalty" || 
+                                        s?.key == 'discountRule' || s?.key == 'discountCoupon' ? 'text-[#20831E]' : 'text-[#004B7A]'}`}><span className="font-bold flex items-center gap-1">{s?.price?.toLocaleString('EN-US')}</span>{currencySymbol}</span>
                                     </div>
                                 )
                             })
