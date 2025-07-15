@@ -12,7 +12,10 @@ export default function MobileHeader(props: any) {
             router.push(`/${props.lang}/${props.redirect}`);
             router.refresh(); // Only refresh after push (optional, based on your needs)
         } else {
-            router.back(); // Don't refresh here
+            // router.back(); // Don't refresh here
+            const returnTo = sessionStorage.getItem('preLoginRoute') || '/'
+            router.push(returnTo, { scroll: false })
+            router.refresh()
         }
     }
     const BackIcon = () => (

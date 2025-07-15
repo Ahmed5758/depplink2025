@@ -257,7 +257,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             currency: "SAR",    ///Currency code of you S
             platform: detectPlatform(),
             value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price),
-            items: selectedProducts,
+            ecommerce : {
+                items: selectedProducts,
+            }
           });
         } else {
           wind.push({
@@ -266,7 +268,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             platform: detectPlatform(),
             value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price),
             payment_type: paymentMethod == 'madapay' ? 'hyperpay' : paymentMethod,
-            items: selectedProducts,
+            ecommerce : {
+                items: selectedProducts,
+            }
           });
         }
     }

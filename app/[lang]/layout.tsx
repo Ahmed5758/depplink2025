@@ -11,6 +11,7 @@ import { headers, cookies } from 'next/headers'
 import { cacheKey } from './GlobalVar'
 import LayoutWrapper from './LayoutWrapper'
 import GTM from './components/GTM'
+import LoginGuard from './components/LoginGuard'
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -74,6 +75,7 @@ export default async function RootLayout({ children, params }: { children: React
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
         <Providers>
           <LayoutWrapper homepageProps={homepageProps}>
+            <LoginGuard />
             {children}
           </LayoutWrapper>
         </Providers>
