@@ -16,6 +16,7 @@
     "@firebase/messaging": "^0.12.6",
     "@headlessui/react": "^1.7.17",
     "@next/third-parties": "^14.1.0",
+    "@react-google-maps/api": "^2.20.7",
     "caniuse-lite": "^1.0.30001699",
     "cookies-next": "^5.1.0",
     "crypto-js": "^4.2.0",

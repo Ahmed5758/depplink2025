@@ -113,6 +113,14 @@ export default function OrderListing({ params }: { params: { lang: string, data:
                                         <div className="flex items-center justify-center underline text-[#B15533]">
                                             <Link href={`${origin}/${params.lang}/account/orderdetails/${data?.id}`} prefetch={true} replace={false}>{params.lang == 'ar' ? 'إظهار التفاصيل' : 'View Details'}</Link>
                                         </div>
+                                        {data?.shipment_order && (data?.status == 0 || data?.status == 1 || data?.status == 2 || data?.status == 3 || data?.status == 4) ?
+                                        <>
+                                            <hr className="opacity-10 mb-3 col-span-3"/>   
+                                            <div className="col-span-2 text-right underline text-[#004B7A] max-md:mb-4">
+                                                <Link prefetch={false} scroll={false} href={`${origin}/${params.lang}/shipmenttracking/${data?.shipment_order?.shipment_no}`} replace={false}>{params.lang == 'ar' ? 'تتبع حالة الشحنة' : 'Track Your Shipment'}</Link>
+                                            </div>
+                                        </>
+                                        : null}
                                     </div>
                                 )
                             })
