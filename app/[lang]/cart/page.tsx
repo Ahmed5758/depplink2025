@@ -18,8 +18,9 @@ import { get, post } from "../api/ApiCalls"
 import Swal from 'sweetalert2'
 import '@next/third-parties/google'
 import withReactContent from 'sweetalert2-react-content'
-import { getCart, getCartCount, getSummary, removeCartItem, increaseQty, setShipping, setDiscountRule, setDiscountRuleBogo, getProductids, removecheckoutdata, recheckcartdata, updateCartItemFbtQty, removeCartItemFbt, removeCart, getExpressDeliveryCart } from '../cartstorage/cart';
+import { getCart, getCartCount, getSummary, removeCartItem, recheckcartdata, increaseQty, setShipping, setDiscountRule, setDiscountRuleBogo, getProductids, removecheckoutdata, removeCartItemFbt, updateCartItemFbtQty, getExpressDeliveryCart, getPickupStoreCart, setPickupStoreCart } from '../cartstorage/cart';
 import moment from 'moment'
+import PickupStorePopup from '../components/PickupStorePopup';
 import GlobalContext from '../GlobalContext'
 
 const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: true })
@@ -35,7 +36,9 @@ export default function Cart({ params }: { params: { lang: string } }) {
     const [cartCount, setCartCount] = useState(0)
     const [summary, setSummary] = useState<any>([]);
     const [isOpen, setIsOpen] = useState(false)
+    const [storePickup, setstorePickup] = useState<any>(0);
     const [signUp, setSignUp] = useState(false)
+    const [isOpenModal, setIsOpenModal] = useState(false)
     const [userid, setUserid] = useState<any>(false)
     const [wishlistProduct, setWishlistProduct] = useState<any>([])
     const [phoneNumber, setPhoneNumber] = useState<any>(false)
@@ -53,6 +56,7 @@ export default function Cart({ params }: { params: { lang: string } }) {
     const [discountType, setDiscountType] = useState<any>(0)
     const [loaderStatus, setLoaderStatus] = useState<any>(true)
     const [expressData, setexpressData] = useState<any>([])
+    const [storeData, setstoreData] = useState<any>([])
     const [showExpPopup, setshowExpPopup] = useState<any>(false)
     // Pickup From Store
     const { globalCity, setglobalCity } = useContext<any>(GlobalContext);
@@ -92,6 +96,18 @@ export default function Cart({ params }: { params: { lang: string } }) {
         (async () => {
             const exp = await getExpressDeliveryCart()
             setexpressData(exp)
+
+            {/* Commented Pickup Store */}
+            const store: any = await getPickupStoreCart()
+            // if(store?.warehouses?.length < 1){
+            //     topMessageAlartDanger('Error! No store available for store pickup.')
+            //     updateDeliveryMethod(0)
+            // }
+            setglobalStore(store?.warehouse_single)
+            localStorage.setItem('globalStore', store?.warehouse_single?.id)
+            setallStores(store?.warehouses)
+            
+            setstoreData(store)
             
             // Display popup when express delivery is implemented
             const hasTrue = Object.values(exp)?.some((value: any) => value !== false);
@@ -100,6 +116,13 @@ export default function Cart({ params }: { params: { lang: string } }) {
             }
         })();
         
+    }, [cartData])
+
+     {/* Commented Pickup Store */}
+    useEffect(() => {
+        if(storePickup != cartData?.storeType && cartData?.storeType != undefined && cartData?.storeType != null){
+            updateDeliveryMethod(cartData?.storeType)
+        }
     }, [cartData])
 
     const refetch = () => {
@@ -427,6 +450,22 @@ export default function Cart({ params }: { params: { lang: string } }) {
         });
     };
 
+    {/* Commented Pickup Store */}
+    const updateDeliveryMethod = (method: any) => {
+        setstorePickup(method)
+        var storeId: any = false
+        var storetype: any = 0
+        var storeCity: any = false
+        if(method == 1){
+            storeId = globalStore?.id
+            storetype = method
+            // storeCity = globalStore?.showroom_data?.waybill_city
+            storeCity = params?.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name
+        }
+        setPickupStoreCart(storeId, storetype, storeCity)
+        resetCart()
+    }
+
     const origin =
         typeof window !== 'undefined' && window.location.origin
             ? window.location.origin
@@ -452,6 +491,74 @@ export default function Cart({ params }: { params: { lang: string } }) {
                 {cartData?.products?.length >= 1 ?
                     <div className="md:flex items-start md:my-4 md:gap-x-5">
                         <div className="w-full">
+                            <div className="bg-white shadow-md rounded-md relative p-3 mb-3">
+                                <h6 className='text-sm font-semibold'>{params?.lang == 'ar' ? 'كيف ترغب في الحصول على طلبك؟' : 'How would you like to get your order?'}</h6>
+                                <div className="space-y-3 mt-3">
+                                    <div className='border border-[#004B7A] rounded-md p-3 flex justify-between items-center w-full'>
+                                        <div className="flex gap-2 justify-start items-center">
+                                            <input value={0} checked={storePickup == 0} onChange={(e: any) => {
+                                                {/* Commented Pickup Store */}
+                                                updateDeliveryMethod(e.target.value)
+                                                topMessageAlartSuccess(params?.lang == 'ar' ? 'تم اختيار التوصيل المنزلي بنجاح.' : 'Success! Home Delivery Selected Successfully..')
+                                            }} type="radio" name='delivery' id='delivery' className='form-radio' />
+                                            <label className='text-sm'>{params?.lang == 'ar' ? 'التوصيل إلى المنازل' : 'Home delivery'}</label>
+                                        </div>
+                                        {/* <h6 className='text-sm text-[#EF7E2C]'>{cartData?.products?.length} of {cartData?.products?.length} {params.lang == 'ar' ? 'العناصر المتاحة' : 'items available'}</h6> */}
+                                    </div>
+                                    {/* Commented Pickup Store */}
+                                    {storeData?.warehouses?.length >= 1 ?
+                                    <div className='border border-[#004B7A] rounded-md p-3 flex justify-between items-cente w-full'>
+                                        <div className="flex gap-2 justify-start items-center">
+                                            <input value={1} checked={storePickup == 1} onChange={(e: any) => {
+                                                updateDeliveryMethod(e.target.value)
+                                                topMessageAlartSuccess(params?.lang == 'ar' ? 'تم اختيار استلام الطلب من المتجر بنجاح.' : 'Success! Store Pickup Selected Successfully..')
+                                            }} type="radio" name='storePickup' id='storePickup' className='form-radio' />
+                                            <label className='text-sm'>{params?.lang == 'ar' ? 'الاستلام من المتجر' : 'Store pickup'}</label>
+                                        </div>
+                                        <h6 className='text-sm text-[#EF7E2C]'>{storeData?.success ? cartData?.products?.length : 0} {params.lang == 'ar' ? 'ل' : 'of'} {cartData?.products?.length} {params.lang == 'ar' ? 'العناصر المتاحة' : 'items available'}</h6>
+                                    </div>
+                                    :null}
+                                </div>
+                                {/* Commented Pickup Store */}
+                                {storePickup == 1 ?
+                                <>
+                                <hr className='opacity-5 my-3 w-full' />
+                                <div className='flex gap-3 justify-start items-center text-sm'>
+                                    <img src="https://cdn-icons-png.flaticon.com/512/726/726498.png" alt="warehouse" height='18' width='18' />
+                                    <button onClick={() => {
+                                        setIsOpenModal(true)
+                                    }}>
+                                        <p className='flex gap-x-1'>{params?.lang == 'ar' ? 'جمع من' : 'Collect from'} 
+                                            <button className="text-[#219EBC] font-semibold">{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</button>
+                                            <svg
+                                                height="12"
+                                                viewBox="0 0 24 24"
+                                                width="12"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className='mt-1'
+                                            >
+                                                <path
+                                                    clipRule="evenodd"
+                                                    d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
+                                                    fillRule="evenodd"
+                                                    stroke='lightgray'
+                                                    strokeWidth='0.5'
+                                                    fill='lightgray'
+                                                ></path>
+                                            </svg>
+                                        </p>
+                                    </button>
+                                </div>
+                                <p className='text-[12px] mt-2'>{params.lang == 'ar' ? 'يمكنك استلام طلبك خلال ساعة واحدة خلال ساعات عمل المتجر' : 'You can collect your order within 1 hour(s) during store work hours'}</p>
+                                </>
+                                :null}
+                            </div>
+                            {storePickup == 0 ?
+                            <div className={`bg-white rounded-md shadow-md flex items-start gap-x-2 mb-3 p-4 w-full text-xs font-semibold`}>
+                                <img src="https://cdn-icons-png.flaticon.com/512/9720/9720868.png" alt="errorMark" height='18' width='18' />
+                                {params.lang == 'ar' ? 'خيارات توصيل أسرع حسب المنتجات المختارة والمنطقة والوقت. اخترها عند إتمام عملية الشراء.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.'}
+                            </div>
+                            :null}
                             {cartData?.products?.map((pro: any, i: number) => {
                                 //if (!pro?.bogo) {
                                 var prototalqty = []
@@ -897,7 +1004,9 @@ export default function Cart({ params }: { params: { lang: string } }) {
                     </button>
                 </div>
                 : null}
-
+            {/* Commented Pickup Store */}
+            <PickupStorePopup lang={params?.lang} allStores={allStores} setModal={() => setIsOpenModal(false)} isOpenModal={isOpenModal} direction={direction} isArabic={params?.lang == 'ar' ? true : false} />
+            
             {relatedproducts?.length >= 1 ?
                 <div className='mb-4 container'>
                     <div className='flex items-center justify-between'>

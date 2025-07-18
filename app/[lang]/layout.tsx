@@ -12,6 +12,7 @@ import { cacheKey } from './GlobalVar'
 import LayoutWrapper from './LayoutWrapper'
 import GTM from './components/GTM'
 import LoginGuard from './components/LoginGuard'
+import { GlobalProvider } from './GlobalContext';
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -73,6 +74,7 @@ export default async function RootLayout({ children, params }: { children: React
         <GTM />
       </head>
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
+        <GlobalProvider>
         <Providers>
           <LayoutWrapper homepageProps={homepageProps}>
             <LoginGuard />
@@ -84,6 +86,7 @@ export default async function RootLayout({ children, params }: { children: React
         </div>
         <div className='py-12'></div>
         <MobileFooterNew lang={params?.lang} dict={dict} />
+        </GlobalProvider>
       </body>
     </html>
   )

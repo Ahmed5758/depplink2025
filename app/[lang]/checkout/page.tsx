@@ -1,6 +1,6 @@
 "use client"; // This is a client component 👈🏽
 
-import React, { useEffect, useState, Fragment } from 'react'
+import React, { useEffect, useState, Fragment, useContext } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
@@ -11,16 +11,22 @@ import { RadioGroup, Transition, Dialog } from '@headlessui/react'
 import { get, post } from "../api/ApiCalls";
 import { usePathname } from "next/navigation"
 import { useRouter } from 'next/navigation'
+import Flatpickr from 'react-flatpickr';
+import 'flatpickr/dist/themes/material_green.css'; // or your preferred theme
+
 // import { useRouter } from 'next-nprogress-bar';
-import { getCartCount, getCart, recheckcartdata, getOrderId, getSummary, setShipping, setDiscountRule, setDiscountRuleBogo, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, setWrapper, unsetWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, setExpressDelivery, getExpressDeliveryData, unsetExpressDelivery, getDoorStepData, setDoorStep, unsetDoorStep, setExtraFees, getSubtotalSale, 
-//     getLoyalty,
-//   getLoyaltyData,
-//   setLoyalty,
-//   removeLoyalty 
+import { getCartCount, getCart, recheckcartdata, getOrderId, getSummary, setShipping, setDiscountRule, setDiscountRuleBogo, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, setWrapper, unsetWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, setExpressDelivery, getExpressDeliveryData,getDeliveryDate,getdeliveryDateData,
+  setDeliveryDate, unsetExpressDelivery, getDoorStepData, setDoorStep, unsetDoorStep, setExtraFees, getSubtotalSale, 
+  getLoyalty,
+  getLoyaltyData,
+  setLoyalty,
+  removeLoyalty ,
+  getPickupStoreCart
 } from '../cartstorage/cart';
 import moment from 'moment';
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import GlobalContext from '../GlobalContext';
 
 const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: true })
 const FullPageLoader = dynamic(() => import('../components/FullPageLoader'), { ssr: false })
@@ -75,6 +81,76 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     const [webEngageStatus, setWebEngageStatus] = useState(false);
     const [checkTermCondition, setCheckTermCondition] = useState(false)
 
+    const [globalStore, setglobalStore] = useState<any>([]);
+    const { globalCity, setglobalCity } = useContext<any>(GlobalContext);
+    const [deliveryDateData, setdeliveryDateData] = useState<any>(false);
+    const [deliverydate, setdeliverydate] = useState<any>(false);
+    const [requiredDate, setRequiredDate] = useState<boolean>(true);
+
+    const DatePicker: any = (props:any) => {
+        // Helper to find first non-Friday in next 15 days
+        // const getFirstAvailableDate = () => {
+        //   const today = new Date();
+        //   for (let i = 1; i <= 17; i++) {
+        //     const date = new Date();
+        //     date.setDate(today.getDate() + i);
+        //     if (date.getDay() !== 5) {
+        //       return date;
+        //     }
+        //   }
+        //   return null;
+        // };
+        // console.log('props?.dates', props?.dates);
+        // const availableDates = props?.dates && props?.dates?.length > 0 
+        // ? props?.dates?.map((dateString: any) => new Date(dateString))
+        // : [];
+        // console.log('availableDates', availableDates);
+        // const firstAvailableDate = getFirstAvailableDate();
+        // const [deliverySelect, setDeliverySelect] = useState<any>(firstAvailableDate);
+
+        // // Optional: fallback if all dates are Fridays
+        // useEffect(() => {
+        //   if (!firstAvailableDate) {
+        //     alert("No available dates in the next 15 days.");
+        //   }
+        // }, [firstAvailableDate]);
+
+        // const maxSelectableDate = new Date();
+        // maxSelectableDate.setDate(maxSelectableDate.getDate() + 17);
+        const [deliverySelect, setDeliverySelect] = useState<any>(false);
+        const enabledDates = deliveryDateData?.length > 0 ? deliveryDateData?.map((dateStr:any) => new Date(dateStr)) : [];
+
+        return (
+        <Flatpickr
+            value={deliverydate}
+            name="deliverySelect"
+            className={`form-input border w-full md:w-1/3 rounded-md text-xs font-semibold ${requiredDate ? "border-[#219EBC]" : "border-red text-red"} focus-visible:ring-0`}
+            onChange={([date]: any) => {
+            if (date) {
+                const formattedDate = moment(date).format('YYYY-MM-DD'); // Always correct, no timezone shift
+                // console.log(formattedDate)
+                // console.log(date.toString().split('T')[0])
+                setDeliverySelect(date);
+                setDeliveryDate(formattedDate)
+                setdeliverydate(formattedDate)
+                // setDeliveryDate(date.toString().split('T')[0]); // Format date to 'YYYY-MM-DD'
+                // setdeliverydate(date.toString().split('T')[0]); // Format date to 'YYYY-MM-DD'
+            }
+            }}
+            options={{
+            // minDate: new Date(new Date().setDate(new Date().getDate() + 1)), // tomorrow
+            // maxDate: maxSelectableDate,
+            // disable: [
+            //   function (date: any) {
+            //     return date.getDay() === 5; // Disable Fridays
+            //   },
+            // ],
+            enable: enabledDates ?? [],
+            dateFormat: 'Y-m-d',
+            }}
+        />
+        );
+    };
 
     // const [email, setEmail] = useState<any>(localStorage.getItem('eMail'))
     // const [phoneNumber, setPhoneNumber] = useState<any>(localStorage.getItem('phoneNumber'))
@@ -275,6 +351,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         }
     }
 
+    // get cart
+    const cartData: any = getCart();
+
     useEffect(() => {
         if (getCartCount() < 1) {
             router.push(`/${params.lang}/`)
@@ -288,10 +367,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                 router.push(`/${params.lang}/cart`);
             }
 
-            // var points = getLoyalty()
-            // var loyaltydata = await getLoyaltyData()
-            // setloyaltyPoints(points)
-            // setloyaltyData(loyaltydata)
+            var points = getLoyalty()
+            var loyaltydata = await getLoyaltyData()
+            setloyaltyPoints(points)
+            setloyaltyData(loyaltydata)
         })();
         // getUser()
         if (typeof window !== 'undefined') {
@@ -308,15 +387,23 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             //resetCheckout()
             getDiscountType()
             getDevice()
+            getPickupStoreData()
         }
     }, [params])
 
-    // useEffect(() => {
-    //     if(loyaltyData?.t_loyaltypoints >= 1) {
-    //         setupLoyalty(true)
-    //         setpaymentMethod('loyalty')
-    //     }
-    // }, [loyaltyData])
+    const getPickupStoreData = () => {
+      get(`get-selected-warehouse/${localStorage.getItem('globalStore')}`).then((responseJson: any) => {
+          if (responseJson?.warehouse) {
+              setglobalStore(responseJson?.warehouse)
+          }
+      })
+    }
+    useEffect(() => {
+        if(loyaltyData?.t_loyaltypoints >= 1) {
+            setupLoyalty(true)
+            setpaymentMethod('loyalty')
+        }
+    }, [loyaltyData])
 
     const getDiscountType = async () => {
         get(`getdiscounttype`).then((responseJson: any) => {
@@ -324,12 +411,25 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         })
     }
     const getpaymentData = async () => {
-        var selectedaddres = addressData?.filter((element: any) => {
-            return element.id == addressid
-        })
-        var city = ''
-        if (selectedaddres?.length && selectedaddres[0].state_data?.name)
-            city = selectedaddres[0].state_data?.name
+        // var selectedaddres = addressData?.filter((element: any) => {
+        //     return element.id == addressid
+        // })
+        // var city = ''
+        // if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+        //     city = selectedaddres[0].state_data?.name
+        if(cartData?.storeType == 0 && cartData?.storeId == false){
+          var selectedaddres = addressData?.filter((element: any) => {
+              return element.id == addressid
+          })
+          var city = ''
+          if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+              city = selectedaddres[0].state_data?.name
+        }
+        else{
+            var storeCity = globalStore?.showroom_data?.store_city ? globalStore?.showroom_data?.store_city?.name : 'Jeddah'
+            city = storeCity
+        }
+        console.log('payment city:', city)
         var pstatus = await getPaymentMethodStatus(city)
         setpaymentstatus(pstatus)
     }
@@ -342,23 +442,40 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             setExpressDeliveryData(false)
             setExpressDeliveryDataStatus(true)
             expressDelivery()
+            if(cartData?.storeType == 0 && cartData?.storeId == false){
             var selectedaddres = addressData?.filter((element: any) => {
-                return element.id == addressid
-            })
-            var city = ''
+            return element.id == addressid;
+            });
+            var city = "";
+            var fullCity: any = "";
             if (selectedaddres?.length && selectedaddres[0].state_data?.name)
-                city = selectedaddres[0].state_data?.name
+            city = selectedaddres[0].state_data?.name;
+            fullCity =
+            params?.lang == "ar"
+                ? selectedaddres[0].state_data?.name_arabic
+                : selectedaddres[0].state_data?.name;
+
+            // set global city
+            setglobalCity(fullCity);
+            localStorage?.setItem("globalcity", fullCity);
 
             if (city != localStorage.getItem("globalcity")) {
-                (async () => {
-                    await setDiscountRule(city);
-                    await setDiscountRuleBogo(city);
-                })();
+            (async () => {
+                await setDiscountRule(city);
+                await setDiscountRuleBogo(city);
+            })();
             }
-            resetCheckout()
-            getpaymentData()
         }
-
+        else {
+            (async () => {
+                var city: string = globalStore?.showroom_data?.store_city?.name
+                await setDiscountRule(city);
+                await setDiscountRuleBogo(city);
+            })();
+        }
+        resetCheckout();
+        getpaymentData();
+    }
     }, [addressid])
 
     useEffect(() => {
@@ -380,11 +497,11 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
           });
     
           var paymentkey = paymentMethod == "madapay" ? "hyperpay" : paymentMethod;
-          // if (paymentMethod != 'loyalty') {
+          if (paymentMethod != 'loyalty') {
             if (!paymentkey || !paymentstatus[paymentkey + "_status"]) {
               setActiveTab3(2);
             }
-          // }
+          }
     
         }
       }, [activeTab3]);
@@ -542,12 +659,23 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
 
     const resetCheckout = async () => {
         if (addressid) {
-            var selectedaddres = addressData?.filter((element: any) => {
-                return element.id == addressid
-            })
-            var city = ''
-            if (selectedaddres?.length && selectedaddres[0].state_data?.name)
-                city = selectedaddres[0].state_data?.name
+            // var selectedaddres = addressData?.filter((element: any) => {
+            //     return element.id == addressid
+            // })
+            // var city = ''
+            // if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+            //     city = selectedaddres[0].state_data?.name
+            if(cartData?.storeType == 0 && cartData?.storeId == false){
+                var selectedaddres = addressData?.filter((element: any) => {
+                return element.id == addressid;
+                });
+                var city = "";
+                if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+                city = selectedaddres[0].state_data?.name;
+            }
+            else {
+                var city: string = globalStore?.showroom_data?.store_city?.name
+            }
             setSummary(getSummary())
             setCheckoutData(getCart())
             await setShipping(city);
@@ -583,24 +711,46 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
 
     const expressDelivery = async () => {
         var city = false;
-        var selectedaddres = addressData?.filter((element: any) => {
-            return element.id == addressid
-        })
-        if (selectedaddres?.length && selectedaddres[0].state_data?.name)
-            city = selectedaddres[0].state_data?.name
-        var response = await getExpressDeliveryData(city)
+        // var selectedaddres = addressData?.filter((element: any) => {
+        //     return element.id == addressid
+        // })
+        // if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+        //     city = selectedaddres[0].state_data?.name
+        if(cartData?.storeType == 0 && cartData?.storeId == false){
+            var selectedaddres = addressData?.filter((element: any) => {
+                return element.id == addressid;
+            });
+            if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+                city = selectedaddres[0].state_data?.name;
+        } else {
+            city= globalStore?.showroom_data?.store_city?.name
+        }
+        var response:any = await getExpressDeliveryData(city);
         if (response) {
-            setExpressDeliveryData(response)
+            setExpressDeliveryData(response);
+            var deliveryDate = await getDeliveryDate(city, response?.data?.id ? 1 : 0);
+            setdeliveryDateData(deliveryDate?.available_dates);
+            setdeliverydate(getdeliveryDateData())
         }
     }
     const couponApplied = async () => {
         if (!getCoupon().amount) {
             var city = false;
-            var selectedaddres = addressData?.filter((element: any) => {
-                return element.id == addressid
-            })
-            if (selectedaddres?.length && selectedaddres[0].state_data?.name)
-                city = selectedaddres[0].state_data?.name
+            // var selectedaddres = addressData?.filter((element: any) => {
+            //     return element.id == addressid
+            // })
+            // if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+            //     city = selectedaddres[0].state_data?.name
+            if(cartData?.storeType == 0 && cartData?.storeId == false){
+                var selectedaddres = addressData?.filter((element: any) => {
+                return element.id == addressid;
+                });
+                if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+                city = selectedaddres[0].state_data?.name;
+            }
+            else {
+                city = globalStore?.showroom_data?.store_city?.name
+            }
             var response = await setCoupon(city, couponcode)
             if (!response && couponcode) {
                 topMessageAlartDangerNew(dict?.invalidcoupon)
@@ -694,11 +844,20 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         setShippingAddress(addressid)
         var city = false;
 
-        var selectedaddres = addressData?.filter((element: any) => {
-            return element.id == addressid
-        })
-        if (selectedaddres?.length && selectedaddres[0].state_data?.name)
-            city = selectedaddres[0].state_data?.name
+        // var selectedaddres = addressData?.filter((element: any) => {
+        //     return element.id == addressid
+        // })
+        // if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+        //     city = selectedaddres[0].state_data?.name
+         if(cartData?.storeType == 0 && cartData?.storeId == false){
+            var selectedaddres = addressData?.filter((element: any) => {
+                return element.id == addressid;
+            });
+            if (selectedaddres?.length && selectedaddres[0].state_data?.name)
+                city = selectedaddres[0].state_data?.name;
+            } else {
+            city = globalStore?.showroom_data?.store_city?.name
+        }
         var recheck = await recheckcartdata(params.lang, city)
         if (recheck.success && getSubtotalSale() > 0) {
 
@@ -977,39 +1136,39 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     ];
 
     
-    // const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
-    // const loyaltyAmount = loyaltyPointsDB / 100;
-    // const currentLoyaltyamount = getLoyalty()?.amount || 0
-    // var usableloyaltyAmount:any = false;
-    // if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price)
-    //     usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
-    // else
-    //     usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price);
-    // const usableLoyaltyPoints = (usableloyaltyAmount * 100).toLocaleString('en-US');
+    const loyaltyPointsDB: any = loyaltyData?.t_loyaltypoints || 0;
+    const loyaltyAmount = loyaltyPointsDB / 100;
+    const currentLoyaltyamount = getLoyalty()?.amount || 0
+    var usableloyaltyAmount:any = false;
+    if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price)
+        usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price) + currentLoyaltyamount;
+    else
+        usableloyaltyAmount = Math.min(loyaltyAmount, summary?.filter((item: any ) => item?.key == 'total')[0]?.price);
+    const usableLoyaltyPoints = (usableloyaltyAmount * 100).toLocaleString('en-US');
     
     // loyalty work
-    // const setupLoyalty = ((e: any) => {
-    //     setuseLoyalty(e)
-    //     if(e) {
-    //         var data: any = {
-    //             id: 0,
-    //             title: 'Tamkeen Points',
-    //             title_arabic: 'نقاط تمكين',
-    //             amount: usableloyaltyAmount,
-    //         }
-    //         setLoyalty(data)
-    //         if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price) {
-    //             setpaymentMethod('loyalty');
-    //         }
-    //     }
-    //     else {
-    //         removeLoyalty()
-    //         if(paymentMethod == 'loyalty') {
-    //             setpaymentMethod(false);
-    //         }
-    //     }
-    //     resetCheckout()
-    // })
+    const setupLoyalty = ((e: any) => {
+        setuseLoyalty(e)
+        if(e) {
+            var data: any = {
+                id: 0,
+                title: 'Tamkeen Points',
+                title_arabic: 'نقاط تمكين',
+                amount: usableloyaltyAmount,
+            }
+            setLoyalty(data)
+            if(loyaltyAmount >= summary?.filter((item: any ) => item?.key == 'total')[0]?.price) {
+                setpaymentMethod('loyalty');
+            }
+        }
+        else {
+            removeLoyalty()
+            if(paymentMethod == 'loyalty') {
+                setpaymentMethod(false);
+            }
+        }
+        resetCheckout()
+    })
 
     return (
         <>
@@ -1207,8 +1366,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         <>
                                         <div className={`mt-4 ${addAddress == true ? 'hidden' : 'block'}`}>
                                             <span className="text-[#B15533] text-sm">{params.lang == 'ar' ? ' تفاصيل العنوان' : 'Address Details'}</span>
-                                            {addressid ? 
+                                            {addressid ? (
                                             <div className="mt-2">
+                                                {cartData?.storeType == 0 && cartData?.storeId == false ? 
+                                                <>
                                                 <RadioGroup>
                                                     <div className="space-y-3">
                                                         <RadioGroup.Option
@@ -1275,46 +1436,417 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 }}
                                                     className="focus-visible:outline-none underline text-sm mt-3 text-primary hover:text-[#B15533]">{params.lang == 'ar' ? 'تغيير العنوان' : 'Change address'}
                                                 </button>
-
+                                                </>
+                                                :
+                                                <>
+                                                    <RadioGroup>
+                                                        <div className="space-y-3"> 
+                                                            <RadioGroup.Option
+                                                                key={globalStore?.id}
+                                                                value={globalStore?.id}
+                                                                className={({ active, checked }) =>
+                                                                    `${checked
+                                                                        ? 'ring-2 ring-white/60 ring-offset-2 ring-offset-sky-300'
+                                                                        : 'ring-2 ring-white/60 ring-offset-2 ring-offset-sky-300'
+                                                                    }   
+                                                                ${checked ? 'bg-[#219EBC] text-white border' : 'bg-[#219EBC] border border-[#219EBC80] text-white'}
+                                                                    relative flex cursor-pointer rounded-lg p-3 shadow-md focus:outline-none border-[#219EBC80]`
+                                                                }
+                                                            >
+                                                                {({ active, checked }) => (
+                                                                    <>
+                                                                        <div className="flex w-full items-center justify-between">
+                                                                            <div className="flex items-center gap-x-3 w-full">
+                                                                                <div className="shrink-0 text-white">
+                                                                                    <CheckIcon className="h-6 w-6" />
+                                                                                </div>
+                                                                                <div className="w-full">
+                                                                                    <RadioGroup.Label as="p" className={`text-sm font-bold  mb-3 text-white`}>
+                                                                                    {params?.lang == 'ar' ? 'متجر الاستلام' : 'Pickup Store'}
+                                                                                    </RadioGroup.Label>
+                                                                                    <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</p>
+                                                                                    <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_data?.address_arabic : globalStore?.showroom_data?.address}</p>
+                                                                                    <p className={`mt-1.5 text-xs font-bold text-white`}>{params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_region?.name_arabic : globalStore?.showroom_data?.store_region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </RadioGroup.Option>
+                                                        </div>
+                                                    </RadioGroup>
+                                                </>
+                                                }
+                                                {cartData?.storeType == 0 && cartData?.storeId == false ?
+                                                <>
                                                 <div className="mt-4">
-                                                    <span className="text-[#B15533] text-sm">{params.lang == 'ar' ? 'موعد التوصيل المحتمل' : 'Possible Delivery Date'}</span>
-                                                    <div className="mt-2 text-[#004B7A] font-regular text-xs bg-white p-3 shadow-md rounded-md border border-[#219EBC] md:flex items-center gap-x-4">
-                                                        
-                                                        {expressDeliveryData?.data?.price >= 0 ?
-                                                            <>
-                                                                {/* <div className="inline-block md:h-20 md:w-0.5 md:min-h-[1em] w-full h-0.5 max-md:mt-2 self-stretch bg-[#219EBC] opacity-10"></div> */}
-                                                                <div className="flex items-center justify-between gap-x-4 max-md:mt-1 w-full">
-                                                                    <div className="font-bold text-sm">
-                                                                        <Image
-                                                                            src={params?.lang == 'ar' ? "/icons/express_logo/express_logo_ar.png" : "/icons/express_logo/express_logo_en.png"}
-                                                                            width="65" height="0" alt="express_delivery" title='Express Delivery'
-                                                                        />
-                                                                        <h6 className="text-[#004B7A] text-sm">{params.lang == 'ar' ? expressDeliveryData?.data?.title_name : expressDeliveryData?.data?.title}</h6>
-                                                                        <span className="text-xs font-medium text-[#5D686F]">{params.lang == 'ar' ? 'من المتوقع أن يتم التسليم يوم' : 'Delivery is expected to take place on'} <span className="font-bold">{moment().add(expressDeliveryData?.data?.num_of_days, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</span></span>
-                                                                        {/* <p className="text-[#B15533] mt-2 text-lg">+ {expressDeliveryData?.data?.price} {params.lang == 'ar' ? 'ر.س' : 'SR'}</p> */}
-                                                                    </div>
-                                                                    {/* <label className="w-12 h-6 relative">
-                                                                        <input onChange={(e) => {
-                                                                            addExpressDelivery(e.target.checked)
-                                                                        }}
-                                                                            defaultChecked={expressDeliveryDataStatus}
-                                                                            type="checkbox" className="custom_switch absolute w-full h-full opacity-0 z-10 cursor-pointer peer" id="custom_switch_checkbox1" />
-                                                                        <span className="bg-[#ebedf2] block h-full rounded-full before:absolute before:left-1 before:bg-white dark:before:bg-white-dark before:bottom-1 before:w-4 before:h-4 before:rounded-full peer-checked:before:left-7 peer-checked:bg-[#219EBC] before:transition-all before:duration-300"></span>
-                                                                    </label> */}
-                                                                </div>
-                                                            </>
-                                                            : 
-                                                            <div className="">
-                                                                <svg id="fi_10112476" height="40" viewBox="0 0 512 512" width="40" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><g fillRule="evenodd"><path d="m310.168 100.287c6.255 0 11.357 5.103 11.357 11.357v261.113h-264.358c-12.456 0-22.62-10.162-22.62-22.62v-238.494c0-6.254 5.102-11.357 11.357-11.357h264.264z" fill="#323e66"></path><path d="m321.525 372.757h-264.358c-12.459 0-22.62-10.162-22.62-22.62v-38.283h286.978v60.904z" fill="#e37500"></path><path d="m483.254 372.757h-161.729v-186.34h97.774c7.146 0 13.298 2.704 18.13 7.97l39.349 42.88c4.331 4.72 6.477 10.231 6.477 16.637v118.854z" fill="#f9ac00"></path><path d="m467.005 372.757h-145.48v-186.34h81.524c7.147 0 13.298 2.704 18.13 7.97l39.349 42.88c4.331 4.72 6.477 10.231 6.477 16.637v118.854z" fill="#fdc72e"></path><path d="m368.851 257.715v-52.102h78.88l29.046 31.653c4.331 4.72 6.477 10.231 6.477 16.637v3.812z" fill="#e9e9ff"></path><path d="m368.851 257.715v-52.102h62.63l29.047 31.653c4.331 4.72 6.477 10.231 6.477 16.637v3.812h-98.153z" fill="#f0f0ff"></path><path d="m483.254 350.966h-448.708v21.79h450.364c8.861 0 16.089-7.227 16.089-16.089v-29.336h-17.745z" fill="#7986bf"></path></g><path d="m34.546 332.788h23.169v18.178h-23.169z" fill="#323e66"></path><path d="m460.89 291.132h22.364v25.908h-22.364z" fill="#323e66"></path><circle cx="396.154" cy="372.757" fill="#323e66" r="38.953"></circle><path d="m396.154 391.897c10.542 0 19.14-8.598 19.14-19.14s-8.598-19.14-19.14-19.14-19.14 8.598-19.14 19.14 8.598 19.14 19.14 19.14z" fill="#fdc72e" fillRule="evenodd"></path><circle cx="118.375" cy="372.757" fill="#323e66" r="38.953" transform="matrix(.987 -.162 .162 .987 -58.875 24.127)"></circle><path d="m118.375 391.897c10.542 0 19.14-8.598 19.14-19.14s-8.598-19.14-19.14-19.14-19.14 8.598-19.14 19.14 8.598 19.14 19.14 19.14z" fill="#fdc72e" fillRule="evenodd"></path><path d="m152.024 235.62h76.233v76.233h-76.233z" fill="#e6b17c"></path><path d="m178.996 235.62h22.289v24.799l-11.145-5.593-11.144 5.593z" fill="#fdc72e" fillRule="evenodd"></path><path d="m152.024 159.387h76.233v76.233h-76.233z" fill="#ba8047"></path><path d="m178.996 159.387h22.289v24.799l-11.145-5.593-11.144 5.593z" fill="#2dd62d" fillRule="evenodd"></path><path d="m228.257 235.62h76.233v76.233h-76.233z" fill="#dea368"></path><path d="m255.228 235.62h22.289v24.799l-11.144-5.593-11.145 5.593z" fill="#fb545c" fillRule="evenodd"></path><path d="m228.257 135.311h76.233v100.309h-76.233z" fill="#fdd7ad"></path><path d="m255.228 135.311h22.289v24.799l-11.144-5.593-11.145 5.593z" fill="#5caeff" fillRule="evenodd"></path><path d="m75.791 235.62h76.233v76.233h-76.233z" fill="#fdd7ad"></path><path d="m102.763 235.62h22.289v24.799l-11.145-5.593-11.144 5.593z" fill="#5caeff" fillRule="evenodd"></path><path d="m321.525 186.416h93.116l-15.238-15.238c-2.093-2.093-4.64-3.148-7.599-3.148h-70.279z" fill="#e37500" fillRule="evenodd"></path><path d="m75.791 235.62h8.362v76.233h-8.362z" fill="#f2c496"></path><path d="m152.024 235.62h8.362v76.233h-8.362z" fill="#dea368"></path><path d="m228.257 235.62h8.362v76.233h-8.362z" fill="#d19458"></path><path d="m228.257 135.311h8.362v100.309h-8.362z" fill="#f2c496"></path><path d="m152.024 159.387h8.362v76.233h-8.362z" fill="#ab733a"></path><path d="m56.692 187.026h-41.059c-2.762 0-5-2.238-5-5s2.238-5 5-5h41.059c2.757 0 5 2.238 5 5s-2.243 5-5 5zm21.777 26.773h-57.117c-2.762 0-5-2.238-5-5s2.238-5 5-5h57.116c2.762 0 5 2.238 5 5s-2.238 5-5 5zm-48.188-67.832h33.202c2.757 0 5 2.238 5 5s-2.243 5-5 5h-33.202c-2.762 0-5-2.238-5-5s2.238-5 5-5zm-19.282-12.843c-2.757 0-5-2.243-5-5s2.243-5 5-5h42.84c2.762 0 5 2.238 5 5s-2.238 5-5 5zm107.371 253.768c-7.791 0-14.139-6.338-14.139-14.139s6.348-14.139 14.139-14.139 14.139 6.348 14.139 14.139-6.338 14.139-14.139 14.139zm0-38.278c-13.31 0-24.139 10.829-24.139 24.139s10.829 24.139 24.139 24.139 24.139-10.829 24.139-24.139-10.829-24.139-24.139-24.139zm277.778 38.278c-7.791 0-14.139-6.338-14.139-14.139s6.348-14.139 14.139-14.139 14.143 6.348 14.143 14.139-6.343 14.139-14.143 14.139zm0-38.278c-13.305 0-24.139 10.829-24.139 24.139s10.834 24.139 24.139 24.139 24.144-10.829 24.144-24.139-10.834-24.139-24.144-24.139zm-37.168-51.288c0-2.762 2.229-5 5-5h21.491c2.757 0 5 2.238 5 5s-2.243 4.995-5 4.995h-21.491c-2.772 0-5-2.224-5-4.995zm137.02 59.336c0 6.124-4.981 11.091-11.091 11.091h-45.097c-.472-4.129-1.51-8.076-3.043-11.786h46.483c2.767 0 5-2.243 5-5v-18.634h7.748zm-99.851 50.054c18.72 0 33.963-15.244 33.963-33.963s-15.244-33.949-33.963-33.949-33.949 15.229-33.949 33.949 15.234 33.963 33.949 33.963zm-277.778 0c18.729 0 33.959-15.244 33.959-33.963s-15.229-33.949-33.959-33.949-33.949 15.229-33.949 33.949 15.229 33.963 33.949 33.963zm-78.817-50.75h38.206c-1.528 3.71-2.576 7.657-3.048 11.786h-35.159v-11.786zm13.167-10h-13.167v-8.181h13.167zm263.801-29.111v29.111h-163.34c-8.039-10.434-20.648-17.163-34.811-17.163s-26.758 6.729-34.801 17.163h-20.849v-13.181c0-2.762-2.238-5-5-5h-18.167v-10.929h276.967zm-235.734-76.236h16.972v19.8c0 1.733.9 3.343 2.381 4.253.8.495 1.71.748 2.619.748.772 0 1.538-.176 2.248-.533l8.9-4.467 8.9 4.467c1.552.776 3.391.7 4.872-.214 1.471-.909 2.372-2.519 2.372-4.253v-19.8h16.967v66.236h-66.231v-66.236zm26.972 0v11.695l3.9-1.957c1.419-.705 3.081-.705 4.491 0l3.9 1.957v-11.695zm49.259-76.232h16.982v19.801c0 1.733.89 3.343 2.367 4.252 1.471.91 3.324.99 4.872.214l8.901-4.467 8.9 4.467c.709.357 1.481.529 2.238.529.924 0 1.833-.248 2.633-.743 1.481-.91 2.367-2.519 2.367-4.252v-19.801h16.981v66.231h-66.241zm26.982 0v11.696l3.9-1.957c1.41-.71 3.067-.71 4.481 0l3.895 1.957v-11.696h-12.277zm66.231-24.077v19.801c0 1.733.896 3.343 2.367 4.252 1.481.91 3.319.99 4.872.214l8.9-4.467 8.896 4.467c.714.357 1.481.533 2.252.533.91 0 1.819-.253 2.619-.748 1.481-.91 2.381-2.519 2.381-4.252v-19.801h16.972v90.308h-66.231v-90.308h16.972zm9.996 0v11.696l3.9-1.957c1.409-.71 3.071-.71 4.491 0l3.9 1.957v-11.696zm0 100.309h12.291v11.695l-3.9-1.957c-1.419-.705-3.081-.705-4.491 0l-3.9 1.957zm-83.861 24.053c1.471.91 3.324.991 4.872.214l8.901-4.467 8.9 4.467c.709.357 1.481.533 2.238.533.924 0 1.833-.252 2.633-.748 1.481-.909 2.367-2.519 2.367-4.253v-19.8h16.981v66.236h-66.241v-66.236h16.982v19.8c0 1.733.89 3.343 2.367 4.253zm7.634-24.053v11.695l3.9-1.957c1.41-.705 3.067-.705 4.481 0l3.895 1.957v-11.695h-12.277zm49.259 66.236h66.231v-66.236h-16.972v19.8c0 1.733-.9 3.343-2.381 4.253-1.467.914-3.319.991-4.872.214l-8.896-4.467-8.9 4.467c-.709.357-1.471.533-2.243.533-.91 0-1.819-.252-2.629-.748-1.471-.909-2.367-2.519-2.367-4.253v-19.8h-16.972v66.236zm158.54-133.825c1.629 0 2.919.533 4.067 1.686l6.7 6.7h-76.046v-8.386zm-232.81 182.936h196.551c-1.543 3.71-2.581 7.657-3.052 11.786h-190.46c-.466-4.129-1.509-8.076-3.038-11.786zm274.75-158.202c-3.862-4.214-8.719-6.348-14.439-6.348h-92.78v154.549h34.83c8.039-10.434 20.648-17.163 34.797-17.163s26.772 6.729 34.811 17.163h47.292v-23.925h-17.363c-2.757 0-5-2.238-5-4.995v-25.911c0-2.762 2.243-5 5-5h17.363v-23.42h-109.4c-2.762 0-5-2.238-5-5v-52.102c0-2.762 2.238-5 5-5h67.508zm44.459 54.95h-104.347v-42.102h71.679l27.558 30.034c3.2 3.486 4.872 7.448 5.11 12.067zm.052 59.331h-12.362v-15.91h12.362zm22.749 10.286h-12.748v-68.427c0-7.653-2.624-14.386-7.791-20.02l-39.354-42.878c-5.748-6.272-13.296-9.591-21.806-9.591h-2.591l-13.772-13.777c-3.019-3.014-6.867-4.61-11.139-4.61h-65.279v-51.388c0-9.019-7.333-16.358-16.353-16.358h-277.019c-2.757 0-5 2.243-5 5s2.243 5 5 5h277.021c3.505 0 6.353 2.852 6.353 6.357v195.213h-7.034v-171.543c0-2.757-2.238-5-5-5h-76.227c-2.762 0-5 2.243-5 5v19.077h-71.241c-2.757 0-5 2.238-5 5v71.231h-71.232c-2.757 0-4.995 2.238-4.995 5v71.236h-31.239v-78.556c0-2.762-2.243-5-5-5-2.772 0-5 2.238-5 5v144.454c0 2.762 2.229 5 5 5h40.159c2.5 21.891 21.12 38.964 43.659 38.964s41.168-17.072 43.659-38.964h190.461c2.49 21.891 21.12 38.964 43.659 38.964s41.173-17.072 43.664-38.964h45.097c11.629 0 21.091-9.457 21.091-21.091v-29.33c0-2.757-2.238-5-5-5z" fillRule="evenodd"></path></svg>
-                                                                <label className="">{params.lang == 'ar' ? 'من المتوقع أن يتم التسليم يوم' : 'Delivery is expected to take place on'}{' '}
-                                                                    <span className="font-bold">
-                                                                        {moment().add(7, 'days').format("MMM  DD, YYYY")}</span></label>
-                                                            </div>
+                                                <span className="text-[#B15533] text-sm">
+                                                    {params.lang == "ar"
+                                                    ? "موعد التوصيل المحتمل"
+                                                    : "Possible Delivery Date"}
+                                                </span>
+                                                <div className={`mt-2 text-[#004B7A] font-regular text-xs bg-white p-3 shadow-md rounded-md border ${requiredDate ? "border-[#219EBC]" : "border-red"}`}>
+                                                    {/* <div className="flex items-center gap-x-2 mb-1">
+                                                    <svg
+                                                        id="fi_10112476"
+                                                        height="24"
+                                                        viewBox="0 0 512 512"
+                                                        width="24"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        data-name="Layer 1"
+                                                    >
+                                                        <g fillRule="evenodd">
+                                                        <path
+                                                            d="m310.168 100.287c6.255 0 11.357 5.103 11.357 11.357v261.113h-264.358c-12.456 0-22.62-10.162-22.62-22.62v-238.494c0-6.254 5.102-11.357 11.357-11.357h264.264z"
+                                                            fill="#323e66"
+                                                        ></path>
+                                                        <path
+                                                            d="m321.525 372.757h-264.358c-12.459 0-22.62-10.162-22.62-22.62v-38.283h286.978v60.904z"
+                                                            fill="#e37500"
+                                                        ></path>
+                                                        <path
+                                                            d="m483.254 372.757h-161.729v-186.34h97.774c7.146 0 13.298 2.704 18.13 7.97l39.349 42.88c4.331 4.72 6.477 10.231 6.477 16.637v118.854z"
+                                                            fill="#f9ac00"
+                                                        ></path>
+                                                        <path
+                                                            d="m467.005 372.757h-145.48v-186.34h81.524c7.147 0 13.298 2.704 18.13 7.97l39.349 42.88c4.331 4.72 6.477 10.231 6.477 16.637v118.854z"
+                                                            fill="#fdc72e"
+                                                        ></path>
+                                                        <path
+                                                            d="m368.851 257.715v-52.102h78.88l29.046 31.653c4.331 4.72 6.477 10.231 6.477 16.637v3.812z"
+                                                            fill="#e9e9ff"
+                                                        ></path>
+                                                        <path
+                                                            d="m368.851 257.715v-52.102h62.63l29.047 31.653c4.331 4.72 6.477 10.231 6.477 16.637v3.812h-98.153z"
+                                                            fill="#f0f0ff"
+                                                        ></path>
+                                                        <path
+                                                            d="m483.254 350.966h-448.708v21.79h450.364c8.861 0 16.089-7.227 16.089-16.089v-29.336h-17.745z"
+                                                            fill="#7986bf"
+                                                        ></path>
+                                                        </g>
+                                                        <path
+                                                        d="m34.546 332.788h23.169v18.178h-23.169z"
+                                                        fill="#323e66"
+                                                        ></path>
+                                                        <path
+                                                        d="m460.89 291.132h22.364v25.908h-22.364z"
+                                                        fill="#323e66"
+                                                        ></path>
+                                                        <circle
+                                                        cx="396.154"
+                                                        cy="372.757"
+                                                        fill="#323e66"
+                                                        r="38.953"
+                                                        ></circle>
+                                                        <path
+                                                        d="m396.154 391.897c10.542 0 19.14-8.598 19.14-19.14s-8.598-19.14-19.14-19.14-19.14 8.598-19.14 19.14 8.598 19.14 19.14 19.14z"
+                                                        fill="#fdc72e"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <circle
+                                                        cx="118.375"
+                                                        cy="372.757"
+                                                        fill="#323e66"
+                                                        r="38.953"
+                                                        transform="matrix(.987 -.162 .162 .987 -58.875 24.127)"
+                                                        ></circle>
+                                                        <path
+                                                        d="m118.375 391.897c10.542 0 19.14-8.598 19.14-19.14s-8.598-19.14-19.14-19.14-19.14 8.598-19.14 19.14 8.598 19.14 19.14 19.14z"
+                                                        fill="#fdc72e"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <path
+                                                        d="m152.024 235.62h76.233v76.233h-76.233z"
+                                                        fill="#e6b17c"
+                                                        ></path>
+                                                        <path
+                                                        d="m178.996 235.62h22.289v24.799l-11.145-5.593-11.144 5.593z"
+                                                        fill="#fdc72e"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <path
+                                                        d="m152.024 159.387h76.233v76.233h-76.233z"
+                                                        fill="#ba8047"
+                                                        ></path>
+                                                        <path
+                                                        d="m178.996 159.387h22.289v24.799l-11.145-5.593-11.144 5.593z"
+                                                        fill="#2dd62d"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <path
+                                                        d="m228.257 235.62h76.233v76.233h-76.233z"
+                                                        fill="#dea368"
+                                                        ></path>
+                                                        <path
+                                                        d="m255.228 235.62h22.289v24.799l-11.144-5.593-11.145 5.593z"
+                                                        fill="#fb545c"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <path
+                                                        d="m228.257 135.311h76.233v100.309h-76.233z"
+                                                        fill="#fdd7ad"
+                                                        ></path>
+                                                        <path
+                                                        d="m255.228 135.311h22.289v24.799l-11.144-5.593-11.145 5.593z"
+                                                        fill="#5caeff"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <path
+                                                        d="m75.791 235.62h76.233v76.233h-76.233z"
+                                                        fill="#fdd7ad"
+                                                        ></path>
+                                                        <path
+                                                        d="m102.763 235.62h22.289v24.799l-11.145-5.593-11.144 5.593z"
+                                                        fill="#5caeff"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <path
+                                                        d="m321.525 186.416h93.116l-15.238-15.238c-2.093-2.093-4.64-3.148-7.599-3.148h-70.279z"
+                                                        fill="#e37500"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                        <path
+                                                        d="m75.791 235.62h8.362v76.233h-8.362z"
+                                                        fill="#f2c496"
+                                                        ></path>
+                                                        <path
+                                                        d="m152.024 235.62h8.362v76.233h-8.362z"
+                                                        fill="#dea368"
+                                                        ></path>
+                                                        <path
+                                                        d="m228.257 235.62h8.362v76.233h-8.362z"
+                                                        fill="#d19458"
+                                                        ></path>
+                                                        <path
+                                                        d="m228.257 135.311h8.362v100.309h-8.362z"
+                                                        fill="#f2c496"
+                                                        ></path>
+                                                        <path
+                                                        d="m152.024 159.387h8.362v76.233h-8.362z"
+                                                        fill="#ab733a"
+                                                        ></path>
+                                                        <path
+                                                        d="m56.692 187.026h-41.059c-2.762 0-5-2.238-5-5s2.238-5 5-5h41.059c2.757 0 5 2.238 5 5s-2.243 5-5 5zm21.777 26.773h-57.117c-2.762 0-5-2.238-5-5s2.238-5 5-5h57.116c2.762 0 5 2.238 5 5s-2.238 5-5 5zm-48.188-67.832h33.202c2.757 0 5 2.238 5 5s-2.243 5-5 5h-33.202c-2.762 0-5-2.238-5-5s2.238-5 5-5zm-19.282-12.843c-2.757 0-5-2.243-5-5s2.243-5 5-5h42.84c2.762 0 5 2.238 5 5s-2.238 5-5 5zm107.371 253.768c-7.791 0-14.139-6.338-14.139-14.139s6.348-14.139 14.139-14.139 14.139 6.348 14.139 14.139-6.338 14.139-14.139 14.139zm0-38.278c-13.31 0-24.139 10.829-24.139 24.139s10.829 24.139 24.139 24.139 24.139-10.829 24.139-24.139-10.829-24.139-24.139-24.139zm277.778 38.278c-7.791 0-14.139-6.338-14.139-14.139s6.348-14.139 14.139-14.139 14.143 6.348 14.143 14.139-6.343 14.139-14.143 14.139zm0-38.278c-13.305 0-24.139 10.829-24.139 24.139s10.834 24.139 24.139 24.139 24.144-10.829 24.144-24.139-10.834-24.139-24.144-24.139zm-37.168-51.288c0-2.762 2.229-5 5-5h21.491c2.757 0 5 2.238 5 5s-2.243 4.995-5 4.995h-21.491c-2.772 0-5-2.224-5-4.995zm137.02 59.336c0 6.124-4.981 11.091-11.091 11.091h-45.097c-.472-4.129-1.51-8.076-3.043-11.786h46.483c2.767 0 5-2.243 5-5v-18.634h7.748zm-99.851 50.054c18.72 0 33.963-15.244 33.963-33.963s-15.244-33.949-33.963-33.949-33.949 15.229-33.949 33.949 15.234 33.963 33.949 33.963zm-277.778 0c18.729 0 33.959-15.244 33.959-33.963s-15.229-33.949-33.959-33.949-33.949 15.229-33.949 33.949 15.229 33.963 33.949 33.963zm-78.817-50.75h38.206c-1.528 3.71-2.576 7.657-3.048 11.786h-35.159v-11.786zm13.167-10h-13.167v-8.181h13.167zm263.801-29.111v29.111h-163.34c-8.039-10.434-20.648-17.163-34.811-17.163s-26.758 6.729-34.801 17.163h-20.849v-13.181c0-2.762-2.238-5-5-5h-18.167v-10.929h276.967zm-235.734-76.236h16.972v19.8c0 1.733.9 3.343 2.381 4.253.8.495 1.71.748 2.619.748.772 0 1.538-.176 2.248-.533l8.9-4.467 8.9 4.467c1.552.776 3.391.7 4.872-.214 1.471-.909 2.372-2.519 2.372-4.253v-19.8h16.967v66.236h-66.231v-66.236zm26.972 0v11.695l3.9-1.957c1.419-.705 3.081-.705 4.491 0l3.9 1.957v-11.695zm49.259-76.232h16.982v19.801c0 1.733.89 3.343 2.367 4.252 1.471.91 3.324.99 4.872.214l8.901-4.467 8.9 4.467c.709.357 1.481.529 2.238.529.924 0 1.833-.248 2.633-.743 1.481-.91 2.367-2.519 2.367-4.252v-19.801h16.981v66.231h-66.241zm26.982 0v11.696l3.9-1.957c1.41-.71 3.067-.71 4.481 0l3.895 1.957v-11.696h-12.277zm66.231-24.077v19.801c0 1.733.896 3.343 2.367 4.252 1.481.91 3.319.99 4.872.214l8.9-4.467 8.896 4.467c.714.357 1.481.533 2.252.533.91 0 1.819-.253 2.619-.748 1.481-.91 2.381-2.519 2.381-4.252v-19.801h16.972v90.308h-66.231v-90.308h16.972zm9.996 0v11.696l3.9-1.957c1.409-.71 3.071-.71 4.491 0l3.9 1.957v-11.696zm0 100.309h12.291v11.695l-3.9-1.957c-1.419-.705-3.081-.705-4.491 0l-3.9 1.957zm-83.861 24.053c1.471.91 3.324.991 4.872.214l8.901-4.467 8.9 4.467c.709.357 1.481.533 2.238.533.924 0 1.833-.252 2.633-.748 1.481-.909 2.367-2.519 2.367-4.253v-19.8h16.981v66.236h-66.241v-66.236h16.982v19.8c0 1.733.89 3.343 2.367 4.253zm7.634-24.053v11.695l3.9-1.957c1.41-.705 3.067-.705 4.481 0l3.895 1.957v-11.695h-12.277zm49.259 66.236h66.231v-66.236h-16.972v19.8c0 1.733-.9 3.343-2.381 4.253-1.467.914-3.319.991-4.872.214l-8.896-4.467-8.9 4.467c-.709.357-1.471.533-2.243.533-.91 0-1.819-.252-2.629-.748-1.471-.909-2.367-2.519-2.367-4.253v-19.8h-16.972v66.236zm158.54-133.825c1.629 0 2.919.533 4.067 1.686l6.7 6.7h-76.046v-8.386zm-232.81 182.936h196.551c-1.543 3.71-2.581 7.657-3.052 11.786h-190.46c-.466-4.129-1.509-8.076-3.038-11.786zm274.75-158.202c-3.862-4.214-8.719-6.348-14.439-6.348h-92.78v154.549h34.83c8.039-10.434 20.648-17.163 34.797-17.163s26.772 6.729 34.811 17.163h47.292v-23.925h-17.363c-2.757 0-5-2.238-5-4.995v-25.911c0-2.762 2.243-5 5-5h17.363v-23.42h-109.4c-2.762 0-5-2.238-5-5v-52.102c0-2.762 2.238-5 5-5h67.508zm44.459 54.95h-104.347v-42.102h71.679l27.558 30.034c3.2 3.486 4.872 7.448 5.11 12.067zm.052 59.331h-12.362v-15.91h12.362zm22.749 10.286h-12.748v-68.427c0-7.653-2.624-14.386-7.791-20.02l-39.354-42.878c-5.748-6.272-13.296-9.591-21.806-9.591h-2.591l-13.772-13.777c-3.019-3.014-6.867-4.61-11.139-4.61h-65.279v-51.388c0-9.019-7.333-16.358-16.353-16.358h-277.019c-2.757 0-5 2.243-5 5s2.243 5 5 5h277.021c3.505 0 6.353 2.852 6.353 6.357v195.213h-7.034v-171.543c0-2.757-2.238-5-5-5h-76.227c-2.762 0-5 2.243-5 5v19.077h-71.241c-2.757 0-5 2.238-5 5v71.231h-71.232c-2.757 0-4.995 2.238-4.995 5v71.236h-31.239v-78.556c0-2.762-2.243-5-5-5-2.772 0-5 2.238-5 5v144.454c0 2.762 2.229 5 5 5h40.159c2.5 21.891 21.12 38.964 43.659 38.964s41.168-17.072 43.659-38.964h190.461c2.49 21.891 21.12 38.964 43.659 38.964s41.173-17.072 43.664-38.964h45.097c11.629 0 21.091-9.457 21.091-21.091v-29.33c0-2.757-2.238-5-5-5z"
+                                                        fillRule="evenodd"
+                                                        ></path>
+                                                    </svg>
+                                                    <label className="text-xs font-semibold">{params?.lang === 'ar' ? "تحديد موعد التوصيل" : "Schedule Delivery"}</label>
+                                                    </div> */}
+                                                    {/* Here Date Will Come */}
+                                                    {/* <Flatpickr value={deliverySelect} options={{ dateFormat: 'M d, Y', position: isArabic ? 'auto right' : 'auto left' }} className="form-input border-none" onChange={(date) => setDeliverySelect(date)} /> */}
+                                                    {expressDeliveryData?.data?.price >= 0 ? (
+                                                    <>
+                                                        <div className="align__center gap-x-4 max-md:mt-1 w-full">
+                                                        <div className="font-bold text-sm w-full">
+                                                            <Image
+                                                            src={
+                                                                params?.lang == "ar"
+                                                                ? "/icons/express_logo/express_logo_ar.png"
+                                                                : "/icons/express_logo/express_logo_en.png"
                                                             }
+                                                            width="65"
+                                                            height="0"
+                                                            alt="express_delivery"
+                                                            title="Express Delivery"
+                                                            />
+                                                            <div className="mb-2 w-full">
+                                                            <DatePicker />
+                                                            </div>
+                                                            <h6 className="text-[#004B7A] text-sm">
+                                                            {params.lang == "ar"
+                                                                ? expressDeliveryData?.data
+                                                                ?.title_name
+                                                                : expressDeliveryData?.data?.title}
+                                                            </h6>
+                                                            
+                                                            <span className="text-xs font-medium text-[#5D686F]">
+                                                            {params.lang == "ar"
+                                                                ? "من المتوقع أن يتم التسليم يوم"
+                                                                : "Delivery is expected to take place on"}{" "}
+                                                            <span className="font-bold">
+                                                                {moment(deliverydate)
+                                                                // .add(
+                                                                //   expressDeliveryData?.data
+                                                                //     ?.num_of_days,
+                                                                //   "days"
+                                                                // )
+                                                                .locale(
+                                                                    params.lang == "ar" ? "ar" : "en"
+                                                                )
+                                                                .format("MMM  DD, YYYY")}
+                                                            </span>
+                                                            </span>
+                                                        </div>
+                                                        </div>
+                                                    </>
+                                                    ) : (
+                                                    <div className="">
+                                                        <svg
+                                                            id="fi_10112476"
+                                                            height="40"
+                                                            viewBox="0 0 512 512"
+                                                            width="40"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                            data-name="Layer 1"
+                                                        >
+                                                            <g fillRule="evenodd">
+                                                            <path
+                                                                d="m310.168 100.287c6.255 0 11.357 5.103 11.357 11.357v261.113h-264.358c-12.456 0-22.62-10.162-22.62-22.62v-238.494c0-6.254 5.102-11.357 11.357-11.357h264.264z"
+                                                                fill="#323e66"
+                                                            ></path>
+                                                            <path
+                                                                d="m321.525 372.757h-264.358c-12.459 0-22.62-10.162-22.62-22.62v-38.283h286.978v60.904z"
+                                                                fill="#e37500"
+                                                            ></path>
+                                                            <path
+                                                                d="m483.254 372.757h-161.729v-186.34h97.774c7.146 0 13.298 2.704 18.13 7.97l39.349 42.88c4.331 4.72 6.477 10.231 6.477 16.637v118.854z"
+                                                                fill="#f9ac00"
+                                                            ></path>
+                                                            <path
+                                                                d="m467.005 372.757h-145.48v-186.34h81.524c7.147 0 13.298 2.704 18.13 7.97l39.349 42.88c4.331 4.72 6.477 10.231 6.477 16.637v118.854z"
+                                                                fill="#fdc72e"
+                                                            ></path>
+                                                            <path
+                                                                d="m368.851 257.715v-52.102h78.88l29.046 31.653c4.331 4.72 6.477 10.231 6.477 16.637v3.812z"
+                                                                fill="#e9e9ff"
+                                                            ></path>
+                                                            <path
+                                                                d="m368.851 257.715v-52.102h62.63l29.047 31.653c4.331 4.72 6.477 10.231 6.477 16.637v3.812h-98.153z"
+                                                                fill="#f0f0ff"
+                                                            ></path>
+                                                            <path
+                                                                d="m483.254 350.966h-448.708v21.79h450.364c8.861 0 16.089-7.227 16.089-16.089v-29.336h-17.745z"
+                                                                fill="#7986bf"
+                                                            ></path>
+                                                            </g>
+                                                            <path
+                                                            d="m34.546 332.788h23.169v18.178h-23.169z"
+                                                            fill="#323e66"
+                                                            ></path>
+                                                            <path
+                                                            d="m460.89 291.132h22.364v25.908h-22.364z"
+                                                            fill="#323e66"
+                                                            ></path>
+                                                            <circle
+                                                            cx="396.154"
+                                                            cy="372.757"
+                                                            fill="#323e66"
+                                                            r="38.953"
+                                                            ></circle>
+                                                            <path
+                                                            d="m396.154 391.897c10.542 0 19.14-8.598 19.14-19.14s-8.598-19.14-19.14-19.14-19.14 8.598-19.14 19.14 8.598 19.14 19.14 19.14z"
+                                                            fill="#fdc72e"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <circle
+                                                            cx="118.375"
+                                                            cy="372.757"
+                                                            fill="#323e66"
+                                                            r="38.953"
+                                                            transform="matrix(.987 -.162 .162 .987 -58.875 24.127)"
+                                                            ></circle>
+                                                            <path
+                                                            d="m118.375 391.897c10.542 0 19.14-8.598 19.14-19.14s-8.598-19.14-19.14-19.14-19.14 8.598-19.14 19.14 8.598 19.14 19.14 19.14z"
+                                                            fill="#fdc72e"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <path
+                                                            d="m152.024 235.62h76.233v76.233h-76.233z"
+                                                            fill="#e6b17c"
+                                                            ></path>
+                                                            <path
+                                                            d="m178.996 235.62h22.289v24.799l-11.145-5.593-11.144 5.593z"
+                                                            fill="#fdc72e"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <path
+                                                            d="m152.024 159.387h76.233v76.233h-76.233z"
+                                                            fill="#ba8047"
+                                                            ></path>
+                                                            <path
+                                                            d="m178.996 159.387h22.289v24.799l-11.145-5.593-11.144 5.593z"
+                                                            fill="#2dd62d"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <path
+                                                            d="m228.257 235.62h76.233v76.233h-76.233z"
+                                                            fill="#dea368"
+                                                            ></path>
+                                                            <path
+                                                            d="m255.228 235.62h22.289v24.799l-11.144-5.593-11.145 5.593z"
+                                                            fill="#fb545c"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <path
+                                                            d="m228.257 135.311h76.233v100.309h-76.233z"
+                                                            fill="#fdd7ad"
+                                                            ></path>
+                                                            <path
+                                                            d="m255.228 135.311h22.289v24.799l-11.144-5.593-11.145 5.593z"
+                                                            fill="#5caeff"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <path
+                                                            d="m75.791 235.62h76.233v76.233h-76.233z"
+                                                            fill="#fdd7ad"
+                                                            ></path>
+                                                            <path
+                                                            d="m102.763 235.62h22.289v24.799l-11.145-5.593-11.144 5.593z"
+                                                            fill="#5caeff"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <path
+                                                            d="m321.525 186.416h93.116l-15.238-15.238c-2.093-2.093-4.64-3.148-7.599-3.148h-70.279z"
+                                                            fill="#e37500"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                            <path
+                                                            d="m75.791 235.62h8.362v76.233h-8.362z"
+                                                            fill="#f2c496"
+                                                            ></path>
+                                                            <path
+                                                            d="m152.024 235.62h8.362v76.233h-8.362z"
+                                                            fill="#dea368"
+                                                            ></path>
+                                                            <path
+                                                            d="m228.257 235.62h8.362v76.233h-8.362z"
+                                                            fill="#d19458"
+                                                            ></path>
+                                                            <path
+                                                            d="m228.257 135.311h8.362v100.309h-8.362z"
+                                                            fill="#f2c496"
+                                                            ></path>
+                                                            <path
+                                                            d="m152.024 159.387h8.362v76.233h-8.362z"
+                                                            fill="#ab733a"
+                                                            ></path>
+                                                            <path
+                                                            d="m56.692 187.026h-41.059c-2.762 0-5-2.238-5-5s2.238-5 5-5h41.059c2.757 0 5 2.238 5 5s-2.243 5-5 5zm21.777 26.773h-57.117c-2.762 0-5-2.238-5-5s2.238-5 5-5h57.116c2.762 0 5 2.238 5 5s-2.238 5-5 5zm-48.188-67.832h33.202c2.757 0 5 2.238 5 5s-2.243 5-5 5h-33.202c-2.762 0-5-2.238-5-5s2.238-5 5-5zm-19.282-12.843c-2.757 0-5-2.243-5-5s2.243-5 5-5h42.84c2.762 0 5 2.238 5 5s-2.238 5-5 5zm107.371 253.768c-7.791 0-14.139-6.338-14.139-14.139s6.348-14.139 14.139-14.139 14.139 6.348 14.139 14.139-6.338 14.139-14.139 14.139zm0-38.278c-13.31 0-24.139 10.829-24.139 24.139s10.829 24.139 24.139 24.139 24.139-10.829 24.139-24.139-10.829-24.139-24.139-24.139zm277.778 38.278c-7.791 0-14.139-6.338-14.139-14.139s6.348-14.139 14.139-14.139 14.143 6.348 14.143 14.139-6.343 14.139-14.143 14.139zm0-38.278c-13.305 0-24.139 10.829-24.139 24.139s10.834 24.139 24.139 24.139 24.144-10.829 24.144-24.139-10.834-24.139-24.144-24.139zm-37.168-51.288c0-2.762 2.229-5 5-5h21.491c2.757 0 5 2.238 5 5s-2.243 4.995-5 4.995h-21.491c-2.772 0-5-2.224-5-4.995zm137.02 59.336c0 6.124-4.981 11.091-11.091 11.091h-45.097c-.472-4.129-1.51-8.076-3.043-11.786h46.483c2.767 0 5-2.243 5-5v-18.634h7.748zm-99.851 50.054c18.72 0 33.963-15.244 33.963-33.963s-15.244-33.949-33.963-33.949-33.949 15.229-33.949 33.949 15.234 33.963 33.949 33.963zm-277.778 0c18.729 0 33.959-15.244 33.959-33.963s-15.229-33.949-33.959-33.949-33.949 15.229-33.949 33.949 15.229 33.963 33.949 33.963zm-78.817-50.75h38.206c-1.528 3.71-2.576 7.657-3.048 11.786h-35.159v-11.786zm13.167-10h-13.167v-8.181h13.167zm263.801-29.111v29.111h-163.34c-8.039-10.434-20.648-17.163-34.811-17.163s-26.758 6.729-34.801 17.163h-20.849v-13.181c0-2.762-2.238-5-5-5h-18.167v-10.929h276.967zm-235.734-76.236h16.972v19.8c0 1.733.9 3.343 2.381 4.253.8.495 1.71.748 2.619.748.772 0 1.538-.176 2.248-.533l8.9-4.467 8.9 4.467c1.552.776 3.391.7 4.872-.214 1.471-.909 2.372-2.519 2.372-4.253v-19.8h16.967v66.236h-66.231v-66.236zm26.972 0v11.695l3.9-1.957c1.419-.705 3.081-.705 4.491 0l3.9 1.957v-11.695zm49.259-76.232h16.982v19.801c0 1.733.89 3.343 2.367 4.252 1.471.91 3.324.99 4.872.214l8.901-4.467 8.9 4.467c.709.357 1.481.529 2.238.529.924 0 1.833-.248 2.633-.743 1.481-.91 2.367-2.519 2.367-4.252v-19.801h16.981v66.231h-66.241zm26.982 0v11.696l3.9-1.957c1.41-.71 3.067-.71 4.481 0l3.895 1.957v-11.696h-12.277zm66.231-24.077v19.801c0 1.733.896 3.343 2.367 4.252 1.481.91 3.319.99 4.872.214l8.9-4.467 8.896 4.467c.714.357 1.481.533 2.252.533.91 0 1.819-.253 2.619-.748 1.481-.91 2.381-2.519 2.381-4.252v-19.801h16.972v90.308h-66.231v-90.308h16.972zm9.996 0v11.696l3.9-1.957c1.409-.71 3.071-.71 4.491 0l3.9 1.957v-11.696zm0 100.309h12.291v11.695l-3.9-1.957c-1.419-.705-3.081-.705-4.491 0l-3.9 1.957zm-83.861 24.053c1.471.91 3.324.991 4.872.214l8.901-4.467 8.9 4.467c.709.357 1.481.533 2.238.533.924 0 1.833-.252 2.633-.748 1.481-.909 2.367-2.519 2.367-4.253v-19.8h16.981v66.236h-66.241v-66.236h16.982v19.8c0 1.733.89 3.343 2.367 4.253zm7.634-24.053v11.695l3.9-1.957c1.41-.705 3.067-.705 4.481 0l3.895 1.957v-11.695h-12.277zm49.259 66.236h66.231v-66.236h-16.972v19.8c0 1.733-.9 3.343-2.381 4.253-1.467.914-3.319.991-4.872.214l-8.896-4.467-8.9 4.467c-.709.357-1.471.533-2.243.533-.91 0-1.819-.252-2.629-.748-1.471-.909-2.367-2.519-2.367-4.253v-19.8h-16.972v66.236zm158.54-133.825c1.629 0 2.919.533 4.067 1.686l6.7 6.7h-76.046v-8.386zm-232.81 182.936h196.551c-1.543 3.71-2.581 7.657-3.052 11.786h-190.46c-.466-4.129-1.509-8.076-3.038-11.786zm274.75-158.202c-3.862-4.214-8.719-6.348-14.439-6.348h-92.78v154.549h34.83c8.039-10.434 20.648-17.163 34.797-17.163s26.772 6.729 34.811 17.163h47.292v-23.925h-17.363c-2.757 0-5-2.238-5-4.995v-25.911c0-2.762 2.243-5 5-5h17.363v-23.42h-109.4c-2.762 0-5-2.238-5-5v-52.102c0-2.762 2.238-5 5-5h67.508zm44.459 54.95h-104.347v-42.102h71.679l27.558 30.034c3.2 3.486 4.872 7.448 5.11 12.067zm.052 59.331h-12.362v-15.91h12.362zm22.749 10.286h-12.748v-68.427c0-7.653-2.624-14.386-7.791-20.02l-39.354-42.878c-5.748-6.272-13.296-9.591-21.806-9.591h-2.591l-13.772-13.777c-3.019-3.014-6.867-4.61-11.139-4.61h-65.279v-51.388c0-9.019-7.333-16.358-16.353-16.358h-277.019c-2.757 0-5 2.243-5 5s2.243 5 5 5h277.021c3.505 0 6.353 2.852 6.353 6.357v195.213h-7.034v-171.543c0-2.757-2.238-5-5-5h-76.227c-2.762 0-5 2.243-5 5v19.077h-71.241c-2.757 0-5 2.238-5 5v71.231h-71.232c-2.757 0-4.995 2.238-4.995 5v71.236h-31.239v-78.556c0-2.762-2.243-5-5-5-2.772 0-5 2.238-5 5v144.454c0 2.762 2.229 5 5 5h40.159c2.5 21.891 21.12 38.964 43.659 38.964s41.168-17.072 43.659-38.964h190.461c2.49 21.891 21.12 38.964 43.659 38.964s41.173-17.072 43.664-38.964h45.097c11.629 0 21.091-9.457 21.091-21.091v-29.33c0-2.757-2.238-5-5-5z"
+                                                            fillRule="evenodd"
+                                                            ></path>
+                                                        </svg>
+                                                        <div className="mb-2">
+                                                            <DatePicker />
+                                                        </div>
+                                                        <label className="">
+                                                            {params.lang == "ar"
+                                                            ? "من المتوقع أن يتم التسليم يوم"
+                                                            : "Delivery is expected to take place on"}{" "}
+                                                            <span className="font-bold">
+                                                            {moment(deliverydate)
+                                                                // .add(5, "days")
+                                                                .format("MMM  DD, YYYY")}
+                                                            </span>
+                                                        </label>
                                                     </div>
+                                                    )}
                                                 </div>
+                                                </div>
+                                                </>
+                                                :null}
                                             </div>
-                                            :null}
+                                            ) : null}
                                         </div>
                                         <Transition appear show={changeAddressPopup} as={Fragment}>
                                             <Dialog as="div" className="relative z-40" onClose={() => setchangeAddressPopup(!changeAddressPopup)}>
@@ -1447,6 +1979,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         </div>
                                         <hr className="opacity-10 my-3" />
                                     </div>
+                                    {cartData?.storeType == 0 && cartData?.storeId == false ? 
+                                    <>
                                     {addressData.filter((element: any) => element.id == addressid).map((data: any, i: any) => {
                                         return (
                                             <div key={addressData?.id + 1}>
@@ -1467,21 +2001,56 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         )
                                     })
                                     }
-                                    {expressDeliveryData?.data && expressDeliveryDataStatus ?
-
-                                        <div className="text-sm font-medium">
-                                            <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? expressDeliveryData?.data?.title_name : expressDeliveryData?.data?.title}</label>
-                                            <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] font-regular text-xs">
-                                                <label className="">{moment().add(expressDeliveryData?.data?.num_of_days, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
+                                    </>
+                                    :
+                                    <>
+                                        <div key={globalStore?.id + 1}>
+                                            <div className="align__center text-sm">
+                                                <label className="font-regular text-[#5D686F]">{params?.lang == 'ar' ? 'متجر الاستلام' : 'Pickup Store'}</label>
+                                                {/* <button className="focus-visible:outline-none text-[#FF671F] hover:underline" onClick={() => setActiveTab3(1)}>{params.lang == 'ar' ? 'تغــيــيـر' : 'Change'}</button> */}
                                             </div>
+                                            <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] fill-[#004B7A] font-regular text-xs">
+                                                <svg id="fi_3514361" height="28" viewBox="0 0 256 256" width="28" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m128 138.184a5 5 0 0 1 -3.607-1.538c-2.075-2.16-50.808-53.259-50.808-82.228a54.415 54.415 0 1 1 108.83 0c0 28.969-48.733 80.068-50.808 82.228a5 5 0 0 1 -3.607 1.538zm0-128.184a44.465 44.465 0 0 0 -44.415 44.418c0 19.07 29.312 54.978 44.414 71.451 15.1-16.478 44.416-52.4 44.416-71.451a44.465 44.465 0 0 0 -44.415-44.418z"></path><path d="m128 76.153a21.735 21.735 0 1 1 21.735-21.735 21.759 21.759 0 0 1 -21.735 21.735zm0-33.47a11.735 11.735 0 1 0 11.735 11.735 11.748 11.748 0 0 0 -11.735-11.735z"></path><path d="m128.126 256a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.559a5 5 0 0 1 -2.5-4.331v-38.385a5 5 0 0 1 10 0v35.5l72.175 41.67 72.174-41.67v-35.88a5 5 0 0 1 10 0v38.765a5 5 0 0 1 -2.5 4.331l-77.174 44.556a4.992 4.992 0 0 1 -2.5.673z"></path><path d="m128.126 166.884a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.557a5 5 0 1 1 5-8.66l74.675 43.113 74.674-43.11a5 5 0 1 1 5 8.66l-77.174 44.557a4.992 4.992 0 0 1 -2.5.667z"></path><path d="m160.933 198.291a5 5 0 0 1 -3.459-1.389l-32.806-31.402a5 5 0 0 1 6.916-7.224l30.1 28.813 68.154-39.349-27.558-26.382-27.359-15.744a5 5 0 1 1 4.988-8.667l27.885 16.047a4.988 4.988 0 0 1 .964.721l32.806 31.407a5 5 0 0 1 -.958 7.942l-77.174 44.557a4.993 4.993 0 0 1 -2.499.67z"></path><path d="m95.067 198.525a4.985 4.985 0 0 1 -2.5-.67l-77.173-44.555a5 5 0 0 1 -.957-7.942l33.057-31.642a4.967 4.967 0 0 1 .957-.718l27.634-15.955a5 5 0 1 1 5 8.66l-27.112 15.653-27.807 26.616 68.154 39.348 30.349-29.048a5 5 0 1 1 6.914 7.224l-33.058 31.641a4.991 4.991 0 0 1 -3.458 1.388z"></path></svg>
+                                                <div>
+                                                    <p className="font-medium text-xs">{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</p>
+                                                    <label className="">{params?.lang == 'ar' ? globalStore?.showroom_data?.address_arabic : globalStore?.showroom_data?.address}</label>
+                                                    <p className="font-medium text-xs">{params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_region?.name_arabic : globalStore?.showroom_data?.store_region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                                </div>
+                                            </div>
+                                            <hr className="opacity-10 my-3" />
                                         </div>
+                                        </>
+                                    }
+                                    {cartData?.storeType == 0 && cartData?.storeId == false ? 
+                                    <>
+                                        {expressDeliveryData?.data && expressDeliveryDataStatus ?
+                                        <>
+                                            <div className="text-sm font-medium">
+                                                <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? expressDeliveryData?.data?.title_name : expressDeliveryData?.data?.title}</label>
+                                                <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] font-regular text-xs">
+                                                    <label className="">{moment().add(expressDeliveryData?.data?.num_of_days, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
+                                                </div>
+                                            </div>
+                                        </>
                                         :
-                                        <div className="text-sm font-medium">
-                                            <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الوقت المتوقع للتوصيل' : 'Expected time for delivery'}</label>
-                                            <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] font-regular text-xs">
-                                                <label className="">{moment().add(7, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
+                                            <div className="text-sm font-medium">
+                                                <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الوقت المتوقع للتوصيل' : 'Expected time for delivery'}</label>
+                                                <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] font-regular text-xs">
+                                                    <label className="">{moment().add(7, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
+                                                </div>
+                                                {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" /> : null}
                                             </div>
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                    <div className="text-sm font-medium">
+                                        <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'الوقت المتوقع للتوصيل' : 'Expected time for delivery'}</label>
+                                        <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] font-regular text-xs">
+                                            <label className="">{moment().add(7, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
                                         </div>
+                                    </div>
+                                    </>
                                     }
                                 </div>
                                <h6 className="text-[#B15533] mt-8">
@@ -1493,74 +2062,74 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                     : "Choose your payment method"}
                                 </div>
                                 <div className="mt-4">
-                                    {/* {loyaltyData && loyaltyData?.t_loyaltypoints >= 1 ?
-                                        <> */}
+                                    {loyaltyData && loyaltyData?.t_loyaltypoints >= 1 ?
+                                        <>
                                         {/* loyalty work */}
-                                        {/* <button onClick={() => setupLoyalty(!useLoyalty)} type="button" className="border bg-white border-[#219EBC80] rounded-md flex flex-col items-center mb-5 text-sm w-full text-left">
+                                        <button 
+                                            onClick={() => setupLoyalty(!useLoyalty)}
+                                            type="button" className="border bg-white border-[#219EBC80] rounded-md flex flex-col items-center mb-5 text-sm w-full text-left">
                                             <div className="w-full bg-primary p-3 rounded-t-md text-white">
-                                            <div className="flex items-center gap-2">
+                                                <div className="flex items-center gap-2">
                                                 <div
-                                                className="focus-visible:outline-none bg-primary border-0 bg-transparent"
-                                                onClick={() => setupLoyalty(!useLoyalty)}
-                                                >
-                                                {useLoyalty ?
-                                                    <div
-                                                    className="border-[#219EBC] text-white bg-[#219EBC] h-5 w-5 rounded-full">
-                                                    <div className="flex-1 items-center justify-center">
-                                                        <div className="shrink-0 text-white">
-                                                        <CheckIcon className="h-5 w-5" />
+                                                    className="focus-visible:outline-none bg-primary border-0 bg-transparent"
+                                                    onClick={() => setupLoyalty(!useLoyalty)}
+                                                    >
+                                                    {useLoyalty ?
+                                                        <div
+                                                        className="border-[#219EBC] text-white bg-[#219EBC] h-5 w-5 rounded-full">
+                                                        <div className="flex-1 items-center justify-center">
+                                                            <div className="shrink-0 text-white">
+                                                            <CheckIcon className="h-5 w-5" />
+                                                            </div>
                                                         </div>
+                                                        </div>
+                                                        :
+                                                        <div className="border-[#219EBC] text-white bg-white h-5 w-5 rounded-full"></div>
+                                                    }
                                                     </div>
-                                                    </div>
-                                                    :
-                                                    <div className="border-[#219EBC] text-white bg-white h-5 w-5 rounded-full"></div>
-                                                }
-                                                </div>
 
-                                                <label className="flex items-center gap-1 font-bold">
-                                                <span className="flex items-center gap-1 peer-checked:text-[#1c262d]">
-                                                    {params?.lang === "ar" ? "إجمالي النقاط" : "Total Points"}: {usableLoyaltyPoints}
-                                                </span>
-                                                </label>
-                                            </div>
-                                            {loyaltyAmount < summary?.filter((item: any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US") ?
-                                                <p className="text-sm text-gray-500 mt-2">
-                                                {params?.lang == 'ar' ? 'رصيد متجرك لا يكفي للطلب، يرجى اختيار طريقة دفع إضافية لتغطية الرصيد المتبقي' : 'Your store credit balance is not sufficent for the oreder, please select an additional payment method to cover the balance of'}{' '}<span className="inline-flex items-center gap-1 text-[#1c262d]"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="13"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg>
-                                                    {summary?.filter((item: any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US")}
-                                                </span>
+                                                    <label className="flex items-center gap-1 font-bold">
+                                                    <span className="flex items-center gap-1 peer-checked:text-[#1c262d]">
+                                                        {params?.lang === "ar" ? "إجمالي النقاط" : "Total Points"}: {usableLoyaltyPoints}
+                                                    </span>
+                                                    </label>
+                                                </div>
+                                                {loyaltyAmount < summary?.filter((item: any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US") ?
+                                                    <p className="text-sm text-gray-500 mt-2">
+                                                    {params?.lang == 'ar' ? 'رصيد متجرك لا يكفي للطلب، يرجى اختيار طريقة دفع إضافية لتغطية الرصيد المتبقي' : 'Your store credit balance is not sufficent for the oreder, please select an additional payment method to cover the balance of'}{' '}<span className="inline-flex items-center gap-1 text-[#1c262d]"> <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="13"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg>
+                                                        {summary?.filter((item: any) => item?.key == 'total')[0]?.price?.toLocaleString("EN-US")}
+                                                    </span>
+                                                    </p>
+                                                    : null}
+                                                </div>
+                                                <div className={`p-3 w-full ${params?.lang === 'ar' ? 'text-right' : ''}`}>
+                                                <p className="text-sm text-gray-800 font-bold">{params?.lang == 'ar' ? 'نقاط تمكين' : 'Tamkeen Points'}</p>
+                                                <p className={`text-xs text-[#007714]`}>
+                                                    {params?.lang === 'ar' ? (
+                                                    <div className='space-x-2'>
+                                                        التحويل إلى رصيد تمكين باستخدام حسابك المرتبط
+                                                        &nbsp;<strong className="font-bold" dir="ltr">
+                                                        {` +966 ${phoneNumber?.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3")} `}
+                                                        </strong>
+                                                    </div>
+                                                    ) : (
+                                                    <>
+                                                        Convert to tamkeen credits using your&nbsp;
+                                                        <strong className="font-bold">
+                                                        {`+966 ${phoneNumber?.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3")}`}
+                                                        </strong>
+                                                        &nbsp;linked account
+                                                    </>
+                                                    )}
                                                 </p>
-                                                : null}
-                                            </div>
-                                            <div className="p-3 w-full">
-                                            <p className="text-sm text-gray-800 font-bold">{params?.lang == 'ar' ? 'نقاط تمكين' : 'Tamkeen Points'}</p>
-                                            <p className="text-xs text-[#007714]"> */}
-                                                {/* <svg className="riyal-svg shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1124.14 1256.39" width="13" height="13"><path fill="currentColor" d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"></path><path fill="currentColor" d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"></path></svg> */}
-                                                {/* </span>{' '}{usableLoyaltyPoints}  */}
-                                                {/* {params?.lang === 'ar' ? (
-                                                <>
-                                                    التحويل إلى رصيد تمكين باستخدام حسابك المرتبط
-                                                    <strong className="font-bold">
-                                                    {`+966 ${phoneNumber?.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3")}`}
-                                                    </strong>
-                                                </>
-                                                ) : (
-                                                <>
-                                                    Convert to tamkeen credits using your&nbsp;
-                                                    <strong className="font-bold">
-                                                    {`+966 ${phoneNumber?.replace(/(\d{2})(\d{3})(\d{4})/, "$1-$2-$3")}`}
-                                                    </strong>
-                                                    &nbsp;linked account
-                                                </>
-                                                )}
-                                            </p>
-                                            </div> */}
-                                            {/* loyalty work */}
-                                        {/* </button>
+                                                </div>
+                                        {/* loyalty work */}
+                                        </button>
                                         </>
-                                     : null} */}
-                                    <RadioGroup value={paymentMethod} onChange={setpaymentMethod} className="mt-3"
-                                    //  disabled={paymentMethod == 'loyalty' ? true : false}
-                                    disabled={false}
+                                        : null}
+                                    <RadioGroup value={paymentMethod} onChange={setpaymentMethod} className={`mt-3 ${paymentMethod == 'loyalty' ? 'opacity-20' : ''}`}
+                                     disabled={paymentMethod == 'loyalty' ? true : false}
+                                    // disabled={false}
                                     >
                                         <div className="grid grid-cols-3 md:grid-cols-4 2xl:grid-cols-6 gap-x-3">
                                             {paymentmethods?.map((p: any, i) => {
@@ -1629,6 +2198,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         </div>
                                         <hr className="opacity-10 my-3" />
                                     </div>
+                                    {cartData?.storeType == 0 && cartData?.storeId == false ? 
+                                    <>
                                     {addressData?.filter((element: any) => element.id == addressid).map((data: any, i: any) => {
                                         return (
                                             <div key={i * 3}>
@@ -1649,6 +2220,28 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         )
                                     })
                                     }
+                                    </>
+                                    :
+                                    <>
+                                    <div key={globalStore?.id * 3}>
+                                        <div className="align__center text-sm">
+                                            <label className="font-regular text-[#5D686F]">{params?.lang == 'ar' ? 'متجر الاستلام' : 'Pickup Store'}</label>
+                                            {/* <button className="focus-visible:outline-none text-[#FF671F] hover:underline" onClick={() => setActiveTab3(1)}>{params.lang == 'ar' ? 'تغــيــيـر' : 'Change'}</button> */}
+                                        </div>
+                                        <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] fill-[#004B7A] font-regular text-xs">
+                                            <svg id="fi_3514361" height="28" viewBox="0 0 256 256" width="28" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m128 138.184a5 5 0 0 1 -3.607-1.538c-2.075-2.16-50.808-53.259-50.808-82.228a54.415 54.415 0 1 1 108.83 0c0 28.969-48.733 80.068-50.808 82.228a5 5 0 0 1 -3.607 1.538zm0-128.184a44.465 44.465 0 0 0 -44.415 44.418c0 19.07 29.312 54.978 44.414 71.451 15.1-16.478 44.416-52.4 44.416-71.451a44.465 44.465 0 0 0 -44.415-44.418z"></path><path d="m128 76.153a21.735 21.735 0 1 1 21.735-21.735 21.759 21.759 0 0 1 -21.735 21.735zm0-33.47a11.735 11.735 0 1 0 11.735 11.735 11.748 11.748 0 0 0 -11.735-11.735z"></path><path d="m128.126 256a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.559a5 5 0 0 1 -2.5-4.331v-38.385a5 5 0 0 1 10 0v35.5l72.175 41.67 72.174-41.67v-35.88a5 5 0 0 1 10 0v38.765a5 5 0 0 1 -2.5 4.331l-77.174 44.556a4.992 4.992 0 0 1 -2.5.673z"></path><path d="m128.126 166.884a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.557a5 5 0 1 1 5-8.66l74.675 43.113 74.674-43.11a5 5 0 1 1 5 8.66l-77.174 44.557a4.992 4.992 0 0 1 -2.5.667z"></path><path d="m160.933 198.291a5 5 0 0 1 -3.459-1.389l-32.806-31.402a5 5 0 0 1 6.916-7.224l30.1 28.813 68.154-39.349-27.558-26.382-27.359-15.744a5 5 0 1 1 4.988-8.667l27.885 16.047a4.988 4.988 0 0 1 .964.721l32.806 31.407a5 5 0 0 1 -.958 7.942l-77.174 44.557a4.993 4.993 0 0 1 -2.499.67z"></path><path d="m95.067 198.525a4.985 4.985 0 0 1 -2.5-.67l-77.173-44.555a5 5 0 0 1 -.957-7.942l33.057-31.642a4.967 4.967 0 0 1 .957-.718l27.634-15.955a5 5 0 1 1 5 8.66l-27.112 15.653-27.807 26.616 68.154 39.348 30.349-29.048a5 5 0 1 1 6.914 7.224l-33.058 31.641a4.991 4.991 0 0 1 -3.458 1.388z"></path></svg>
+                                            <div>
+                                                <p className="font-medium text-xs">{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</p>
+                                                <label className="">{params?.lang == 'ar' ? globalStore?.showroom_data?.address_arabic : globalStore?.showroom_data?.address}</label>
+                                                <p className="font-medium text-xs">{params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_region?.name_arabic : globalStore?.showroom_data?.store_region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                            </div>
+                                        </div>
+                                        <hr className="opacity-10 my-3" />
+                                    </div>
+                                    </>
+                                }
+                                {cartData?.storeType == 0 && cartData?.storeId == false ? 
+                                <>  
                                     {expressDeliveryData?.data && expressDeliveryDataStatus ?
                                         <div className="text-sm font-medium">
                                             <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? expressDeliveryData?.data?.title_name : expressDeliveryData?.data?.title}</label>
@@ -1657,8 +2250,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 {/* <label className="">-</label>
                                         <label className=""> {params.lang == 'ar' ? 'الاثنين' : 'Monday'} 13/11/2023</label> */}
                                             </div>
-                                             <hr className="opacity-10 my-3" />
-                                            {/* {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" /> : null} */}
+                                             {/* <hr className="opacity-10 my-3" /> */}
+                                            {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" /> : null}
                                         </div>
                                         :
                                         <div className="text-sm font-medium">
@@ -1668,10 +2261,12 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 {/* <label className="">-</label>
                                             <label className=""> {params.lang == 'ar' ? 'الاثنين' : 'Monday'} 13/11/2023</label> */}
                                             </div>
-                                            <hr className="opacity-10 my-3" />
-                                            {/* {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" /> : null} */}
+                                            {/* <hr className="opacity-10 my-3" /> */}
+                                            {paymentMethod != 'loyalty' ? <hr className="opacity-10 my-3" /> : null}
                                         </div>
                                     }
+                                </>
+                                :null}
 
                                     {doorStepDataStatus ?
                                         <>
@@ -1935,6 +2530,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                     </div>
                                                 </div>
                                                 {/* {!pro?.bogo ?  */}
+                                                {cartData?.storeType == 0 && cartData?.storeId == false ?
                                                 <>
                                                     <hr className='my-2 opacity-5' />
                                                     {pro.express && pro?.express_qty >= pro?.quantity ?
@@ -1966,6 +2562,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                     </div>
                                                     }
                                                 </>
+                                                :
+                                                null}
                                                 {/* :null} */}
                                             </div>
                                             {pro?.gift?.length ?
