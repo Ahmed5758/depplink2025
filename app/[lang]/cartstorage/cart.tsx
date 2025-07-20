@@ -156,6 +156,7 @@ const removecheckoutdata = () => {
     cartdata.fees.wrapper = {}
     cartdata.fees.installation = {}
     cartdata.fees.fee = []
+    cartdata.loyalty = {} as discount;
     for (let index = 0; index < cartdata.products.length; index++) {
         cartdata.products[index].express = false
     }
@@ -641,10 +642,10 @@ const getTotal = () => {
         total -= getLoyalty().amount
     }
 
-    if(getDirectCashbackDiscount().amount) {
-        total -= getDirectCashbackDiscount().amount
+    // if(getDirectCashbackDiscount().amount) {
+    //     total -= getDirectCashbackDiscount().amount
         
-    }
+    // }
 
     if (getAdditionalDiscount().amount) {
         total -= Number(parseFloat(getAdditionalDiscount().amount).toFixed(2))
@@ -697,9 +698,9 @@ const getSummary = () => {
         summary = summary.concat(getExtraFees().summary)
     }
 
-    if (getDirectCashbackDiscount().amount) {
-        summary = summary.concat(getDirectCashbackDiscount().summary)
-    }
+    // if (getDirectCashbackDiscount().amount) {
+    //     summary = summary.concat(getDirectCashbackDiscount().summary)
+    // }
 
     if (getCoupon().amount)
         // summary.push({ key: getCoupon().title, price: '- ' + Number(parseFloat(getCoupon().amount).toFixed(2)), title: getCoupon().title, title_arabic: getCoupon().title_arabic })

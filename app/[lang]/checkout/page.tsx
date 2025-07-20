@@ -367,10 +367,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                 router.push(`/${params.lang}/cart`);
             }
 
-            var points = getLoyalty()
-            var loyaltydata = await getLoyaltyData()
-            setloyaltyPoints(points)
-            setloyaltyData(loyaltydata)
+            // var points = getLoyalty()
+            // var loyaltydata = await getLoyaltyData()
+            // setloyaltyPoints(points)
+            // setloyaltyData(loyaltydata)
         })();
         // getUser()
         if (typeof window !== 'undefined') {
