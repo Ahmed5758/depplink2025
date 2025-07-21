@@ -18,9 +18,9 @@ const PickupStorePopup = (props: any) => {
     const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(props?.direction);
 
     const filteredStores = props?.allStores.filter((city: any) =>
-        city?.showroom_data?.name.toLowerCase().includes(storeSearch.toLowerCase()) ||
-        city?.showroom_data?.name_arabic.toLowerCase().includes(storeSearch.toLowerCase()) ||
-        city.showroom_data?.address.toLowerCase().includes(storeSearch.toLowerCase())
+        city?.showroom_data?.name?.toLowerCase().includes(storeSearch.toLowerCase()) ||
+        city?.showroom_data?.name_arabic?.toLowerCase().includes(storeSearch.toLowerCase()) ||
+        city.showroom_data?.address?.toLowerCase().includes(storeSearch.toLowerCase())
     );
 
     const MySwal = withReactContent(Swal);
