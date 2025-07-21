@@ -17,6 +17,8 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { Disclosure } from '@headlessui/react'
 import GlobalContext from '../../GlobalContext'
+import PickupStorePopup from '../../components/PickupStorePopup';
+
 
 const LoginSingup = dynamic(() => import('../../components/LoginSignup'), { ssr: false })
 const MobileHeader = dynamic(() => import('../../components/MobileHeader'), { ssr: true })
@@ -2697,6 +2699,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                     </div>
                 </Dialog>
             </Transition>
+
+            <PickupStorePopup lang={params?.lang} allStores={allStores} setModal={() => setIsOpenModal(false)} isOpenModal={isOpenModal} direction={direction} isArabic={params?.lang == 'ar' ? true : false} />
         </>
     )
 }
