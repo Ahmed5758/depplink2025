@@ -1436,6 +1436,10 @@ tp__309mainDiv
 	@apply bg-primary border border-primary text-white text-xs py-2 px-3 rounded-md shadow-md hover:shadow-none
 }
 
+.btn_pendingCustomXS {
+	@apply bg-gray border border-gray cursor-not-allowed text-white text-xs py-2 px-3 rounded-md shadow-md hover:shadow-none
+}
+
 /* End st__304 */
 
 /* Start shipping tracking sht__303 */
@@ -1985,7 +1989,7 @@ tp__309mainDiv
 }
 
 .nc__278mainInnerImg {
-	@apply absolute -top-[23%]
+	@apply absolute -top-[25%]
 }
 
 .nc__278mainInnerSixthDiv {
@@ -1997,11 +2001,11 @@ tp__309mainDiv
 }
 
 .nc__278mainInnerSevDiv {
-	@apply text-xs flex items-center gap-2
+	@apply text-xs flex items-center mb-1 ltr:-ml-2 rtl:-mr-2
 }
 
 .nc__278mainInnerSmHeading {
-	@apply line-clamp-2 text-sm font-semibold mt-1
+	@apply line-clamp-2 text-xs font-semibold mt-1
 }
 
 .nc__278mainInnerEightDiv {
@@ -2013,7 +2017,7 @@ tp__309mainDiv
 }
 
 .nc__278mainInnerLgPara {
-	@apply font-bold text-lg text-right text-[#DC4E4E] leading-3
+	@apply font-bold text-lg text-[#DC4E4E] leading-3
 }
 
 .nc__278mainInnerSecXsPara {
@@ -2025,7 +2029,7 @@ tp__309mainDiv
 }
 
 .nc__278mainInnerThirdXspara {
-	@apply font-semibold text-[#20831E] text-xs
+	@apply font-semibold text-[#20831E] text-[0.65rem]
 }
 
 .nc__278mainInnerEleDiv {
@@ -2077,7 +2081,7 @@ tp__309mainDiv
 }
 
 .nc__278mainInnerFifteenDiv {
-	@apply sticky flex-col top-[15.6rem] overflow-hidden
+	@apply sticky flex-col top-[14.6rem]
 }
 
 .nc__278mainInnerSixteenDiv {
@@ -2298,10 +2302,12 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton:hover,
 section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected {
 	background-color: #FF7B34;
 }
-.tamkeenProduct_card_footer  .productSliderBtns svg path{
+
+.tamkeenProduct_card_footer .productSliderBtns svg path {
 	transition: all .3s ease-in-out;
 }
-.tamkeenProduct_card_footer  .productSliderBtns:hover svg path {
+
+.tamkeenProduct_card_footer .productSliderBtns:hover svg path {
 	fill: #ffffff;
 }
 
@@ -2343,49 +2349,65 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 }
 
 @media (min-width: 300px) and (max-width: 420px) {
-.productBadge_topText{
-  font-size: 5.76px;
-}
-.productBadge_topImg img{
-  height: 14px;
-}
-.headingHomeMain {
-	font-size: 1rem;
-}
-.rating_div {
-	padding-block: 3px;
-}
-.rating_div svg{
-	width: 7px;
-	height: 7px;
-}
-.afterDiscount{
-	font-size: 10px;
-}
-.offerPercent,.realPrice,.animated_orangePrice,.productDesc,.rating_div span{
-	font-size: 7px;
-}
-.productDesc:dir(ltr){
-	line-height: normal;
-	height: 18px;
-}
-.productDesc:dir(rtl){
-	line-height: normal;
-	height: 24px;
-}
-.paymentText{
-	font-size: 5px;
-}
-.prodTop_verticalImgs{
-	top: 2.7rem;
-}
-.productRedOrangeBtns button{
-	padding: 4px !important;
-}
-.productRedOrangeBtns button svg{
-	width: 10px;
-	height: 10px;
-}
+	.productBadge_topText {
+		font-size: 5.76px;
+	}
+
+	.productBadge_topImg img {
+		height: 14px;
+	}
+
+	.headingHomeMain {
+		font-size: 1rem;
+	}
+
+	.rating_div {
+		padding-block: 3px;
+	}
+
+	.rating_div svg {
+		width: 7px;
+		height: 7px;
+	}
+
+	.afterDiscount {
+		font-size: 10px;
+	}
+
+	.offerPercent,
+	.realPrice,
+	.animated_orangePrice,
+	.productDesc,
+	.rating_div span {
+		font-size: 7px;
+	}
+
+	.productDesc:dir(ltr) {
+		line-height: normal;
+		height: 18px;
+	}
+
+	.productDesc:dir(rtl) {
+		line-height: normal;
+		height: 24px;
+	}
+
+	.paymentText {
+		font-size: 5px;
+	}
+
+	.prodTop_verticalImgs {
+		top: 2.7rem;
+	}
+
+	.productRedOrangeBtns button {
+		padding: 4px !important;
+	}
+
+	.productRedOrangeBtns button svg {
+		width: 10px;
+		height: 10px;
+	}
 }
 
 /* Animation slide up */
@@ -2393,7 +2415,8 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 	display: inline-flex;
 	position: relative;
 	overflow: hidden;
-	font-variant-numeric: tabular-nums; /* consistent number widths */
+	font-variant-numeric: tabular-nums;
+	/* consistent number widths */
 }
 
 .number-animation-inner {
@@ -2421,7 +2444,8 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 }
 
 .number-animation::after {
-	content: '1000'; /* max width example */
+	content: '10000';
+	/* max width example */
 	visibility: hidden;
 	overflow: hidden;
 	white-space: nowrap;
@@ -2429,24 +2453,28 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 
 @keyframes slideUp {
 	0% {
-	transform:translateX(-50%)  translateY(100%);
-	opacity: 0;
+		transform: translateX(-50%) translateY(100%);
+		opacity: 0;
 	}
+
 	10% {
-	transform:translateX(-50%)  translateY(0);
-	opacity: 1;
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
 	}
+
 	40% {
-	transform:translateX(-50%)  translateY(0);
-	opacity: 1;
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
 	}
+
 	50% {
-	transform:translateX(-50%)  translateY(-100%);
-	opacity: 0;
+		transform: translateX(-50%) translateY(-100%);
+		opacity: 0;
 	}
+
 	100% {
-	transform:translateX(-50%)  translateY(-100%);
-	opacity: 0;
+		transform: translateX(-50%) translateY(-100%);
+		opacity: 0;
 	}
 }
 
@@ -2515,4 +2543,23 @@ span.flatpickr-weekday {
 
 .flatpickr-calendar:after {
 	margin: -1px -4px !important;
+}
+
+/* .category_topbar{
+	background-image:url("../../public/images/categoryNew/topbar_bg.png")
+}
+.category_sec_1{
+	background-image:url("../../public/images/categoryNew/banner_bg.png")
+} */
+
+.testimonials_sec .swiper.swiper-initialized{
+	@apply !pb-12 md:!pb-16
+}
+
+.categories_items .swiper-wrapper {
+	@apply justify-center
+}
+
+.categories_items .swiper-slide {
+	@apply !mr-0
 }
