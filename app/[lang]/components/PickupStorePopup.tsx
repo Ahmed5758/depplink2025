@@ -8,6 +8,7 @@ import GlobalContext from '../GlobalContext'
 import { useContext } from 'react';
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
+import Link from 'next/link';
 const PickupStorePopup = (props: any) => {
     const isArabic = props?.isArabic
     const router = useRouter();
@@ -15,7 +16,7 @@ const PickupStorePopup = (props: any) => {
     // Pickup From Store
     const { globalStore, setglobalStore } = useContext<any>(GlobalContext);
     const [storeSearch, setstoreSearch] = useState<any>('')
-    const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(props?.direction);
+    // const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(props?.direction);
 
     const filteredStores = props?.allStores.filter((city: any) =>
         city?.showroom_data?.name?.toLowerCase().includes(storeSearch.toLowerCase()) ||
@@ -59,26 +60,6 @@ const PickupStorePopup = (props: any) => {
         });
     };
 
-    const isStoreOpen = (timeRange: string) => {
-        if (!timeRange) return false;
-
-        const [openTime, closeTime] = timeRange.split(" - ").map(time => {
-            let [hours, minutes] = time.match(/\d+/g)?.map(Number) || [0, 0];
-            const isPM = time.includes("PM");
-
-            if (isPM && hours !== 12) hours += 12;
-            if (!isPM && hours === 12) hours = 0;
-
-            return hours * 60 + minutes; // Convert to total minutes for easy comparison
-        });
-
-        const now = new Date();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        return currentMinutes >= openTime && currentMinutes <= closeTime;
-    };
-
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
     return (
         <Transition appear show={props?.isOpenModal} as={Fragment}>
             <Dialog as="div" open={props?.isOpenModal} onClose={props.setModal}>
@@ -99,17 +80,17 @@ const PickupStorePopup = (props: any) => {
                             as={Fragment}
                             enter="transform transition ease-out duration-300"
                             enterFrom={
-                                props?.direction === "left-to-right"
-                                    ? "opacity-0 -translate-x-0"
-                                    : "opacity-0 translate-x-full"
+                                isArabic
+                                    ? "opacity-0 translate-x-full" // start off-screen left
+                                    : "opacity-0 -translate-x-full"  // start off-screen right
                             }
-                            enterTo="opacity-100 translate-x-0"
+                            enterTo="opacity-100 translate-x-0" // end at normal position
                             leave="transform transition ease-in duration-200"
-                            leaveFrom="opacity-100 translate-x-0"
+                            leaveFrom="opacity-100 translate-x-0" // start at normal position
                             leaveTo={
-                                props?.direction === "left-to-right"
-                                    ? "opacity-0 translate-x-full"
-                                    : "opacity-0 -translate-x-full"
+                                isArabic
+                                    ? "opacity-0 -translate-x-full"  // slide out to right
+                                    : "opacity-0 translate-x-full" // slide out to left
                             }
                         >
                             <Dialog.Panel as="div" className={`panel overflow-hidden w-full max-w-lg h-screen text-black bg-white absolute ${isArabic ? 'right-0 rounded-l-lg' : 'left-0 rounded-r-lg'}`}>
@@ -147,51 +128,126 @@ const PickupStorePopup = (props: any) => {
                                                         <h5 className='font-semibold text-sm my-3 line-clamp-1'><span className='text-[#219EBC] font-bold uppercase'>{filteredStores?.length}</span> {isArabic ? 'المتاجر لديها توافر' : 'Stores have availablity'}</h5>
                                                         <div className='overflow-y-auto h-[calc(100vh-15rem)]'>
                                                             {filteredStores?.map((item: any, i: any) => {
+                                                                function formatTime(time: string, isArabic: boolean) {
+                                                                    if (!time) return "";
+                                                                    let [hour, minute] = time.split(":").map(Number);
+
+                                                                    let isPM = hour >= 12;
+                                                                    let suffix = isArabic ? (isPM ? "مساءً" : "صباحًا") : (isPM ? "PM" : "AM");
+
+                                                                    hour = hour % 12 || 12; // convert 0 -> 12
+
+                                                                    return `${hour}:${minute.toString().padStart(2, "0")} ${suffix}`;
+                                                                }
+                                                                const openTime = formatTime(item?.showroom_data?.open_time, isArabic);
+                                                                const closeTime = formatTime(item?.showroom_data?.close_time, isArabic);
+                                                                const openTimeWeekends = formatTime(item?.showroom_data?.weekend_open_time, isArabic);
+                                                                const closeTimeWeekends = formatTime(item?.showroom_data?.weekend_close_time, isArabic);
+                                                                const weekDays = isArabic
+                                                                    ? `السبت إلى الخميس ${openTime} - ${closeTime}`
+                                                                    : `Saturday to Thursday ${openTime} - ${closeTime}`;
+
+                                                                const weekEnds = isArabic
+                                                                    ? `الجمعة ${openTimeWeekends} - ${closeTimeWeekends}`
+                                                                    : `Friday ${openTimeWeekends} - ${closeTimeWeekends}`;
+
+                                                                function parseTimeToMinutes(time: string): number {
+                                                                    if (!time) return 0;
+
+                                                                    const [timePart, meridian] = time.split(" ");
+                                                                    let [hours, minutes] = timePart.split(":").map(Number);
+
+                                                                    if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                                                                        hours += 12;
+                                                                    }
+                                                                    if (meridian.toUpperCase() === "AM" && hours === 12) {
+                                                                        hours = 0; // midnight
+                                                                    }
+
+                                                                    return hours * 60 + minutes;
+                                                                }
+
+                                                                const normalDayOpen = formatTime(item?.showroom_data?.open_time, isArabic);
+                                                                const normalDayClose = formatTime(item?.showroom_data?.close_time, isArabic);
+                                                                const fridayOpen = formatTime(item?.showroom_data?.weekend_open_time, isArabic);
+                                                                const fridayClose = formatTime(item?.showroom_data?.weekend_close_time, isArabic);
+
+                                                                function isStoreOpen(): boolean {
+                                                                    const now = new Date();
+                                                                    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+                                                                    const day = now.getDay();
+                                                                    // Sunday=0, Monday=1, ..., Friday=5, Saturday=6
+
+                                                                    // Determine today's schedule
+                                                                    let openTime = normalDayOpen;
+                                                                    let closeTime = normalDayClose;
+
+                                                                    if (day === 5) {
+                                                                        // Friday
+                                                                        openTime = fridayOpen;
+                                                                        closeTime = fridayClose;
+                                                                    }
+
+                                                                    const openMinutes = parseTimeToMinutes(openTime);
+                                                                    let closeMinutes = parseTimeToMinutes(closeTime);
+
+                                                                    // Since 12:00 AM means next day
+                                                                    if (closeMinutes === 0) closeMinutes = 24 * 60;
+
+                                                                    return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
+                                                                }
+                                                                const showroomNotFound = isArabic
+                                                                    ? (item?.showroom_data?.address_arabic || item?.showroom_data?.address)
+                                                                    : (item?.showroom_data?.address || item?.showroom_data?.address_arabic);
+                                                                const addressShowroom = showroomNotFound || (isArabic ? "العنوان غير متوفر" : "Address not available")
+                                                                const showroomDirectionText = isArabic ? 'احصل على الاتجاه' : 'Get Direction';
+                                                                const showroomDirectionLink = item?.showroom_data?.direction_button ? item?.showroom_data?.direction_button : '#';
                                                                 return (
-                                                                    <div className="border border-[#20831E] rounded-md mt-2">
+                                                                    <div className="border border-[#20831E] rounded-md mt-2" key={i}>
                                                                         <div className='cursor-pointer'
                                                                             onClick={() => {
                                                                                 setglobalStore(item)
                                                                                 localStorage.setItem('globalStore', item?.id)
                                                                                 props?.setModal(false)
-                                                                                topMessageAlartSuccess('Success! Pickup From Store Changed Successfully..')
+                                                                                topMessageAlartSuccess(isArabic ? 'نجاح! تم تغيير نقطة الالتقاط من المتجر بنجاح..' : 'Success! Pickup From Store Changed Successfully..')
                                                                             }}
                                                                         >
                                                                             <div className='flex justify-between gap-4 items-center p-3'>
-                                                                                <div className='flex items-center gap-2'>
-                                                                                    {/* <img src="/images/icons/storePickup.png" alt="warehouse" height='20' width='20' /> */}
-                                                                                    <svg height="15pt" viewBox="-8 0 464 464.01771" width="15pt" xmlns="http://www.w3.org/2000/svg" id="fi_1356559"><path d="m16.007812 232.019531h416v232h-416zm0 0" fill="#668796"></path><path d="m304.007812 232.019531h16v232h-16zm0 0" fill="#4d6877"></path><path d="m48.007812 320.019531h232v72h-232zm0 0" fill="#fff"></path><path d="m16.007812 432.019531h296v32h-296zm0 0" fill="#4d6877"></path><path d="m408.007812 136.019531v-32h-368v32l-39.9999995 80v16h447.9999995v-16zm0 0" fill="#5cc4a6"></path><path d="m40.007812 104.019531h368v32h-368zm0 0" fill="#239172"></path><path d="m224.007812.0195312c-34.398437-.8007812-63.199218 25.5976568-64 59.9999998v5.597657c0 9.601562 2.402344 18.402343 6.402344 27.199218l57.597656 99.203125 57.601563-99.203125c4.800781-8 6.398437-17.597656 6.398437-27.199218v-5.597657c-.800781-34.402343-29.597656-60.800781-64-59.9999998zm0 0" fill="#ef4848"></path><path d="m248.007812 56.019531c0 13.253907-10.742187 24-24 24-13.253906 0-24-10.746093-24-24 0-13.257812 10.746094-24 24-24 13.257813 0 24 10.742188 24 24zm0 0" fill="#fff"></path><path d="m.0078125 232.019531v28c0 15.199219 12.8007815 28 27.9999995 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m112.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m168.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#2ab793"></path><path d="m224.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m224.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m280.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><path d="m336.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m392.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><g fill="#e4e7ea"><path d="m232.007812 392.019531h-32l72-72h8v24zm0 0"></path><path d="m168.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m104.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m48.007812 384.019531v-32l32-32h32zm0 0"></path></g><path d="m336.007812 304.019531h80v144h-80zm0 0" fill="#fff"></path><path d="m336.007812 352.019531h16v16h-16zm0 0" fill="#668796"></path><path d="m336.007812 432.019531v-32l80-80v32zm0 0" fill="#e4e7ea"></path><path d="m392.007812 448.019531h-32l56-56v32zm0 0" fill="#e4e7ea"></path></svg>
-                                                                                    <h6 className='text-xs font-semibold'>{isArabic ? item?.showroom_data?.name_arabic : item?.showroom_data?.name}</h6>
-                                                                                    <span className='border border-[#20831E] text-[#20831E] p-0.5 rounded text-[0.60rem] font-semibold'>{isArabic ? 'في الأوراق المالية' : 'IN STOCK'}</span>
-                                                                                </div>
-                                                                                {item?.id == globalStore?.id ?
-                                                                                    <div className='flex items-center gap-1'>
-                                                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0,0,256,256">
-                                                                                            <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style={{ mixBlendMode: 'normal' }}><g transform="scale(5.33333,5.33333)"><path d="M44,24c0,11.045 -8.955,20 -20,20c-11.045,0 -20,-8.955 -20,-20c0,-11.045 8.955,-20 20,-20c11.045,0 20,8.955 20,20z" fill="#c8e6c9"></path><path d="M34.586,14.586l-13.57,13.586l-5.602,-5.586l-2.828,2.828l8.434,8.414l16.395,-16.414z" fill="#4caf50"></path></g></g>
-                                                                                        </svg>
-                                                                                        <h6 className='text-xs font-semibold text-[#20831E]'>{isArabic ? 'تم اختياره' : 'Selected'}</h6>
+                                                                                <div className='flex items-center gap-3'>
+                                                                                    <svg height="22" viewBox="-8 0 464 464.01771" width="22" xmlns="http://www.w3.org/2000/svg" id="fi_1356559"><path d="m16.007812 232.019531h416v232h-416zm0 0" fill="#668796"></path><path d="m304.007812 232.019531h16v232h-16zm0 0" fill="#4d6877"></path><path d="m48.007812 320.019531h232v72h-232zm0 0" fill="#fff"></path><path d="m16.007812 432.019531h296v32h-296zm0 0" fill="#4d6877"></path><path d="m408.007812 136.019531v-32h-368v32l-39.9999995 80v16h447.9999995v-16zm0 0" fill="#5cc4a6"></path><path d="m40.007812 104.019531h368v32h-368zm0 0" fill="#239172"></path><path d="m224.007812.0195312c-34.398437-.8007812-63.199218 25.5976568-64 59.9999998v5.597657c0 9.601562 2.402344 18.402343 6.402344 27.199218l57.597656 99.203125 57.601563-99.203125c4.800781-8 6.398437-17.597656 6.398437-27.199218v-5.597657c-.800781-34.402343-29.597656-60.800781-64-59.9999998zm0 0" fill="#ef4848"></path><path d="m248.007812 56.019531c0 13.253907-10.742187 24-24 24-13.253906 0-24-10.746093-24-24 0-13.257812 10.746094-24 24-24 13.257813 0 24 10.742188 24 24zm0 0" fill="#fff"></path><path d="m.0078125 232.019531v28c0 15.199219 12.8007815 28 27.9999995 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m112.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m168.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#2ab793"></path><path d="m224.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m224.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m280.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><path d="m336.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m392.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><g fill="#e4e7ea"><path d="m232.007812 392.019531h-32l72-72h8v24zm0 0"></path><path d="m168.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m104.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m48.007812 384.019531v-32l32-32h32zm0 0"></path></g><path d="m336.007812 304.019531h80v144h-80zm0 0" fill="#fff"></path><path d="m336.007812 352.019531h16v16h-16zm0 0" fill="#668796"></path><path d="m336.007812 432.019531v-32l80-80v32zm0 0" fill="#e4e7ea"></path><path d="m392.007812 448.019531h-32l56-56v32zm0 0" fill="#e4e7ea"></path></svg>
+                                                                                    <div>
+                                                                                        <h6 className='text-xs font-semibold'>{isArabic ? item?.showroom_data?.name_arabic : item?.showroom_data?.name}</h6>
+                                                                                        <p className='text-xs mt-1'>{addressShowroom}</p>
                                                                                     </div>
-                                                                                    :
-                                                                                    <h6 className='text-xs font-semibold text-[#004B7A]'>{isArabic ? 'يختار' : 'Select'}</h6>
-                                                                                }
-
+                                                                                </div>
+                                                                                <div className={`${isArabic ? 'w-22' : 'w-20'} flex justify-end items-center`}>
+                                                                                    <div>
+                                                                                        <span className='border border-[#20831E] text-[#20831E] py-1 px-3 rounded text-[0.60rem] font-semibold animationImp'>{isArabic ? 'في الأوراق المالية' : 'IN STOCK'}</span>
+                                                                                        {item?.id == globalStore?.id ?
+                                                                                            <div className='flex items-center gap-1 mt-2'>
+                                                                                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0,0,256,256">
+                                                                                                    <g fill="none" fillRule="nonzero" stroke="none" strokeWidth="1" strokeLinecap="butt" strokeLinejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style={{ mixBlendMode: 'normal' }}><g transform="scale(5.33333,5.33333)"><path d="M44,24c0,11.045 -8.955,20 -20,20c-11.045,0 -20,-8.955 -20,-20c0,-11.045 8.955,-20 20,-20c11.045,0 20,8.955 20,20z" fill="#c8e6c9"></path><path d="M34.586,14.586l-13.57,13.586l-5.602,-5.586l-2.828,2.828l8.434,8.414l16.395,-16.414z" fill="#4caf50"></path></g></g>
+                                                                                                </svg>
+                                                                                                <h6 className='text-xs font-semibold text-[#20831E]'>{isArabic ? 'تم اختياره' : 'Selected'}</h6>
+                                                                                            </div>
+                                                                                            :
+                                                                                            null // <h6 className='text-xs font-semibold text-[#004B7A] mt-2 ltr:text-right rtl:text-left'>{isArabic ? 'يختار' : 'Select'}</h6>
+                                                                                        }
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
-                                                                            <p className='text-xs px-3 mb-2.5'>
-                                                                                {item?.showroom_data?.address ? item?.showroom_data?.address : null}
-                                                                            </p>
                                                                         </div>
                                                                         <Disclosure>
                                                                             {({ open }) => (
                                                                                 <>
                                                                                     <Disclosure.Button className="tc__311mainDisclosureBtn rounded-b-none !mb-0">
                                                                                         <div className='flex gap-1 justify-start items-center text-xs'>
-                                                                                            <span className={`${isStoreOpen(item?.showroom_data?.time) ? 'bg-[#20831E]' : 'bg-[#EF7E2C]'} h-2 w-2 rounded-full`}></span>
-                                                                                            <p>{isStoreOpen(item?.showroom_data?.time) ?
-                                                                                                isArabic ? 'يفتح' : 'Open'
-                                                                                                :
-                                                                                                isArabic ? 'مغلق' : 'Closed'
-                                                                                            }</p>
-
+                                                                                            <span className={`${isStoreOpen() ? 'bg-[#20831E]' : 'bg-[#EF7E2C]'} h-2 w-2 rounded-full`}></span>
+                                                                                            <p>{isStoreOpen()
+                                                                                                ? (isArabic ? "يفتح" : "Open")
+                                                                                                : (isArabic ? "مغلق" : "Closed")}
+                                                                                            </p>
                                                                                         </div>
                                                                                         <div className='flex gap-x-1.5 justify-start items-center text-xs'>
                                                                                             <p className='text-[#004B7A]'>{isArabic ? 'تفاصيل' : 'Details'}</p>
@@ -217,11 +273,12 @@ const PickupStorePopup = (props: any) => {
                                                                                                     <path d="M 25 2 C 12.309295 2 2 12.309295 2 25 C 2 37.690705 12.309295 48 25 48 C 37.690705 48 48 37.690705 48 25 C 48 12.309295 37.690705 2 25 2 z M 25 4 C 36.609824 4 46 13.390176 46 25 C 46 36.609824 36.609824 46 25 46 C 13.390176 46 4 36.609824 4 25 C 4 13.390176 13.390176 4 25 4 z M 37.039062 10.990234 A 1.0001 1.0001 0 0 0 36.265625 11.322266 L 26.183594 22.244141 A 3 3 0 0 0 25 22 A 3 3 0 0 0 22 25 A 3 3 0 0 0 25 28 A 3 3 0 0 0 25.5 27.958984 L 29.125 34.486328 A 1.0010694 1.0010694 0 1 0 30.875 33.513672 L 27.246094 26.984375 A 3 3 0 0 0 28 25 A 3 3 0 0 0 27.652344 23.599609 L 37.734375 12.677734 A 1.0001 1.0001 0 0 0 37.039062 10.990234 z"></path>
                                                                                                 </svg>
                                                                                                 <div className='text-[#53616A] text-[10px]'>
-                                                                                                    <h6 className='p-0 text-xs mb-1'>{isArabic ? 'ساعات العمل' : 'Working Hours'}</h6>
-                                                                                                    <p>{isArabic ? 'ساعات العمل المسائية' : 'friday 04:30 PM - 11:59 PM'}</p>
+                                                                                                    <h6 className='p-0 text-xs mb-1 font-semibold text-primary'>{isArabic ? 'ساعات العمل' : 'Working Hours'}</h6>
+                                                                                                    <p className='uppercase'>{weekDays}</p>
+                                                                                                    <p className='uppercase'>{weekEnds}</p>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <hr className='my-4 opcaity-5' />
+                                                                                            <hr className="w-full my-3 opacity-10" />
                                                                                             <div className='flex gap-2 justify-start items-start'>
                                                                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                                     <path
@@ -232,12 +289,12 @@ const PickupStorePopup = (props: any) => {
                                                                                                     <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="1.5" />
                                                                                                 </svg>
                                                                                                 <div className='text-[#53616A] text-[10px]'>
-                                                                                                    <h6 className='p-0 text-xs mb-1'>{isArabic ? 'ساعات العمل المسائية' : 'Address'}</h6>
-                                                                                                    <p>{item?.showroom_data?.address ? item?.showroom_data?.address : null}</p>
-                                                                                                    <a href={item?.showroom_data?.direction_button} className='text-[#004B7A] text-xs'>{isArabic ? 'ساعات العمل المسائية' : 'Get Direction'}</a>
+                                                                                                    <h6 className='p-0 text-xs mb-1 font-semibold text-primary'>{isArabic ? 'ساعات العمل المسائية' : 'Address'}</h6>
+                                                                                                    <p className='mb-2 text-xs'>{addressShowroom} | <Link href="tel:8002444464" className='font-semibold underline text-primary'>8002444464</Link></p>
+                                                                                                    <Link href={showroomDirectionLink} target='_blank' className='text-[#004B7A] text-xs' aria-label={showroomDirectionText}>{showroomDirectionText}</Link>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <hr className='my-4 opcaity-5' />
+                                                                                            {/* <hr className="w-full my-3 opacity-10" />
                                                                                             <div className='flex gap-2 justify-start items-start'>
                                                                                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                                     <path
@@ -258,11 +315,11 @@ const PickupStorePopup = (props: any) => {
                                                                                                     />
                                                                                                 </svg>
                                                                                                 <div className='text-[#53616A] text-[10px]'>
-                                                                                                    <h6 className='p-0 text-xs mb-1'>{isArabic ? 'اتصل بالمتجر' : 'Contact the store'}</h6>
-                                                                                                    <p>{item?.showroom_data?.address ? item?.showroom_data?.address : null}</p>
-                                                                                                    <a href={`tel:${item?.showroom_data?.phone_number}`} className='text-[#004B7A] text-xs'>{item?.showroom_data?.phone_number}</a>
+                                                                                                    <h6 className='p-0 text-xs mb-1 font-semibold'>{isArabic ? 'اتصل بالمتجر' : 'Contact the store'}</h6>
+                                                                                                    <p className='mb-2'>{addressShowroom}</p>
+                                                                                                    <a href={`tel:8002444464`} className='text-[#004B7A] text-xs'>8002444464</a>
                                                                                                 </div>
-                                                                                            </div>
+                                                                                            </div> */}
                                                                                         </div>
                                                                                     </Disclosure.Panel>
                                                                                 </>
