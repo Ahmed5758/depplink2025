@@ -682,57 +682,28 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                 <h6 className='text-sm font-semibold'>{subHeading}</h6>
                                 <div className="space-y-3 mt-3">
                                     <div className='border border-[#004B7A] rounded-md p-3 flex justify-between items-center w-full'>
-                                    {/* <div className="flex gap-2 justify-start items-center">
-                                                <input value={0} checked={storePickup == 0} onChange={(e: any) => {
-                                                    updateDeliveryMethod(e.target.value)
-                                                    topMessageAlartSuccess(deliveryTextSuccess)
-                                                }} type="radio" name='delivery' id='delivery' className='form-radio' />
-                                                <label className='text-sm'>{deliveryText}</label>
-                                            </div> */}
-                                        <label htmlFor="homeDelivery">
-                                            <div className="flex gap-2 justify-start items-center">
-                                                <input
-                                                value={0}
-                                                checked={storePickup == 0}
-                                                onChange={(e: any) => {
-                                                    updateDeliveryMethod(e.target.value);
-                                                    topMessageAlartSuccess(deliveryTextSuccess);
-                                                }}
-                                                type="radio"
-                                                name="deliveryMethod"
-                                                id="homeDelivery"
-                                                className="form-radio"
-                                                />
-                                                <span className="text-sm">{deliveryText}</span>
-                                            </div>
-                                        </label>
+                                        <div className="flex gap-2 justify-start items-center">
+                                            <input value={0} checked={storePickup == 0} onChange={(e: any) => {
+                                                {/* Commented Pickup Store */ }
+                                                updateDeliveryMethod(e.target.value)
+                                                topMessageAlartSuccess(deliveryTextSuccess)
+                                            }} type="radio" name='delivery' id='delivery' className='form-radio' />
+                                            <label className='text-sm'>{deliveryText}</label>
+                                        </div>
                                         {/* <h6 className='text-sm text-[#EF7E2C]'>{cartData?.products?.length} {itemPreText} {cartData?.products?.length} {itemText}</h6> */}
-                                    {storeData?.warehouses?.length >= 1 ? (
-                                        <label
-                                            htmlFor="storePickup"
-                                            className="cursor-pointer border border-[#004B7A] rounded-md p-3 flex justify-between items-center w-full"
-                                        >
-                                            <div className="flex gap-2 justify-start items-center">
-                                            <input
-                                                value={1}
-                                                checked={storePickup == 1}
-                                                onChange={(e: any) => {
-                                                updateDeliveryMethod(e.target.value);
-                                                topMessageAlartSuccess(pickupSuccess);
-                                                }}
-                                                type="radio"
-                                                name="storePickup"
-                                                id="storePickup"
-                                                className="form-radio"
-                                            />
-                                            <span className="text-sm">{pickupText}</span>
-                                            </div>
-                                            <h6 className="text-sm text-[#EF7E2C]">
-                                            {storeData?.success ? cartData?.products?.length : 0} {itemPreText} {cartData?.products?.length} {itemText}
-                                            </h6>
-                                        </label>
-                                        ) : null}
                                     </div>
+                                    {storeData?.warehouses?.length >= 1 ?
+                                        <div className='border border-[#004B7A] rounded-md p-3 flex justify-between items-cente w-full'>
+                                            <div className="flex gap-2 justify-start items-center">
+                                                <input value={1} checked={storePickup == 1} onChange={(e: any) => {
+                                                    updateDeliveryMethod(e.target.value)
+                                                    topMessageAlartSuccess(pickupSuccess)
+                                                }} type="radio" name='storePickup' id='storePickup' className='form-radio' />
+                                                <label className='text-sm'>{pickupText}</label>
+                                            </div>
+                                            <h6 className='text-sm text-[#EF7E2C]'>{storeData?.success ? cartData?.products?.length : 0} {itemPreText} {cartData?.products?.length} {itemText}</h6>
+                                        </div>
+                                        : null}
                                 </div>
                                 {storePickup == 1 ?
                                     <>
