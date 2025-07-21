@@ -20,6 +20,7 @@ const ProductLoopMobile = dynamic(() => import("./components/NewHomePageComp/Pro
 const TamkeenServices = dynamic(() => import("./components/TamkeenServices"), { ssr: true, });
 const MobileHeaderNew = dynamic(() => import("./components/MobileHeaderNew"), { ssr: true, });
 const Newsletter = dynamic(() => import("./components/NewHomePageComp/Newsletter"), { ssr: true });
+const TopSectionSlider = dynamic(() => import("./components/NewHomePageComp/TopSectionSlider"), { ssr: false });
 // const Popup = dynamic(() => import("./components/NewHomePageComp/Popup"), { ssr: true })
 
 import { useHomepage } from "./context/HomepageContext";
@@ -72,59 +73,59 @@ export default function Homepage({ params }: { params: any }) {
   }, [params, homepagepartonelatest, homepageparttwolatest]);
 
   function calculateTimeLeft(endTime: any) {
-      const now: any = new Date();
-      const end: any = new Date(endTime);
-      const difference: any = end - now;
-  
-      if (difference <= 0) {
-        return { expired: true };
-      }
-  
-      return {
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60),
-        expired: false
-      };
+    const now: any = new Date();
+    const end: any = new Date(endTime);
+    const difference: any = end - now;
+
+    if (difference <= 0) {
+      return { expired: true };
     }
-    function detectPlatform() {
-      if (window.Android) return "Android";
-      if (window.webkit?.messageHandlers?.iosBridge) return "iOS";
-      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      if (/android/i.test(userAgent)) return "Android";
-      if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS";
-      return "Web";
+
+    return {
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
+      expired: false
+    };
+  }
+  function detectPlatform() {
+    if (window.Android) return "Android";
+    if (window.webkit?.messageHandlers?.iosBridge) return "iOS";
+    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/android/i.test(userAgent)) return "Android";
+    if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS";
+    return "Web";
+  }
+
+  useEffect(() => {
+    const allProducts: any[] = [];
+
+    // 1. Section One
+    const partOne: any = homepagepartonelatest?.first_five_sec;
+    const secFour: any = partOne?.section_four[0]?.products ?? [];
+
+    // 2. Section Two
+    const secSix: any = homepageparttwolatest?.six_eleven_sec?.section_six[0]?.products || [];
+    const secNine: any = homepageparttwolatest?.six_eleven_sec?.section_nine?.products?.data || [];
+    const secTen: any = homepageparttwolatest?.six_eleven_sec?.section_ten?.products?.data || [];
+
+    // 3. Section Three
+    const partThree: any = homepagepartthreelatest?.twelve_seventeen_sec || {};
+    const secTwelve: any = partThree?.sec_twelve_products?.products?.data || {};
+    const secFifteen: any = partThree?.sec_fifteen_products?.products?.data || [];
+    const secSixteen: any = partThree?.sec_sixteen_products?.products?.data || [];
+    const secSeventeen: any = partThree?.sec_seventeen_products?.products?.data || [];
+    // allProducts.push(...secFour, ...secSix, ...secNine, ...secTen, ...secTwelve, ...secFifteen, ...secSixteen, ...secSeventeen);
+    // const uniqueProducts: any = Array.from(new Map(allProducts.map(p => [p.id, p])).values());
+
+    // Push to GTM's dataLayer
+    if (typeof window !== 'undefined' && window.dataLayer && activeSection) {
+      const sectionProducts = sectionProductsMap.current[activeSection] || [];
+
+      if (sectionProducts.length === 0) return;
     }
-  
-    useEffect(() => {
-      const allProducts: any[] = [];
-  
-      // 1. Section One
-      const partOne: any = homepagepartonelatest?.first_five_sec;
-      const secFour: any = partOne?.section_four[0]?.products ?? [];
-  
-      // 2. Section Two
-      const secSix: any = homepageparttwolatest?.six_eleven_sec?.section_six[0]?.products || [];
-      const secNine: any = homepageparttwolatest?.six_eleven_sec?.section_nine?.products?.data || [];
-      const secTen: any = homepageparttwolatest?.six_eleven_sec?.section_ten?.products?.data || [];
-  
-      // 3. Section Three
-      const partThree: any = homepagepartthreelatest?.twelve_seventeen_sec || {};
-      const secTwelve: any = partThree?.sec_twelve_products?.products?.data || {};
-      const secFifteen: any = partThree?.sec_fifteen_products?.products?.data || [];
-      const secSixteen: any = partThree?.sec_sixteen_products?.products?.data || [];
-      const secSeventeen: any = partThree?.sec_seventeen_products?.products?.data || [];
-      // allProducts.push(...secFour, ...secSix, ...secNine, ...secTen, ...secTwelve, ...secFifteen, ...secSixteen, ...secSeventeen);
-      // const uniqueProducts: any = Array.from(new Map(allProducts.map(p => [p.id, p])).values());
-  
-      // Push to GTM's dataLayer
-      if (typeof window !== 'undefined' && window.dataLayer && activeSection) {
-        const sectionProducts = sectionProductsMap.current[activeSection] || [];
-  
-        if (sectionProducts.length === 0) return;
-      }
-  
-    }, [activeSection, isArabic, homepagepartonelatest]);
+
+  }, [activeSection, isArabic, homepagepartonelatest]);
 
   const [isSection4Visible, setIsSection4Visible] = useState(false);
   const [isSection6NewVisible, setIsSection6NewVisible] = useState(false);
@@ -349,6 +350,11 @@ export default function Homepage({ params }: { params: any }) {
   const sec1Image: any = homepagepartonelatest?.first_five_sec?.sec_one_image
     ? NewMedia2 + homepagepartonelatest?.first_five_sec?.sec_one_image
     : "";
+  const sec1SliderData: any = homepagepartonelatest?.first_five_sec
+    ?.section_one_slider_data?.slider_image
+    ? homepagepartonelatest?.first_five_sec?.section_one_slider_data
+      ?.slider_image
+    : [];
   const sec1Link: any = homepagepartonelatest?.first_five_sec?.sec_one_link
     ? homepagepartonelatest?.first_five_sec?.sec_one_link
     : "#";
@@ -869,6 +875,11 @@ export default function Homepage({ params }: { params: any }) {
   return (
     <>
       {/* Section 1 Start */}
+      <TopSectionSlider
+        data={sec1SliderData}
+        lang={lang}
+        origin={origin}
+      />
       <div className="sticky top-0 z-40 bg-white">
         <MobileHeaderNew
           type="Main"
