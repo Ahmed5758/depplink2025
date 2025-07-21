@@ -1556,7 +1556,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         : null}
                                 </>
                             }
-                            {globalStore?.name ?
+                            {globalStore?.name_arabic || globalStore?.name ?
                                 <div className='bg-[#fde18d] rounded-md p-2 w-full text-sm space-y-2'>
                                     <div className='flex gap-3 justify-start items-center'>
                                         <p className='font-semibold'>{isArabic ? 'الاستلام من المتجر' : 'Store Pick-up:'} <button className="text-[#219EBC] font-semibold"
