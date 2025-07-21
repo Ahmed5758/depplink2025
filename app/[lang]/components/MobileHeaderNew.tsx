@@ -844,7 +844,7 @@ export default function MobileHeaderNew(props: any) {
                                     </Tab> */}
                     </Tab.List>
                     <Tab.Panels>
-                      <Tab.Panel className="focus-visible:outline-none mt-3 px-4">
+                      <Tab.Panel className="focus-visible:outline-none mt-3 px-4 bg-white">
                         <div className="panel rounded-t-none">
                           <div className="border rounded px-2 flex items-center border-[#004B7A] focus::border-[#000] h-10 gap-2 relative z-20 bg-white">
                             <input
@@ -869,7 +869,7 @@ export default function MobileHeaderNew(props: any) {
                               </button>
                             )}
                           </div>
-                          <div className="overflow-y-auto h-[38rem] md:h-[543px] px-2 ios-scroll">
+                          <div className="overflow-y-auto h-[39.5rem] px-2 ios-scroll">
                             <RadioGroup
                               value={selectedCityData}
                               onChange={(e) => {
@@ -947,7 +947,7 @@ export default function MobileHeaderNew(props: any) {
                               </div>
                             </RadioGroup>
                           </div>
-                          <div className="fixed z-20 bottom-20 w-[92%] py-3">
+                          <div className="fixed z-20 bottom-8 w-[92%] py-3">
                             <button
                               onClick={() => {
                                 setupCity();
