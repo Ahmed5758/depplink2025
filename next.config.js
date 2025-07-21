@@ -44,6 +44,11 @@ const nextConfig = {
             },
             {
                 protocol: 'https',
+                hostname: 'tamkeenstores.com.sa',
+                pathname: '/images/**',
+            },
+            {
+                protocol: 'https',
                 hostname: 'partners.tamkeenstores.com.sa',
                 pathname: '/**',
             },
