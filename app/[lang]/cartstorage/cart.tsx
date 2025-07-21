@@ -65,6 +65,9 @@ interface cart {
     shippingAddress: any,
     orderId: any,
     deliveryDate:any,
+    storeId?: any,
+    storeType?: any,
+    storeCity?: any
 }
 
 const emptyCart = (): cart => ({
@@ -89,7 +92,10 @@ const emptyCart = (): cart => ({
     paymentMethod: '',
     shippingAddress: false,
     orderId: false,
-    deliveryDate: false
+    deliveryDate: false,
+    storeId: false,
+    storeType: 0,
+    storeCity: false
 });
 
 const createCart = <T extends Partial<cart>>(initialValues: T): cart & T => {
