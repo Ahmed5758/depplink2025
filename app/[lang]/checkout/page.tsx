@@ -21,7 +21,8 @@ import { getCartCount, getCart, recheckcartdata, getOrderId, getSummary, setShip
   getLoyaltyData,
   setLoyalty,
   removeLoyalty ,
-  getPickupStoreCart
+  getPickupStoreCart,
+  setPickupStoreCart
 } from '../cartstorage/cart';
 import moment from 'moment';
 import Swal from 'sweetalert2'
@@ -390,6 +391,16 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             getPickupStoreData()
         }
     }, [params])
+
+    useEffect(() => {
+        if (cartData?.storeType != undefined && cartData?.storeType != null && cartData?.storeType == 1) {
+        var storeId = globalStore?.id
+        var storetype = 1
+        var storeCity = params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name
+        setPickupStoreCart(storeId, storetype, storeCity)
+        }
+    }, [cartData])
+
 
     const getPickupStoreData = () => {
       get(`get-selected-warehouse/${localStorage.getItem('globalStore')}`).then((responseJson: any) => {
@@ -1462,11 +1473,28 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                                                 </div>
                                                                                 <div className="w-full">
                                                                                     <RadioGroup.Label as="p" className={`text-sm font-bold  mb-3 text-white`}>
-                                                                                    {params?.lang == 'ar' ? 'متجر الاستلام' : 'Pickup Store'}
+                                                                                    {params?.lang == 'ar' ? 'متجر الاستلام' : 'Collect From Store'}
                                                                                     </RadioGroup.Label>
                                                                                     <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</p>
                                                                                     <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_data?.address_arabic : globalStore?.showroom_data?.address}</p>
                                                                                     <p className={`mt-1.5 text-xs font-bold text-white`}>{params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_region?.name_arabic : globalStore?.showroom_data?.store_region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                                                                    <div className="mt-3">
+                                                                                        <p
+                                                                                        className={`mt-3 text-xs font-bold text-white`}
+                                                                                        >
+                                                                                        {params.lang == "ar"
+                                                                                            ? "تعليمات الشحن"
+                                                                                            : "Shipping Instructions"}
+                                                                                        :
+                                                                                        </p>
+                                                                                        <p
+                                                                                        className={`mt-1 text-xs font-light text-white w-[70%]`}
+                                                                                        >
+                                                                                        {params.lang == "ar"
+                                                                                            ? "يرجى زيارة المعرض بعد استلام رسالة التأكيد التي تحتوي على رمز تحقق مكون من 6 أرقام. يجب تقديم هذا الرمز لممثل المعرض للتحقق من هويتك."
+                                                                                            : "Please visit the showroom after receiving the confirmation message containing a 6-digit OTP code. This code must be provided to the showroom representative to verify your identity."}
+                                                                                        </p>
+                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>

@@ -24,6 +24,7 @@ interface product {
     express: boolean,
     express_qty: number,
     express_total_qty: number,
+    fgcart:number,
     item_list_id: string,
     item_list_name: string,
 }
@@ -210,6 +211,13 @@ const updateCartItemFbtQty = (qty: number ,prokey: number, fbtkey: number) => {
     return cartdata;
 }
 
+const removeCartItemGift = (prokey: number, fbtkey: number) => {
+    var cartdata = getCart();
+    cartdata.products[prokey]?.gift?.splice(fbtkey, 1)
+    setCart(cartdata)
+    return cartdata;
+}
+
 const removeBogo = (cartdata: any) => {
     // var cartdata = getCart();
     // cartdata.products.splice(key,1)
@@ -270,6 +278,26 @@ const addBogo = (data: [product], cartdata: any) => {
     // console.log(cartdata.products)
     cartdata.products = cartdata.products.concat(data)
     return cartdata
+}
+
+const addgifttextraitem = async (data: product, gift: [product]) => {
+    var cartdata = getCart();
+    var checktData: any = searchItem(cartdata.products, data)
+    if (checktData) {
+        if (gift.length) {
+            var newgift = (cartdata.products[checktData].gift.length) ? cartdata.products[checktData].gift : []
+            if (newgift.length) {
+                for (let index = 0; index < gift.length; index++) {
+                    const element = gift[index];
+                    cartdata.products[checktData].gift.push(element)
+                }
+            }
+            else {
+                cartdata.products[checktData].gift = gift
+            }
+        }
+    }
+    setCart(cartdata)
 }
 
 const addfbtextraitem = async (data: product, fbt: [product]) => {
@@ -857,6 +885,33 @@ const getExpressDeliveryCart = async (city: any = false) => {
     }
     var EXdata: never[] = [];
     await post(`productextradata-regional-new-cart/${localStorage.getItem("globalcity")}`, setData).then((responseJson: any) => {
+        EXdata = responseJson
+    })
+    return EXdata;
+}
+
+function hasAnyGiftWithFgcart(products: product[]): boolean {
+    return products?.some(product => product?.gift?.some(g => g?.fgcart === 1) ?? false);
+}
+
+const getFGCart = async (city: any = false) => {
+    // var proid = getProductids(true)
+    var cartdata = getCart();
+    
+    if(hasAnyGiftWithFgcart(cartdata?.products)){
+        return null
+    }
+    if(cartdata?.products)
+    var proid = getProductids(true)
+    var setData: any = {
+        product_ids: proid.id,
+        qtys: proid.quantity,
+        sale_prices: proid.price,
+        city: city ? city : localStorage.getItem("globalcity"),
+        subtotal: getSubtotalSale()
+    }
+    var EXdata: never[] = [];
+    await post(`getfreegift-cart`, setData).then((responseJson: any) => {
         EXdata = responseJson
     })
     return EXdata;
@@ -1558,4 +1613,4 @@ const setExtraFees = async (paymentMethod: any = false) => {
 }
 
 // export { setCartExpiry, getCartItems, setCartItems, getSubtotalSale, recheckcartdata, getCart, getCartCount, getSummary, removeCartItem, removeCartItemFbt, updateCartItemFbtQty, increaseQty, setShipping, getProductids, setDiscountRule, setDiscountRuleBogo, getShippingAddress, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, unsetWrapper, setWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, getOrderId, removeCart, getExpressDelivery, setExpressDelivery, unsetExpressDelivery, getExpressDeliveryData, getDoorStep, setDoorStep, unsetDoorStep, getDoorStepData, setExtraFees, getExtraFees, removecheckoutdata, setCart, addfbtextraitem, getExpressDeliveryCart, getLoyalty, getLoyaltyData, setLoyalty, removeLoyalty }
-export { setCartExpiry, getCartItems, setCartItems, getSubtotalSale, recheckcartdata, getCart, getCartCount, getSummary, removeCartItem, removeCartItemFbt, updateCartItemFbtQty, increaseQty, setShipping, getProductids, setDiscountRule, setDiscountRuleBogo, getShippingAddress, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, unsetWrapper, setWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, getOrderId, removeCart, getExpressDelivery, setExpressDelivery, unsetExpressDelivery, getExpressDeliveryData, getDoorStep, setDoorStep, unsetDoorStep, getDoorStepData, setExtraFees, getExtraFees, removecheckoutdata, setCart, addfbtextraitem, getExpressDeliveryCart, setPickupStoreCart, getPickupStoreCart, getLoyalty, getLoyaltyData, setLoyalty, removeLoyalty, getDeliveryDate, getdeliveryDateData, setDeliveryDate }
+export { setCartExpiry, getCartItems, setCartItems, getSubtotalSale, recheckcartdata, getCart, getCartCount, getSummary, removeCartItem, removeCartItemFbt, updateCartItemFbtQty, increaseQty, setShipping, getProductids, setDiscountRule, setDiscountRuleBogo, getShippingAddress, setShippingAddress, setPaymentMethod, getPaymentMethod, getPaymentMethodStatus, getWrapper, unsetWrapper, setWrapper, getInstallation, unsetInstallation, setInstallation, getCoupon, setCoupon, unsetcoupon, proceedToCheckout, getOrderId, removeCart, getExpressDelivery, setExpressDelivery, unsetExpressDelivery, getExpressDeliveryData, getDoorStep, setDoorStep, unsetDoorStep, getDoorStepData, setExtraFees, getExtraFees, removecheckoutdata, setCart, addfbtextraitem, getExpressDeliveryCart, setPickupStoreCart, getPickupStoreCart, getLoyalty, getLoyaltyData, setLoyalty, removeLoyalty, getDeliveryDate, getdeliveryDateData, setDeliveryDate, removeCartItemGift, addgifttextraitem, getFGCart }

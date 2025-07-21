@@ -115,7 +115,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
     {/* Commented Pickup Store */ }
     const getStoreData = () => {
-        get(`pickup-from-store/${params.data?.data?.sku}/${localStorage.getItem('globalStore') ? localStorage.getItem('globalStore') : localStorage.getItem('globalcity')}/${localStorage.getItem('globalStore') ? 1 : 0}`).then((responseJson: any) => {
+        get(`pickup-from-store/${params.data?.data?.sku}/${localStorage.getItem('globalStore') ? localStorage.getItem('globalStore') : localStorage.getItem('globalcity')}/${localStorage.getItem('globalStore') ? 1 : 0}?lang=${params?.lang}`).then((responseJson: any) => {
             if (responseJson?.warehouse_single) {
                 setfoundStore(true)
                 console.log('responseJson?.warehouse_single', responseJson?.warehouse_single)
@@ -1143,7 +1143,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
             icon: "success",
             title:
                 <div className="text-xs">
-                    <div className="uppercase">{title}</div>
+                    <div className="">{title}</div>
                     {viewcart ?
                         <>
                             <p className="font-light mb-3">{isArabic ? 'تمت إضافة العنصر إلى سلة التسوق الخاصة بك.' : 'The item has been added into your cart.'}</p>
@@ -1178,7 +1178,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
             icon: "error",
             title:
                 <div className="text-xs">
-                    <div className="uppercase">{title}</div>
+                    <div className="">{title}</div>
                 </div>
             ,
             toast: true,
