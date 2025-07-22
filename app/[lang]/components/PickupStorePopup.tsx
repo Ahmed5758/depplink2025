@@ -223,9 +223,9 @@ const PickupStorePopup = (props: any) => {
                                                                                         <p className='text-xs mt-1'>{addressShowroom}</p>
                                                                                     </div>
                                                                                 </div>
-                                                                                <div className={`${isArabic ? 'w-22' : 'w-20'} flex justify-end items-center`}>
-                                                                                    <div className='shrink-0'>
-                                                                                        <span className={`border ${checkQty ? 'border-[#20831E] text-[#20831E] animationImp' : 'border-primary text-primary'} py-1 px-3 rounded text-[0.60rem] font-semibold`}>{checkQty ? (isArabic ? 'متوفر في المخزون' : 'IN STOCK') : (isArabic ? 'المخزون غير متوفر' : 'STOCK NOT AVAILABLE')}</span>
+                                                                                <div className={`w-fit shrink-0 flex justify-end items-center`}>
+                                                                                    <div>
+                                                                                        <span className={`border ${checkQty ? 'border-[#20831E] text-[#20831E] animationImp' : 'border-[#ff5555] text-[#ff5555]'} py-1 px-3 rounded text-[0.60rem] font-semibold`}>{checkQty ? (isArabic ? 'متوفر في المخزون' : 'IN STOCK') : (isArabic ? 'المخزون غير متوفر' : 'STOCK NOT AVAILABLE')}</span>
                                                                                         {item?.id == globalStore?.id ?
                                                                                             <div className='flex items-center gap-1 mt-2'>
                                                                                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0,0,256,256">
