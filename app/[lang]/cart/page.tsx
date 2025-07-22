@@ -63,7 +63,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
             var wdata: any = localStorage.getItem('userWishlist')
             setProWishlistData(JSON.parse(wdata))
         }
-
+        updateDeliveryMethod(0)
         window.addEventListener("storage", () => {
             refetch();
         });

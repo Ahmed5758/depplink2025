@@ -126,7 +126,7 @@ const PickupStorePopup = (props: any) => {
                                                             />
                                                         </div>
                                                         <hr className='opacity-10' />
-                                                        <h5 className='font-semibold text-sm my-3 line-clamp-1'><span className='text-[#219EBC] font-bold uppercase'>{filteredStores?.length}</span> {isArabic ? 'المعارض المتوفرة' : 'Stores have availablity'}</h5>
+                                                        <h5 className='font-semibold text-sm my-3 line-clamp-1'><span className='text-[#219EBC] font-bold uppercase'>{filteredStores?.filter((e:any) => e?.qty > 0 || e?.livestock_qty > 0)?.length}</span> {isArabic ? 'المعارض المتوفرة' : 'Stores have availablity'}</h5>
                                                         <div className='overflow-y-auto h-[calc(100vh-15rem)]'>
                                                             {filteredStores?.map((item: any, i: any) => {
                                                                 function formatTime(time: string, isArabic: boolean) {
