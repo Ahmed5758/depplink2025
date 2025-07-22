@@ -1530,7 +1530,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 <h6 className='font-bold text-sm'>{params?.lang == "ar" ? "احصل عليه بطريقتك!" : "Get it your way!"}</h6>
                             </div>
                             {extraData?.expressdeliveryData && expDelivery ?
-                                <div className='flex items-center gap-x-4 my-2 bg-[#C3E6F170] rounded-md p-2 w-[-webkit-fit-content]'>
+                                <div className='flex items-center gap-x-4 my-2 bg-[#fde18d] rounded-md p-2 w-[-webkit-fit-content]'>
                                     <Image
                                         src={isArabic ? "/icons/express_logo/express_logo_ar.png" : "/icons/express_logo/express_logo_en.png"}
                                         width="65" height="0" alt="express_delivery" title='Express Delivery' className='bg-white p-2.5 rounded-md'
