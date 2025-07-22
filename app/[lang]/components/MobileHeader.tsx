@@ -13,6 +13,7 @@ export default function MobileHeader(props: any) {
             router.refresh(); // Only refresh after push (optional, based on your needs)
         } else {
             router.back(); // Don't refresh here
+            setTimeout(() => router.refresh(), 100)
             // const returnTo = sessionStorage.getItem('preLoginRoute') || '/'
             // router.push(returnTo, { scroll: false })
             // router.refresh()
