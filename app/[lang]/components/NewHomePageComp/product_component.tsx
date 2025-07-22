@@ -901,7 +901,7 @@ export default function product_component(props: any) {
                   loading="eager"
                   quality={80}
                   className={`mx-auto w-full max-w-[350px] sm:h-auto h-auto object-cover object-center rounded-2xl transition-opacity duration-300}`}
-                  onLoadingComplete={() => setImageLoaded(true)} // Set loaded to true once the image is loaded
+                  onLoad={() => setImageLoaded(true)} // Set loaded to true once the image is loaded
                 />
               </div>
             </div>
