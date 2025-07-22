@@ -2,17 +2,25 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, Fragment } from 'react'
+import React, { useState, Fragment, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 
 export default function Popup(props: any, request: any) {
-
+    const [imgSrc, setImgSrc] = useState(
+        '/images/poupformobileupdate_2.webp'
+    )
     const [isOpen, setIsOpen] = useState(true)
-    const isMobileOrTablet = props?.isMobileOrTablet;
+    useEffect(() => {
+        const hasShown = sessionStorage.getItem('hasShown');
+        if (!hasShown) {
+            setIsOpen(true);
+            sessionStorage.setItem('hasShown', 'true');
+        }
+    }, []);
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
-            < Dialog as="div" open={isOpen} onClose={() => setIsOpen(false)}>
+            <Dialog as="div" open={isOpen} onClose={() => setIsOpen(false)}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -41,7 +49,7 @@ export default function Popup(props: any, request: any) {
                                 </button>
                                 <Link href={`${props?.lang ? 'ar' : 'en'}/login`} aria-label={`${props?.lang ? 'ar' : 'en'}/login`} target='_blank' onClick={() => setIsOpen(false)}>
                                     <Image
-                                        src="https://images.tamkeenstores.com.sa/assets/new-media/poupformobile.webp"
+                                        src={imgSrc}
                                         alt="popup"
                                         title="popup-discount"
                                         height={0}
