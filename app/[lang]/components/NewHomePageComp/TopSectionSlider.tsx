@@ -35,7 +35,7 @@ const TopSectionSlider: React.FC<TopSectionSliderData> = ({
         pagination={{ clickable: true }}
         loop={true}
         modules={[Autoplay, Navigation, Pagination]}
-        className="mySwiper"
+        className="mySwiper cursor-grab active:cursor-grabbing"
       >
         {data?.map((item: any) => {
           const sliderImage: any = item?.image ? NewMedia2 + item?.image : '';
@@ -46,7 +46,7 @@ const TopSectionSlider: React.FC<TopSectionSliderData> = ({
                 prefetch={false}
                 scroll={false}
                 href={sliderLink}
-                className='rounded-b-2xl w-full'
+                className='rounded-b-2xl w-full cursor-grab'
                 aria-label={`Go to ${sliderLink}`}
               >
                 <div className={`relative w-full`}>
