@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import Select from 'react-select'
 import dynamic from 'next/dynamic'
-import { useUserAgent } from 'next-useragent'
 import { getDictionary } from "../dictionaries"
 
 import { useRouter } from 'next/navigation'
@@ -32,7 +31,6 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const [userid, setUserid] = useState<any>(false)
     const [expressData, setexpressData] = useState<any>([])
     const [isOpenModal, setIsOpenModal] = useState(false)
-    const [citySearch, setCitySearch] = useState<any>('')
     const [ProWishlistData, setProWishlistData] = useState<any>([])
     const router = useRouter();
     const [storePickup, setstorePickup] = useState<any>(0);
@@ -53,62 +51,12 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     // Pickup From Store
     const { globalStore, setglobalStore } = useContext<any>(GlobalContext);
     const { updateWishlist, setUpdateWishlist } = useContext(GlobalContext);
-	const [gtmEventPushed, setGtmEventPushed] = useState<any>(false);
+    const [gtmEventPushed, setGtmEventPushed] = useState<any>(false);
     const [allStores, setallStores] = useState<any>([])
-    const [storeSearch, setstoreSearch] = useState<any>('')
     const [storeData, setstoreData] = useState<any>([])
     const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(
         "left-to-right"
     );
-
-    const filteredStores = allStores.filter((city: any) =>
-        city?.showroom_data?.name.toLowerCase().includes(storeSearch.toLowerCase()) ||
-        city?.showroom_data?.name_arabic.toLowerCase().includes(storeSearch.toLowerCase()) ||
-        city.showroom_data?.address.toLowerCase().includes(storeSearch.toLowerCase())
-    );
-
-    // Fgift
-    function CheckIcon(props: any) {
-        return (
-            <svg viewBox="0 0 24 24" fill="none" {...props}>
-                <circle cx={12} cy={12} r={12} fill="#fff" opacity="0.2" />
-                <path
-                    d="M7 13l3 3 7-7"
-                    stroke="#fff"
-                    strokeWidth={1.5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                />
-            </svg>
-        )
-    }
-
-    function CheckIconInActive(props: any) {
-        return (
-            <svg viewBox="0 0 24 24" fill="none" {...props}>
-                <circle cx={12} cy={12} r={12} fill="#004B7A80" opacity="0.2" />
-            </svg>
-        )
-    }
-
-    const isStoreOpen = (timeRange: string) => {
-        if (!timeRange) return false;
-
-        const [openTime, closeTime] = timeRange.split(" - ").map(time => {
-            let [hours, minutes] = time.match(/\d+/g)?.map(Number) || [0, 0];
-            const isPM = time.includes("PM");
-
-            if (isPM && hours !== 12) hours += 12;
-            if (!isPM && hours === 12) hours = 0;
-
-            return hours * 60 + minutes; // Convert to total minutes for easy comparison
-        });
-
-        const now = new Date();
-        const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-        return currentMinutes >= openTime && currentMinutes <= closeTime;
-    };
 
     useEffect(() => {
         if (localStorage.getItem('userWishlist')) {
@@ -134,8 +82,6 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
         else if (ProWishlistData.length) {
             setProWishlistData([])
         }
-
-
     }
 
     useEffect(() => {
@@ -151,7 +97,6 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     }, [params])
 
     useEffect(() => {
-
         var sku: string[] = []
         var productids: string[] = []
         cartData?.products?.forEach((item: any) => {
@@ -159,129 +104,65 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
         });
         setProductSku(sku)
         setProductIds(productids)
-        // dataLayers()
-        // async () => {
-        // 	const exp = await getExpressDeliveryCart()
-        // 	setexpressData(exp)
-        // };
-        // productExtraData()
     }, [cartData?.products])
 
     useEffect(() => {
-		if (cartData?.products && !gtmEventPushed) {
-			pushGTMEvent()
-			setGtmEventPushed(true)
-		}
-	}, [cartData?.products, gtmEventPushed])
+        if (cartData?.products && !gtmEventPushed) {
+            pushGTMEvent()
+            setGtmEventPushed(true)
+        }
+    }, [cartData?.products, gtmEventPushed])
 
-	function detectPlatform() {
-		if (window.Android) return "Android-WebView";
-		if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
-		var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-		if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
-		if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
-		return "Web";
-	}
+    function detectPlatform() {
+        if (window.Android) return "Android-WebView";
+        if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
+        var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
+        if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
+        return "Web";
+    }
 
-	const pushGTMEvent = () => {
-		if (typeof window === 'undefined' || !window.dataLayer) return;
+    const pushGTMEvent = () => {
+        if (typeof window === 'undefined' || !window.dataLayer) return;
 
-		const isList = 'view_cart';
-		const productArray = Array.isArray(cartData.products) ? cartData.products : [];
-		if (!productArray.length) return;
-		window.dataLayer.push({ ecommerce: null });
-		window.dataLayer.push({
-			event: isList,
-			value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price), // sum of prices
-			currency: "SAR", // currency
-			platform: detectPlatform(),
-			ecommerce: {
-				items: productArray.map((item: any, index: number) => {
-					const price = item?.bogo === 1 ? 0 : (item?.price > 0 ? Number(item?.price) : Number(item?.regular_price));
-					const discountPrice: any = item?.regular_price - price;
-					return {
-						item_id: item?.sku,
-						item_name: isArabic ? item?.name_arabic : item?.name,
-						item_brand: isArabic ? item?.brand?.name_arabic : item?.brand?.name,
-						item_image_link: `${item?.image}`,
-						item_link: `${origin}/${isArabic ? 'ar' : 'en'}/${item?.slug}`,
-						price: Number(price),
-						shelf_price: Number(item?.regular_price),
-						discount: Number(discountPrice),
-						item_availability: "in stock",
-						item_list_id: item?.item_list_id ?? "50000",
-						item_list_name: item?.item_list_name ?? "direct",
-						index: index + 1,
-						quantity: item?.quantity ?? 1,
-						id: item?.sku,
-					}
-				}),
-			},
-		});
-	};
+        const isList = 'view_cart';
+        const productArray = Array.isArray(cartData.products) ? cartData.products : [];
+        if (!productArray.length) return;
+        window.dataLayer.push({ ecommerce: null });
+        window.dataLayer.push({
+            event: isList,
+            value: Number(getSummary().filter((element: any) => element.key == 'total')[0]?.price), // sum of prices
+            currency: "SAR", // currency
+            platform: detectPlatform(),
+            ecommerce: {
+                items: productArray.map((item: any, index: number) => {
+                    const price = item?.bogo === 1 ? 0 : (item?.price > 0 ? Number(item?.price) : Number(item?.regular_price));
+                    const discountPrice: any = item?.regular_price - price;
+                    return {
+                        item_id: item?.sku,
+                        item_name: isArabic ? item?.name_arabic : item?.name,
+                        item_brand: isArabic ? item?.brand?.name_arabic : item?.brand?.name,
+                        item_image_link: `${item?.image}`,
+                        item_link: `${origin}/${isArabic ? 'ar' : 'en'}/${item?.slug}`,
+                        price: Number(price),
+                        shelf_price: Number(item?.regular_price),
+                        discount: Number(discountPrice),
+                        item_availability: "in stock",
+                        item_list_id: item?.item_list_id ?? "50000",
+                        item_list_name: item?.item_list_name ?? "direct",
+                        index: index + 1,
+                        quantity: item?.quantity ?? 1,
+                        id: item?.sku,
+                    }
+                }),
+            },
+        });
+    };
 
     const getDiscountType = async () => {
         get(`getdiscounttype`).then((responseJson: any) => {
             setDiscountType(responseJson?.data?.discount_type)
         })
-    }
-
-    const dataLayers = () => {
-        window.dataLayer = window.dataLayer || [];
-        var SHA256 = require("crypto-js/sha256");
-        var encryptedEmail = SHA256(profileData?.userdata?.email);
-        var splittedfinalEmail = encryptedEmail.words.join("");
-        var finalEmail = splittedfinalEmail.split("-");
-        var encryptedPhone = SHA256("+966" + profileData?.userdata?.phone_number);
-        var splittedfinalPhone = encryptedPhone.words.join("");
-        var finalPhone = splittedfinalPhone.split("-");
-        var encryptedFirstName = SHA256(profileData?.userdata?.first_name);
-        var encryptedLastName = SHA256(profileData?.userdata?.last_name);
-        window.dataLayer.push({ ecommerce: null });
-        if (localStorage.getItem("userid")) {
-            window.dataLayer.push({
-                event: "addToCart",
-                phone_number: `+966${profileData?.userdata?.phone_number}`,
-                __INSERT_USER_PHONE__: "+966" + profileData?.userdata?.phone_number,
-                __INSERT_USER_EMAIL__: profileData?.userdata?.email,
-                user_email: profileData?.userdata?.email,
-                user_hashed_phone_number: finalPhone.join(""),
-                user_hashed_email: finalEmail.join(""),
-                address: {
-                    first_name: profileData?.userdata?.first_name,
-                    last_name: profileData?.userdata?.last_name,
-                    city: isArabic ? profileData?.userdata?.shipping_address_data_default?.state_data?.name_arabic : profileData?.userdata?.shipping_address_data_default?.state_data?.name,
-                    country: isArabic ? 'المملكة العربية السعودية' : 'Saudi Arabia',
-                },
-                ecommerce: {
-                    affiliation: "Tamkeen Stores Online Store",
-                    value: getSummary().filter((element: any) => element.key == 'total')[0]?.price,
-                    tax: ((getSummary().filter((element: any) => element.key == 'total')[0]?.price) - (getSummary().filter((element: any) => element.key == 'total')[0]?.price) / 1.15).toFixed(2),
-                    currency: "SAR",
-                    shipping: cartData?.fees?.shipping?.amount,
-                    no_of_items: cartData?.products?.length,
-                    content_ids: productSku,
-                    product_id: productIds,
-                },
-            })
-        } else {
-            window.dataLayer.push({
-                event: "addToCart",
-                ecommerce: {
-                    currencyCode: "SAR",
-                    add: {
-                        products: cartData?.products,
-                    },
-                    affiliation: "Tamkeen Stores Online Store",
-                    value: getSummary().filter((element: any) => element.key == 'total')[0]?.price,
-                    tax: ((getSummary().filter((element: any) => element.key == 'total')[0]?.price) - (getSummary().filter((element: any) => element.key == 'total')[0]?.price) / 1.15).toFixed(2),
-                    no_of_items: cartData?.products?.length,
-                    content_ids: productSku,
-                    product_id: productIds,
-                },
-            });
-        }
-
     }
 
     const resetCart = async () => {
@@ -463,99 +344,11 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
             },
         });
     };
-    const topMessageAlartDanger = (title: any) => {
-        MySwal.fire({
-            icon: "error",
-            title:
-                <div className="text-xs">
-                    <div className="">{title}</div>
-                </div>
-            ,
-            toast: true,
-            position: isArabic ? 'top-start' : 'top-end',
-            showConfirmButton: false,
-            timer: 15000,
-            showCloseButton: true,
-            background: '#DC4E4E',
-            color: '#FFFFFF',
-            timerProgressBar: true,
-        });
-    };
-
-
-    // for time being gift data
-    const productExtraData: any = async () => {
-        var responseJson: any = await getFGCart()
-        setExtraData(responseJson)
-        if (responseJson?.freegiftdata)
-            setallowed_gifts(responseJson?.freegiftdata?.allowed_gifts)
-        if (responseJson?.freegiftdata?.allowed_gifts == responseJson?.freegiftdata?.freegiftlist?.length && responseJson?.freegiftdata?.discount_type == 1) {
-            var gifts = selectedGifts
-            for (let index = 0; index < responseJson?.freegiftdata?.freegiftlist?.length; index++) {
-                const element = responseJson?.freegiftdata?.freegiftlist[index];
-                gifts[element.id] = true
-            }
-            setselectedGifts(gifts)
-        }
-        if (responseJson?.freegiftdata) {
-            setIsOpen(true)
-            setgift_product_id(responseJson?.product_id)
-        }
-    }
-
-    const addgifts = async () => {
-        var gifts: any = false
-        var product: any = false
-        if (extraData?.freegiftdata?.freegiftlist?.length > 0) {
-            gifts = []
-            product = cartData?.products.filter((e: any) => e.id == gift_product_id)[0]
-            for (let index = 0; index < extraData?.freegiftdata?.freegiftlist?.length; index++) {
-                const element = extraData?.freegiftdata?.freegiftlist[index];
-                if (selectedGifts[element.id]) {
-                    var amount = 0
-                    if (extraData?.freegiftdata?.discount_type == 2) {
-                        var fgprice = element?.productdetail?.sale_price ? element?.productdetail?.sale_price : element?.productdetail?.price;
-                        fgprice -= (element?.discount * fgprice) / 100;
-                    }
-                    else if (extraData?.freegiftdata?.discount_type == 3)
-                        amount = element.discount
-                    var giftitem: any = {
-                        id: element.productdetail.id,
-                        sku: element.productdetail.sku,
-                        name: element.productdetail.name,
-                        name_arabic: element.productdetail.name_arabic,
-                        image: element.productdetail?.featured_image ? NewMedia + element.productdetail?.featured_image?.image : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png',
-                        price: element.productdetail.sale_price ? element.productdetail.sale_price : element.productdetail.price,
-                        regular_price: element.productdetail.price,
-                        quantity: 1,
-                        gift_id: extraData?.freegiftdata?.id,
-                        discounted_amount: amount,
-                        slug: element.productdetail?.slug,
-                        pre_order: 0,
-                        pre_order_day: false,
-                        fgcart: 1
-                    }
-                    gifts.push(giftitem)
-                }
-            }
-        }
-        if (product && gifts) {
-            addgifttextraitem(product, gifts)
-            resetCart()
-            setIsOpen(false)
-        }
-    }
 
     const origin =
         typeof window !== 'undefined' && window.location.origin
             ? window.location.origin
             : '';
-
-
-    const userAgent: any =
-        typeof window !== 'undefined' && window.location.origin
-            ? useUserAgent(window.navigator.userAgent)
-            : false;
 
 
     const totalPrice = summary.find((e: any) => e.key === "total")?.price || 0;
@@ -622,7 +415,6 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const collectingOrderText = isArabic ? 'يمكنك استلام طلبك خلال ساعة واحدة (س) خلال ساعات عمل المتجر' : 'You can collect your order within 1 hour(s) during store work hours';
     const fastDeiveryImg = 'https://cdn-icons-png.flaticon.com/512/9720/9720868.png';
     const fastDeliveryText = isArabic ? 'خيارات توصيل أسرع حسب العناصر المحددة والمنطقة والوقت. اختر عند الخروج.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.';
-    const brand = isArabic ? 'العلامة' : 'Brand';
     const srText = isArabic ? ' ر.س' : 'SR ';
     const percentageText = isArabic ? 'خصم %' : '% OFF ';
     const saveText = isArabic ? 'وفر ' : 'Save ';
@@ -644,20 +436,6 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const madfuImg = '/images/madfu.webp';
     const tamaraImg = '/images/tamara-en.webp';
     const proceedCheckout = isArabic ? 'اكمال شراء الطلب' : 'Proceed to Checkout';
-    const itemOnlyText = isArabic ? 'منتج' : 'item';
-    const cartText = isArabic ? 'العربة' : 'Cart';
-    const quantityText = isArabic ? 'عدد' : 'Qty';
-    const bankCardText = isArabic ? 'نحن نقبل جميع البطاقات البنكية' : 'We will accept all kind of bank cards.'
-    const paymentInfoText = isArabic ? 'بيانات الدفع' : 'Payment Information'
-    const extraDataFreeGiftList = extraData?.freegiftdata?.freegiftlist.length === extraData?.freegiftdata?.allowed_gifts;
-    const extraDataFreeGift = extraData?.freegiftdata?.allowed_gifts;
-    const freeGiftDetails = isArabic ? `(${extraDataFreeGift})  هدية مجانية` : `(${extraDataFreeGift}) Free Gift`;
-    const chooseFreeGiftData = isArabic ? `هديا (${extraDataFreeGift}) مجانية مضافة` : `Choose (${extraDataFreeGift}) Free Gift`;
-    const chooseFreeGiftDataSR = isArabic ? `اختر منتج واحد بـ 11 ر.س` : `Choose (${extraDataFreeGift}) Product in 11 SR`;
-    const freeGiftItem = isArabic ? 'هدية مجانية' : 'Free Gift Item';
-    const withOutGiftText = isArabic ? 'أضف بدون هدايا' : 'Add Without Gifts';
-    const selectGiftText = isArabic ? 'الرجاء اختيار منتجات الهدايا' : 'please select gift products';
-    const SelectText = isArabic ? "يتخطى" : "Select This";
 
     return (
         <>
