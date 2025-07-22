@@ -59,6 +59,7 @@ const PickupStorePopup = (props: any) => {
             },
         });
     };
+    const searchContentPlaceholder = isArabic ? 'استكشف أقرب معرض تمكين ستورز.' : 'Explore the nearest Tamkeen Stores showroom.';
 
     return (
         <Transition appear show={props?.isOpenModal} as={Fragment}>
@@ -121,7 +122,7 @@ const PickupStorePopup = (props: any) => {
                                                             <input id="productSearch" type="text" name="shipping-charge" className="form-input focus-visible:outline-none focus:ring-transparent text-xs h-6 border-none w-full"
                                                                 value={storeSearch}
                                                                 onChange={(e) => setstoreSearch(e.target.value)}
-                                                                placeholder={'Search Store'}
+                                                                placeholder={searchContentPlaceholder}
                                                             />
                                                         </div>
                                                         <hr className='opacity-10' />
@@ -290,8 +291,8 @@ const PickupStorePopup = (props: any) => {
                                                                                                 </svg>
                                                                                                 <div className='text-[#53616A] text-[10px]'>
                                                                                                     <h6 className='p-0 text-xs mb-1 font-semibold text-primary'>{isArabic ? 'ساعات العمل المسائية' : 'Address'}</h6>
-                                                                                                    <p className='mb-2 text-xs'>{addressShowroom} | <Link href="tel:8002444464" className='font-semibold underline text-primary'>8002444464</Link></p>
-                                                                                                    <Link href={showroomDirectionLink} target='_blank' className='text-[#004B7A] text-xs' aria-label={showroomDirectionText}>{showroomDirectionText}</Link>
+                                                                                                    <p className='mb-4 text-xs'>{addressShowroom} | <Link href="tel:8002444464" className='font-semibold underline text-primary'>8002444464</Link></p>
+                                                                                                    <Link href={showroomDirectionLink} target='_blank' className='text-[#004B7A] text-xs underline font-semibold' aria-label={showroomDirectionText}>{showroomDirectionText}</Link>
                                                                                                 </div>
                                                                                             </div>
                                                                                             {/* <hr className="w-full my-3 opacity-10" />
