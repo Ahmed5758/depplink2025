@@ -59,7 +59,7 @@ const PickupStorePopup = (props: any) => {
             },
         });
     };
-    const searchContentPlaceholder = isArabic ? 'استكشف أقرب معرض تمكين ستورز.' : 'Explore the nearest Tamkeen Stores showroom.';
+    const searchContentPlaceholder = isArabic ? 'استكشف اقرب معرض تمكين منك.' : 'Explore the nearest Tamkeen Stores showroom.';
 
     return (
         <Transition appear show={props?.isOpenModal} as={Fragment}>
@@ -108,7 +108,7 @@ const PickupStorePopup = (props: any) => {
                                                     <button
                                                         className={`!border-primary text-primary !outline-none flex items-center justify-center border-b-2 text-base border-transparent bg-transparent py-3 before:inline-block hover:border-primary hover:text-primary font-bold w-full`}
                                                     >
-                                                        {isArabic ? 'التوصيل' : 'Store Pickup'}
+                                                        {isArabic ? 'الاستلام' : 'Store Pickup'}
                                                     </button>
                                                 )}
                                             </Tab>
@@ -117,7 +117,7 @@ const PickupStorePopup = (props: any) => {
                                             <Tab.Panel className="focus-visible:outline-none">
                                                 <div className="panel rounded-t-none">
                                                     <div className='px-4'>
-                                                        <h5 className='font-semibold text-sm mt-3 line-clamp-1'>{isArabic ? 'المتجر المحدد:' : 'Selected Store:'} <span className='text-[#219EBC] font-bold uppercase'>{isArabic ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</span></h5>
+                                                        <h5 className='font-semibold text-sm mt-3 line-clamp-1'>{isArabic ? 'المعرض المحدد:' : 'Selected Store:'} <span className='text-[#219EBC] font-bold uppercase'>{isArabic ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</span></h5>
                                                         <div className="border rounded flex items-center border-[#004B7A] focus::border-[#000] h-9 gap-2 relative z-20 bg-white mt-1">
                                                             <input id="productSearch" type="text" name="shipping-charge" className="form-input focus-visible:outline-none focus:ring-transparent text-xs h-6 border-none w-full"
                                                                 value={storeSearch}
@@ -126,7 +126,7 @@ const PickupStorePopup = (props: any) => {
                                                             />
                                                         </div>
                                                         <hr className='opacity-10' />
-                                                        <h5 className='font-semibold text-sm my-3 line-clamp-1'><span className='text-[#219EBC] font-bold uppercase'>{filteredStores?.length}</span> {isArabic ? 'المتاجر لديها توافر' : 'Stores have availablity'}</h5>
+                                                        <h5 className='font-semibold text-sm my-3 line-clamp-1'><span className='text-[#219EBC] font-bold uppercase'>{filteredStores?.length}</span> {isArabic ? 'المعارض المتوفرة' : 'Stores have availablity'}</h5>
                                                         <div className='overflow-y-auto h-[calc(100vh-15rem)]'>
                                                             {filteredStores?.map((item: any, i: any) => {
                                                                 function formatTime(time: string, isArabic: boolean) {
@@ -224,7 +224,7 @@ const PickupStorePopup = (props: any) => {
                                                                                 </div>
                                                                                 <div className={`${isArabic ? 'w-22' : 'w-20'} flex justify-end items-center`}>
                                                                                     <div>
-                                                                                        <span className={`border ${item?.qty > 0 ? 'border-[#20831E] text-[#20831E] animationImp' : 'border-[#ff5555] text-[#ff5555]'} py-1 px-3 rounded text-[0.60rem] font-semibold`}>{isArabic ? 'في الأوراق المالية' : 'IN STOCK'}</span>
+                                                                                        <span className={`border ${item?.qty > 0 ? 'border-[#20831E] text-[#20831E] animationImp' : 'border-[#ff5555] text-[#ff5555]'} py-1 px-3 rounded text-[0.60rem] font-semibold`}>{isArabic ? 'متوفر في المخزون' : 'IN STOCK'}</span>
                                                                                         {item?.id == globalStore?.id ?
                                                                                             <div className='flex items-center gap-1 mt-2'>
                                                                                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0,0,256,256">
@@ -290,7 +290,7 @@ const PickupStorePopup = (props: any) => {
                                                                                                     <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="1.5" />
                                                                                                 </svg>
                                                                                                 <div className='text-[#53616A] text-[10px]'>
-                                                                                                    <h6 className='p-0 text-xs mb-1 font-semibold text-primary'>{isArabic ? 'ساعات العمل المسائية' : 'Address'}</h6>
+                                                                                                    <h6 className='p-0 text-xs mb-1 font-semibold text-primary'>{isArabic ? 'العنوان' : 'Address'}</h6>
                                                                                                     <p className='mb-4 text-xs'>{addressShowroom} | <Link href="tel:8002444464" className='font-semibold underline text-primary'>8002444464</Link></p>
                                                                                                     <Link href={showroomDirectionLink} target='_blank' className='text-[#004B7A] text-xs underline font-semibold' aria-label={showroomDirectionText}>{showroomDirectionText}</Link>
                                                                                                 </div>
