@@ -12,8 +12,14 @@ export default function MobileHeader(props: any) {
             router.push(`/${props.lang}/${props.redirect}`);
             router.refresh(); // Only refresh after push (optional, based on your needs)
         } else {
-            router.back(); // Don't refresh here
-            setTimeout(() => router.refresh(), 100)
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/category/')) {
+                router.push(`/${props.lang}`);
+                router.refresh()
+            } else {
+                router.back();
+                setTimeout(() => router.refresh(), 300);
+            }
             // const returnTo = sessionStorage.getItem('preLoginRoute') || '/'
             // router.push(returnTo, { scroll: false })
             // router.refresh()
