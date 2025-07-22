@@ -205,8 +205,8 @@ const PickupStorePopup = (props: any) => {
                                                                 const showroomDirectionText = isArabic ? 'احصل على الاتجاه' : 'Get Direction';
                                                                 const showroomDirectionLink = item?.showroom_data?.direction_button ? item?.showroom_data?.direction_button : '#';
                                                                 return (
-                                                                    <div className="border border-[#20831E] rounded-md mt-2" key={i}>
-                                                                        <div className='cursor-pointer'
+                                                                    <div className={`border ${item?.qty > 0 ? 'border-[#20831E]' : 'border-[#ff5555]'} rounded-md mt-2`} key={i}>
+                                                                        <div className={`cursor-pointer ${item?.qty <= 0 ? 'pointer-events-none' : ''}`}
                                                                             onClick={() => {
                                                                                 setglobalStore(item)
                                                                                 localStorage.setItem('globalStore', item?.id)
@@ -224,7 +224,7 @@ const PickupStorePopup = (props: any) => {
                                                                                 </div>
                                                                                 <div className={`${isArabic ? 'w-22' : 'w-20'} flex justify-end items-center`}>
                                                                                     <div>
-                                                                                        <span className='border border-[#20831E] text-[#20831E] py-1 px-3 rounded text-[0.60rem] font-semibold animationImp'>{isArabic ? 'في الأوراق المالية' : 'IN STOCK'}</span>
+                                                                                        <span className={`border ${item?.qty > 0 ? 'border-[#20831E] text-[#20831E] animationImp' : 'border-[#ff5555] text-[#ff5555]'} py-1 px-3 rounded text-[0.60rem] font-semibold`}>{isArabic ? 'في الأوراق المالية' : 'IN STOCK'}</span>
                                                                                         {item?.id == globalStore?.id ?
                                                                                             <div className='flex items-center gap-1 mt-2'>
                                                                                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0,0,256,256">
