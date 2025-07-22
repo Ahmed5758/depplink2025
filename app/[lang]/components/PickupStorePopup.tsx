@@ -204,16 +204,16 @@ const PickupStorePopup = (props: any) => {
                                                                 const addressShowroom = showroomNotFound || (isArabic ? "العنوان غير متوفر" : "Address not available")
                                                                 const showroomDirectionText = isArabic ? 'احصل على الاتجاه' : 'Get Direction';
                                                                 const showroomDirectionLink = item?.showroom_data?.direction_button ? item?.showroom_data?.direction_button : '#';
+                                                                const checkQty = item?.qty > 0 || item?.livestock_qty > 0;
                                                                 return (
-                                                                    <div className={`border ${item?.qty > 0 ? 'border-[#20831E]' : 'border-primary opacity-45'} rounded-md mt-2`} key={i}>
-                                                                        <div className={`cursor-pointer ${item?.qty <= 0 ? 'pointer-events-none' : ''}`}
+                                                                    <div className={`border ${checkQty ? 'border-[#20831E]' : 'border-primary opacity-45'} rounded-md mt-2`} key={i}>
+                                                                        <div className={`cursor-pointer ${!checkQty ? 'pointer-events-none' : ''}`}
                                                                             onClick={() => {
                                                                                 setglobalStore(item)
                                                                                 localStorage.setItem('globalStore', item?.id)
                                                                                 props?.setModal(false)
                                                                                 topMessageAlartSuccess(isArabic ? 'نجاح! تم تغيير نقطة الالتقاط من المتجر بنجاح..' : 'Success! Pickup From Store Changed Successfully..')
                                                                             }}
-                                                                            aria-disabled = {item?.qty > 0}
                                                                         >
                                                                             <div className='flex justify-between gap-4 items-center p-3'>
                                                                                 <div className='flex items-center gap-3'>
@@ -225,7 +225,7 @@ const PickupStorePopup = (props: any) => {
                                                                                 </div>
                                                                                 <div className={`${isArabic ? 'w-22' : 'w-20'} flex justify-end items-center`}>
                                                                                     <div className='shrink-0'>
-                                                                                        <span className={`border ${item?.qty > 0 ? 'border-[#20831E] text-[#20831E] animationImp' : 'border-primary text-primary'} py-1 px-3 rounded text-[0.60rem] font-semibold`}>{isArabic ? 'متوفر في المخزون' : 'IN STOCK'}</span>
+                                                                                        <span className={`border ${checkQty ? 'border-[#20831E] text-[#20831E] animationImp' : 'border-primary text-primary'} py-1 px-3 rounded text-[0.60rem] font-semibold`}>{checkQty ? (isArabic ? 'متوفر في المخزون' : 'IN STOCK') : (isArabic ? 'المخزون غير متوفر' : 'STOCK NOT AVAILABLE')}</span>
                                                                                         {item?.id == globalStore?.id ?
                                                                                             <div className='flex items-center gap-1 mt-2'>
                                                                                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="18" height="18" viewBox="0,0,256,256">
