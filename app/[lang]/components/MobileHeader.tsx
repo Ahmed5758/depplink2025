@@ -15,6 +15,7 @@ export default function MobileHeader(props: any) {
             const currentPath = window.location.pathname;
             if (currentPath.includes('/category/')) {
                 router.push(`/${props.lang}`);
+                router.refresh()
             } else {
                 router.back();
                 setTimeout(() => router.refresh(), 300);
