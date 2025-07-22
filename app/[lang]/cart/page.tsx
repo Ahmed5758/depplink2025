@@ -381,9 +381,10 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                 <p className="mt-3">
                     {params.lang === "ar"
                         ? `قسها على ${installments} دفعات`
-                        : `Split in ${installments} payments of SAR`}{" "}
-                    <span className="font-bold">
+                        : `Split in ${installments} payments of `}{" "}
+                    <span className="font-bold inline-flex items-center gap-0.5">
                         {(price / installments).toLocaleString("en-US")}
+                        <span>{currencySymbolSmall}</span>
                     </span>
                     .{" "}
                     {params.lang === "ar"
@@ -415,7 +416,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const collectingOrderText = isArabic ? 'يمكنك استلام طلبك خلال ساعة واحدة (س) خلال ساعات عمل المتجر' : 'You can collect your order within 1 hour(s) during store work hours';
     const fastDeiveryImg = 'https://cdn-icons-png.flaticon.com/512/9720/9720868.png';
     const fastDeliveryText = isArabic ? 'خيارات توصيل أسرع حسب العناصر المحددة والمنطقة والوقت. اختر عند الخروج.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.';
-    const srText = isArabic ? ' ر.س' : 'SR ';
+   // const srText = isArabic ? ' ر.س' : 'SR ';
     const percentageText = isArabic ? 'خصم %' : '% OFF ';
     const saveText = isArabic ? 'وفر ' : 'Save ';
     const removeText = isArabic ? 'إزالة' : ' Remove';
@@ -436,7 +437,42 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const madfuImg = '/images/madfu.webp';
     const tamaraImg = '/images/tamara-en.webp';
     const proceedCheckout = isArabic ? 'اكمال شراء الطلب' : 'Proceed to Checkout';
-
+ const currencySymbol = (
+		<svg
+		className="riyal-svg inline-flex"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 1124.14 1256.39"
+		width="15"
+		height="15"
+		>
+		<path
+			fill="currentColor"
+			d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"
+		></path>
+		<path
+			fill="currentColor"
+			d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
+		></path>
+		</svg>
+ )
+ const currencySymbolSmall = (
+		<svg
+		className="riyal-svg inline-flex"
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 1124.14 1256.39"
+		width="12"
+		height="12"
+		>
+		<path
+			fill="currentColor"
+			d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"
+		></path>
+		<path
+			fill="currentColor"
+			d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
+		></path>
+		</svg>
+ )
     return (
         <>
             <FullPageLoader loader={loaderStatus} />
@@ -557,22 +593,23 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                                         <h2 className="nc__278mainInnerSmHeading">{proImgAlt}</h2>
                                                         <div className="nc__278mainInnerEightDiv">
                                                             <div className="nc__278mainInnerNineDiv">
-                                                                <p className='nc__278mainInnerLgPara'><small className="tpb_308mainInnerXsPara">{srText}</small>
+                                                                <p className='nc__278mainInnerLgPara flex items-center gap-0.5'>
                                                                     {!pro?.bogo ? pro?.price?.toLocaleString('EN-US') : null}
                                                                     {pro?.bogo ? pro?.discounted_amount?.toLocaleString('EN-US') : null}
+                                                                    <small className="tpb_308mainInnerXsPara">{currencySymbol}</small>
                                                                 </p>
                                                                 {pro?.regular_price > pro?.price ? <p className='nc__278mainInnerSecXsPara'><span className="line-through">{pro?.regular_price?.toLocaleString('EN-US')}</span></p> : null}
                                                             </div>
                                                             {pro?.regular_price > pro?.price ?
                                                                 <div className="nc__278mainInnerTenDiv">
-                                                                    <p className="nc__278mainInnerThirdXspara">
+                                                                    <p className="nc__278mainInnerThirdXspara flex items-center gap-0.5">
                                                                         {discountType === 1 ?
                                                                             <>
                                                                                 {Math.round(((pro.regular_price - pro.price) * 100) / pro.regular_price)} {percentageText}
                                                                             </>
                                                                             :
                                                                             <>
-                                                                                {saveText} {(pro?.regular_price - pro?.price).toLocaleString('EN-US')} {srText}
+                                                                                {saveText} {(pro?.regular_price - pro?.price).toLocaleString('EN-US')} {currencySymbolSmall}
                                                                             </>
                                                                         }
                                                                     </p>
@@ -678,7 +715,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                                                 <div className="nc__278mainInnerFourteenDiv">
                                                                     <div>
                                                                         <h5 className="tpb_308mainInnerXsPara">{giftDataText}</h5>
-                                                                        <p className='nc__278mainInnerLgPara'><small className="tpb_308mainInnerXsPara">{srText}</small> {giftData?.discounted_amount?.toLocaleString('EN-US')}</p>
+                                                                        <p className='nc__278mainInnerLgPara'><small className="tpb_308mainInnerXsPara">{currencySymbol}</small> {giftData?.discounted_amount?.toLocaleString('EN-US')}</p>
                                                                     </div>
                                                                     <div className="sht_303mainInnenNineteenDiv">
                                                                         <Select
@@ -736,7 +773,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                                                 <div className="nc__278mainInnerFourteenDiv">
                                                                     <div>
                                                                         <h5 className="tpb_308mainInnerXsPara">{gidtDataText}</h5>
-                                                                        <p className='nc__278mainInnerLgPara'><small className="tpb_308mainInnerXsPara">{srText}</small> {giftData?.discounted_amount?.toLocaleString('EN-US')}</p>
+                                                                        <p className='nc__278mainInnerLgPara'><small className="tpb_308mainInnerXsPara">{currencySymbol}</small> {giftData?.discounted_amount?.toLocaleString('EN-US')}</p>
                                                                     </div>
                                                                     <div className="sht_303mainInnenNineteenDiv">
                                                                         <Select
@@ -827,7 +864,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                                     <hr className="nc__278mainInnerHr" key={i} />
                                                     <div className="nc__278mainInnerNineteenDiv" key={i}>
                                                         <label className="text-dark">{itemTitletext} <small className="nc__278mainInnerSmall">({includingVatText})</small></label>
-                                                        <p className={`text-[#004B7A]`}>{isArabic ? '' : 'SR'}{' '}<span className="font-bold">{s?.price?.toLocaleString('EN-US')}</span>{' '}{isArabic ? 'ر.س' : ''}</p>
+                                                        <p className={`text-[#004B7A] flex items-center gap-0.5`}>{isArabic ? currencySymbol : ''}{' '}<span className="font-bold">{s?.price?.toLocaleString('EN-US')}</span>{' '}{isArabic ? '' : currencySymbol}</p>
                                                     </div>
                                                 </>
                                             )
@@ -835,7 +872,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                         return (
                                             <div className="nc__278mainInnerTwntyDiv" key={i}>
                                                 <label className="nc__278mainInnerMdLabel">{itemTitletext}</label>
-                                                <p className={`nc__278mainInnerPara`}>{isArabic ? '' : 'SR'}{' '}<span className="font-bold">{s?.price?.toLocaleString('EN-US')}</span>{' '}{isArabic ? 'ر.س' : ''}</p>
+                                                <p className={`nc__278mainInnerPara flex items-center gap-0.5`}>{isArabic ? currencySymbol :''}{' '}<span className="font-bold">{s?.price?.toLocaleString('EN-US')}</span>{' '}{isArabic ? '' : currencySymbol}</p>
                                             </div>
                                         )
                                     })
