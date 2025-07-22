@@ -9,7 +9,7 @@ export default function Popup(props: any, request: any) {
     const [imgSrc, setImgSrc] = useState(
         '/images/poupformobileupdate_2.webp'
     )
-    const [isOpen, setIsOpen] = useState(true)
+    const [isOpen, setIsOpen] = useState(false)
     useEffect(() => {
         const hasShown = sessionStorage.getItem('hasShown');
         if (!hasShown) {
