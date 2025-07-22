@@ -46,7 +46,7 @@ const TopSectionSlider: React.FC<TopSectionSliderData> = ({
                 prefetch={false}
                 scroll={false}
                 href={sliderLink}
-                className='rounded-b-2xl'
+                className='rounded-b-2xl w-full'
                 aria-label={`Go to ${sliderLink}`}
               >
                 <div className={`relative w-full`}>
