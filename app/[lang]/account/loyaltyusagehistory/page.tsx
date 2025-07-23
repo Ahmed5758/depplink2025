@@ -48,7 +48,6 @@ export default function AddressDetails({
       await get(
         `get-user-loyalty-data-history/${localStorage.getItem("userid")}`
       ).then((responseJson: any) => {
-        console.log("Loyalty History Data", responseJson);
         setLoyalityData(responseJson?.data);
       });
     } else {
