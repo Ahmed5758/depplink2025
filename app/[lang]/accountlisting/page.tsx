@@ -211,7 +211,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                     </Link>
                 </div>
                 <div className="mt-2 bg-white pb-32">
-                <Link href={`${origin}/${params?.lang}/`} className="border-b border-[#9CA4AB50] px-4 py-3 flex items-center justify-between text-[#004B7A] fill-[#004B7A]">
+                <Link href={`${origin}/${params?.lang}/account/loyaltyusagehistory`} className="border-b border-[#9CA4AB50] px-4 py-3 flex items-center justify-between text-[#004B7A] fill-[#004B7A]">
                     <div className="flex items-center gap-x-2">
                         <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width={23} fill="#004B7A"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M0 0h48v48H0z" fill="none"></path> <g id="Shopicon"> <path d="M40,14h-8V4L4,14v26c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V18C44,15.8,42.2,14,40,14z M36,29c0,1.105-0.895,2-2,2 c-1.105,0-2-0.895-2-2c0-1.105,0.895-2,2-2C35.105,27,36,27.895,36,29z M28,9.676V14H15.893L28,9.676z"></path> </g> </g></svg>
                         <h2 className="text-sm font-semibold">
