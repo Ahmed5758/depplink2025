@@ -155,13 +155,18 @@ const PickupStorePopup = (props: any) => {
                                                                 function parseTimeToMinutes(time: string): number {
                                                                     if (!time) return 0;
 
-                                                                    const [timePart, meridian] = time.split(" ");
+                                                                    const [timePart, meridianRaw] = time.split(" ");
                                                                     let [hours, minutes] = timePart.split(":").map(Number);
 
-                                                                    if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                                                                    // Normalize Arabic suffixes
+                                                                    const meridian = meridianRaw?.trim();
+                                                                    const isPM = meridian === "PM" || meridian === "مساءً";
+                                                                    const isAM = meridian === "AM" || meridian === "صباحًا";
+
+                                                                    if (isPM && hours !== 12) {
                                                                         hours += 12;
                                                                     }
-                                                                    if (meridian.toUpperCase() === "AM" && hours === 12) {
+                                                                    if (isAM && hours === 12) {
                                                                         hours = 0; // midnight
                                                                     }
 
