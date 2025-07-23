@@ -126,7 +126,7 @@ const PickupStorePopup = (props: any) => {
                                                             />
                                                         </div>
                                                         <hr className='opacity-10' />
-                                                        <h5 className='font-semibold text-sm my-3 line-clamp-1'><span className='text-[#219EBC] font-bold uppercase'>{filteredStores?.length}</span> {isArabic ? 'المعارض المتوفرة' : 'Stores have availablity'}</h5>
+                                                        <h5 className='font-semibold text-sm my-3 line-clamp-1'><span className='text-[#219EBC] font-bold uppercase'>{filteredStores?.filter((e:any) => e?.qty > 0 || e?.livestock_qty > 0)?.length}</span> {isArabic ? 'المعارض المتوفرة' : 'Stores have availablity'}</h5>
                                                         <div className='overflow-y-auto h-[calc(100vh-15rem)]'>
                                                             {filteredStores?.map((item: any, i: any) => {
                                                                 function formatTime(time: string, isArabic: boolean) {
@@ -155,13 +155,18 @@ const PickupStorePopup = (props: any) => {
                                                                 function parseTimeToMinutes(time: string): number {
                                                                     if (!time) return 0;
 
-                                                                    const [timePart, meridian] = time.split(" ");
+                                                                    const [timePart, meridianRaw] = time.split(" ");
                                                                     let [hours, minutes] = timePart.split(":").map(Number);
 
-                                                                    if (meridian.toUpperCase() === "PM" && hours !== 12) {
+                                                                    // Normalize Arabic suffixes
+                                                                    const meridian = meridianRaw?.trim();
+                                                                    const isPM = meridian === "PM" || meridian === "مساءً";
+                                                                    const isAM = meridian === "AM" || meridian === "صباحًا";
+
+                                                                    if (isPM && hours !== 12) {
                                                                         hours += 12;
                                                                     }
-                                                                    if (meridian.toUpperCase() === "AM" && hours === 12) {
+                                                                    if (isAM && hours === 12) {
                                                                         hours = 0; // midnight
                                                                     }
 
