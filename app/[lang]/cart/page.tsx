@@ -410,10 +410,6 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const pickupText = isArabic ? 'الاستلام من المعرض' : 'Store pickup';
     const itemText = isArabic ? 'منتجات متاحة' : 'items available';
     const itemPreText = isArabic ? 'من' : 'of';
-    const collectText = isArabic ? 'استلام من' : 'Collect from';
-    const globalStoreShowroomText = isArabic ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name;
-    const collectIconImg = 'https://cdn-icons-png.flaticon.com/512/726/726498.png';
-    const collectingOrderText = isArabic ? 'يمكنك استلام طلبك خلال ساعة عمل من المعرض' : 'You can collect your order within 1 hour(s) during store work hours';
     const fastDeiveryImg = 'https://cdn-icons-png.flaticon.com/512/9720/9720868.png';
     const fastDeliveryText = isArabic ? 'خيارات توصيل أسرع حسب العناصر المحددة والمنطقة والوقت. اختر عند الخروج.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.';
    // const srText = isArabic ? ' ر.س' : 'SR ';
@@ -473,6 +469,28 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
 		></path>
 		</svg>
  )
+
+    const iconPickupMan = "/icons/pickupMans.webp";
+	const iconLocationPin = "/icons/location_icon.webp";
+	const iconPickupTime = "/icons/box-time.webp";
+	const pickupStoreContent = isArabic ? "الاستلام من المعرض" : "Store Pick Up";
+	const showroomName = isArabic
+		? globalStore?.showroom_data?.name_arabic
+		: globalStore?.showroom_data?.name;
+
+	const pickupStoreTimeText = isArabic ? (
+		<>
+			الاستلام سوف يكون متاح خلال{" "}
+			<span className="text-[#fde18d] font-bold">1</span> ساعة عمل.
+		</>
+	) : (
+		<>
+			Collection will be available in the next{" "}
+			<span className="text-[#fde18d] font-bold">1</span> hour.
+		</>
+	);
+	const stockText = isArabic ? "متوفر في المعرض" : "Item in Stock for Pickup";
+
     return (
         <>
             <FullPageLoader loader={loaderStatus} />
@@ -522,31 +540,24 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                 {storePickup == 1 ?
                                     <>
                                         <hr className='opacity-5 my-3 w-full' />
-                                        <div className='flex gap-3 justify-start items-center text-sm'>
-                                            <img src={collectIconImg} alt="warehouse" height='18' width='18' />
-                                            <button onClick={() => setIsOpenModal(true)}>
-                                                <p className='flex gap-x-1 ltr:text-left rtl:text-right text-xs'>{collectText}
-                                                    <span className="text-[#219EBC] font-semibold ltr:text-left rtl:text-right">{globalStoreShowroomText}</span>
-                                                    <svg
-                                                        height="12"
-                                                        viewBox="0 0 24 24"
-                                                        width="12"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className='mt-1'
-                                                    >
-                                                        <path
-                                                            clipRule="evenodd"
-                                                            d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
-                                                            fillRule="evenodd"
-                                                            stroke='lightgray'
-                                                            strokeWidth='0.5'
-                                                            fill='lightgray'
-                                                        ></path>
-                                                    </svg>
-                                                </p>
-                                            </button>
-                                        </div>
-                                        <p className='text-[12px] mt-2 ltr:text-left rtl:text-right text-xs'>{collectingOrderText}</p>
+                                        <button onClick={() => { setIsOpenModal(true) }} className='bg-primary text-white rounded-md p-2 text-sm w-full ltr:text-left rtl:text-right'>
+                                            <div className='flex gap-2 md:gap-3 md:justify-between item-start md:items-center'>
+                                                <Image src={iconPickupMan} alt="ExpressIcon" title="Express Icon" width="65" height="0" className='inline-block h-auto rounded-md' />
+                                                <div className=''>
+                                                    <div className='flex gap-4 items-center'>
+                                                        <div className='flex gap-2 items-center'>
+                                                            <Image src={iconLocationPin} alt="ExpressIcon" title="Express Icon" width="16" height="16" className='inline-block h-auto' />
+                                                            <span className='text-xs md:text-sm font-bold'>{pickupStoreContent}: <span className='text-[#fde18d]'>{showroomName}</span></span>
+                                                        </div>
+                                                    </div>
+                                                    <div className='flex gap-2 items-center mt-1 md:-mt-1 mb-3 md:mb-0'>
+                                                        <Image src={iconPickupTime} alt="ExpressIcon" title="Express Icon" width="18" height="18" className='inline-block h-auto' />
+                                                        <span className='text-[0.65rem] md:text-xs'>{pickupStoreTimeText}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span className='bg-[#fde18d] px-2 py-1 text-primary text-[0.60rem] rounded-md font-semibold animate-pulse float-end'>{stockText}</span>
+                                        </button>
                                     </>
                                     : null}
                             </div>

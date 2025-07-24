@@ -121,9 +121,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         get(`pickup-from-store/${params.data?.data?.sku}/${getCookie('selectedCity')}/${localStorage.getItem('globalStore') ? 0 : 0}?lang=${params?.lang}&sortCity=${getCookie('selectedCity')}`).then((responseJson: any) => {
             if (responseJson?.warehouse_single) {
                 setfoundStore(true)
-                console.log('responseJson?.warehouse_single', responseJson?.warehouse_single)
                 var check = setglobalStore(responseJson?.warehouse_single)
-                console.log('check', check)
                 // setTimeout(function(){
                 //     console.log('globalStore', globalStore)
                 // }, 1000)
@@ -883,7 +881,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         var fbt_false: any = false
         setCartItems(item, gifts, fbt_false)
         getCriteoAddToCart()
-        router.push(`/${params.lang}/checkout`);
+         // router.push(`/${params.lang}/checkout`);
+        router.push(`/${params.lang}/cart`);
 
     }
 
@@ -1333,6 +1332,28 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                 : data?.promo_title
             : "";
 
+    const iconPickupMan = "/icons/pickupMans.webp";
+    const iconLocationPin = "/icons/location_icon.webp";
+    const iconPickupTime = "/icons/box-time.webp";
+    const pickupStoreContent = isArabic ? "الاستلام من المعرض" : "Store Pick Up";
+    const showroomName = isArabic
+        ? globalStore?.showroom_data?.name_arabic
+        : globalStore?.showroom_data?.name;
+
+    const pickupStoreTimeText = isArabic ? (
+        <>
+            الاستلام سوف يكون متاح خلال{" "}
+            <span className="text-[#fde18d] font-bold">1</span> ساعة عمل.
+        </>
+    ) : (
+        <>
+            Collection will be available in the next{" "}
+            <span className="text-[#fde18d] font-bold">1</span> hour.
+        </>
+    );
+
+    const stockText = isArabic ? "متوفر في المعرض" : "Item in Stock for Pickup";
+
 
     return (
         <>
@@ -1560,19 +1581,24 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 </>
                             }
                             {globalStore?.name_arabic || globalStore?.name ?
-                                <div className='bg-[#C3E6F170] rounded-md p-2 w-full text-sm space-y-2'>
-                                    <div className='flex gap-3 justify-start items-center'>
-                                        <p className='font-semibold'>{isArabic ? 'الاستلام من الفرع' : 'Store Pick-up:'} <button className="text-[#219EBC] font-semibold"
-                                            onClick={() => {
-                                                setIsOpenModal(true)
-                                            }}>{isArabic ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</button></p>
-                                        <span className='border border-[#20831E] text-[#20831E] p-0.5 rounded text-[0.60rem] font-semibold w-24 text-center'>{isArabic ? 'متوفر في المخزون  ' : 'IN STOCK'}</span>
+                                <button onClick={() => { setIsOpenModal(true) }} className='bg-primary text-white rounded-md p-2 text-sm w-full ltr:text-left rtl:text-right'>
+                                    <div className='flex gap-2 md:gap-3 md:justify-between item-start md:items-center'>
+                                        <Image src={iconPickupMan} alt="ExpressIcon" title="Express Icon" width="65" height="0" className='inline-block h-auto rounded-md' />
+                                        <div className='flex flex-col justify-center items-start gap-2'>
+                                            <div className='flex gap-4 items-center'>
+                                                <div className='flex gap-2 items-center'>
+                                                    <Image src={iconLocationPin} alt="ExpressIcon" title="Express Icon" width="16" height="16" className='inline-block h-auto' />
+                                                    <span className='text-xs md:text-sm font-bold'>{pickupStoreContent}: <span className='text-[#fde18d]'>{showroomName}</span></span>
+                                                </div>
+                                            </div>
+                                            <div className='lex gap-2 items-center md:-mt-1 md:mb-0'>
+                                                <Image src={iconPickupTime} alt="ExpressIcon" title="Express Icon" width="18" height="18" className='inline-block h-auto' />
+                                                <span className='text-[0.65rem] md:text-xs'>{pickupStoreTimeText}</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className='flex gap-3 justify-start items-center text-xs'>
-                                        <svg height="16" viewBox="-8 0 464 464.01771" width="16" xmlns="http://www.w3.org/2000/svg" id="fi_1356559"><path d="m16.007812 232.019531h416v232h-416zm0 0" fill="#668796"></path><path d="m304.007812 232.019531h16v232h-16zm0 0" fill="#4d6877"></path><path d="m48.007812 320.019531h232v72h-232zm0 0" fill="#fff"></path><path d="m16.007812 432.019531h296v32h-296zm0 0" fill="#4d6877"></path><path d="m408.007812 136.019531v-32h-368v32l-39.9999995 80v16h447.9999995v-16zm0 0" fill="#5cc4a6"></path><path d="m40.007812 104.019531h368v32h-368zm0 0" fill="#239172"></path><path d="m224.007812.0195312c-34.398437-.8007812-63.199218 25.5976568-64 59.9999998v5.597657c0 9.601562 2.402344 18.402343 6.402344 27.199218l57.597656 99.203125 57.601563-99.203125c4.800781-8 6.398437-17.597656 6.398437-27.199218v-5.597657c-.800781-34.402343-29.597656-60.800781-64-59.9999998zm0 0" fill="#ef4848"></path><path d="m248.007812 56.019531c0 13.253907-10.742187 24-24 24-13.253906 0-24-10.746093-24-24 0-13.257812 10.746094-24 24-24 13.257813 0 24 10.742188 24 24zm0 0" fill="#fff"></path><path d="m.0078125 232.019531v28c0 15.199219 12.8007815 28 27.9999995 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m112.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m168.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#2ab793"></path><path d="m224.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m224.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m280.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><path d="m336.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m392.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><g fill="#e4e7ea"><path d="m232.007812 392.019531h-32l72-72h8v24zm0 0"></path><path d="m168.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m104.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m48.007812 384.019531v-32l32-32h32zm0 0"></path></g><path d="m336.007812 304.019531h80v144h-80zm0 0" fill="#fff"></path><path d="m336.007812 352.019531h16v16h-16zm0 0" fill="#668796"></path><path d="m336.007812 432.019531v-32l80-80v32zm0 0" fill="#e4e7ea"></path><path d="m392.007812 448.019531h-32l56-56v32zm0 0" fill="#e4e7ea"></path></svg>
-                                        <p>{isArabic ? 'الاستلام سوف يكون متاح خلال ساعة عمل' : 'Collection will be available in the next 1 hour(s)'}</p>
-                                    </div>
-                                </div>
+                                    <span className='bg-[#fde18d] px-2 py-1 mt-3 text-primary text-[0.60rem] rounded-md font-semibold animate-pulse float-end'>{stockText}</span>
+                                </button>
                                 : null}
                         </div>
                         <div className="w-full mt-3">
