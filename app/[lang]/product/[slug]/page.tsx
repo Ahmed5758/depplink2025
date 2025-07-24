@@ -118,7 +118,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
     {/* Commented Pickup Store */ }
     const getStoreData = () => {
-        get(`pickup-from-store/${params.data?.data?.sku}/${localStorage.getItem('globalStore') ? localStorage.getItem('globalStore') : localStorage.getItem('globalcity')}/${localStorage.getItem('globalStore') ? 1 : 0}?lang=${params?.lang}&sortCity=${getCookie('selectedCity')}`).then((responseJson: any) => {
+        get(`pickup-from-store/${params.data?.data?.sku}/${getCookie('selectedCity')}/${localStorage.getItem('globalStore') ? 0 : 0}?lang=${params?.lang}&sortCity=${getCookie('selectedCity')}`).then((responseJson: any) => {
             if (responseJson?.warehouse_single) {
                 setfoundStore(true)
                 console.log('responseJson?.warehouse_single', responseJson?.warehouse_single)
