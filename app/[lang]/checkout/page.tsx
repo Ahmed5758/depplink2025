@@ -368,10 +368,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                 router.push(`/${params.lang}/cart`);
             }
 
-            // var points = getLoyalty()
-            // var loyaltydata = await getLoyaltyData()
-            // setloyaltyPoints(points)
-            // setloyaltyData(loyaltydata)
+            var points = getLoyalty()
+            var loyaltydata = await getLoyaltyData()
+            setloyaltyPoints(points)
+            setloyaltyData(loyaltydata)
         })();
         // getUser()
         if (typeof window !== 'undefined') {
@@ -2159,8 +2159,8 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         </>
                                         : null}
                                     <RadioGroup value={paymentMethod} onChange={setpaymentMethod} className={`mt-3 ${paymentMethod == 'loyalty' ? 'opacity-20' : ''}`}
-                                     disabled={paymentMethod == 'loyalty' ? true : false}
-                                    // disabled={false}
+                                    //  disabled={paymentMethod == 'loyalty' ? true : false}
+                                    disabled={false}
                                     >
                                         <div className="grid grid-cols-3 md:grid-cols-4 2xl:grid-cols-6 gap-x-3">
                                             {paymentmethods?.map((p: any, i) => {
