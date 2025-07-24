@@ -619,7 +619,10 @@ const getDiscountes = () => {
     if (cartdata.discounts.discuountRules) {
         for (let index = 0; index < cartdata.discounts.discuountRules.length; index++) {
             const element = cartdata.discounts.discuountRules[index];
-            const amountPrice = element.amount ? parseFloat(element.amount.replace(/,/g, '')).toFixed(2) : '0.00';
+            const amountStr = String(element?.amount ?? '');
+            const cleanedStr = amountStr.replace(/,/g, '');
+            const amountNum = parseFloat(cleanedStr);
+            const amountPrice = !isNaN(amountNum) ? amountNum.toFixed(2) : '0.00';
             // summary.push({ key: element.title, price: '- ' + amountPrice, title: element.title, title_arabic: element.title_arabic })
             summary.push({ key: 'discountRule', price: '- ' + amountPrice, title: element.title, title_arabic: element.title_arabic })
             amount += Number(amountPrice);
