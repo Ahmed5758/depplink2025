@@ -942,7 +942,7 @@ const getPickupStoreCart = async (city: any = false) => {
         qty: proid.quantity,
         city: city ? city : localStorage.getItem("globalcity"),
         store_id: localStorage.getItem("globalStore"),
-        type:localStorage.getItem("globalStore") ? 1 : 0
+        type:localStorage.getItem("globalStore") ? 0 : 0
         
     }
     var EXdata: never[] = [];
