@@ -619,9 +619,10 @@ const getDiscountes = () => {
     if (cartdata.discounts.discuountRules) {
         for (let index = 0; index < cartdata.discounts.discuountRules.length; index++) {
             const element = cartdata.discounts.discuountRules[index];
-            // summary.push({ key: element.title, price: '- ' + parseFloat(element.amount).toFixed(2), title: element.title, title_arabic: element.title_arabic })
-            summary.push({ key: 'discountRule', price: '- ' + parseFloat(element.amount).toFixed(2), title: element.title, title_arabic: element.title_arabic })
-            amount += Number(parseFloat(element.amount).toFixed(2));
+            const amountPrice = element.amount ? parseFloat(element.amount.replace(/,/g, '')).toFixed(2) : '0.00';
+            // summary.push({ key: element.title, price: '- ' + amountPrice, title: element.title, title_arabic: element.title_arabic })
+            summary.push({ key: 'discountRule', price: '- ' + amountPrice, title: element.title, title_arabic: element.title_arabic })
+            amount += Number(amountPrice);
         }
     }
     return { amount: amount, summary: summary };
