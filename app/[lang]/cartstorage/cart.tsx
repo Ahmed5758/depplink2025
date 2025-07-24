@@ -749,14 +749,14 @@ const getSummary = () => {
     if (getDoorStep().amount)
         summary.push({ key: getDoorStep().title, price: Number(parseFloat(getDoorStep().amount).toFixed(2)), title: getExpressDelivery().title, title_arabic: getExpressDelivery().title_arabic })
 
-    // if(getLoyalty().amount && getLoyalty().amount > 0){
-    //     summary.push({
-    //         key: 'loyalty',
-    //         title: getLoyalty().title,
-    //         title_arabic: getLoyalty().title_arabic,
-    //         price: '- ' + Number(parseFloat(getLoyalty().amount).toFixed(2))
-    //     })
-    // }
+    if(getLoyalty().amount && getLoyalty().amount > 0){
+        summary.push({
+            key: 'loyalty',
+            title: getLoyalty().title,
+            title_arabic: getLoyalty().title_arabic,
+            price: '- ' + Number(parseFloat(getLoyalty().amount).toFixed(2))
+        })
+    }
 
     // if(getWrapper())
     summary.push({
@@ -842,7 +842,8 @@ const setShipping = async (city: any = false) => {
                     title_arabic: responseJson?.data?.name_arabic,
                     // loyalty work
                     // amount: (cartdata?.loyalty_shipping) ? 0 : responseJson?.data?.amount,
-                    amount: responseJson?.data?.amount,
+                    amount: (cartdata?.loyalty_shipping) ? 0 : (cartdata?.storeType === '1' || cartdata?.storeType === 1) ? 0 : responseJson?.data?.amount,
+                    // amount: responseJson?.data?.amount,
                 }
                 cartdata.fees.shipping = feesdata as fees
                 setCart(cartdata)
