@@ -591,7 +591,13 @@ export default function product_component(props: any) {
       topMessageAlartSuccess(isArabic ? "اضـافـة الـي العـربــة" : "Add to Cart", true)
       setBuyNowLoading(0);
       if (redirect) {
-        router.push(`/${isArabic ? "ar" : "en"}/${localStorage.getItem("userid") ? "checkout" : "login?type=checkout"}`); // Redirect to cart page
+        // router.push(
+        //   `/${isArabic ? "ar" : "en"}/${localStorage.getItem("userid") ? "checkout" : "login?type=checkout"
+        //   }`
+        // ); // Redirect to cart page
+        router.push(
+          `/${isArabic ? "ar" : "en"}/cart`
+        ); // Redirect to cart page
         router.refresh();
       }
     }
