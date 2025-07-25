@@ -9,6 +9,7 @@ import 'swiper/css/scrollbar';
 import './scrollBar.css';
 import Link from "next/link";
 import { get } from "../../api/ApiCalls";
+import { getCookie } from "cookies-next";
 
 const ProductComponent = dynamic(
     () => import("./product_component"),
@@ -41,8 +42,8 @@ export default function BadgeProductLoopComponent(props: any) {
         productDataSlider.forEach((item: any) => {
             a.push(item.id)
         });
-        // localStorage.getItem("globalcity")
-        await get(`productextradatamulti-regional-new/${a?.join(",")}/${localStorage.getItem("globalcity")}`).then((responseJson: any) => {
+        var city = getCookie('selectedCity')
+        await get(`productextradatamulti-regional-new/${a?.join(",")}/${city}`).then((responseJson: any) => {
             const data = responseJson?.data;
             setProExtraData(data)
         })

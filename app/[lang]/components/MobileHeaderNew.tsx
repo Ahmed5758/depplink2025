@@ -58,6 +58,7 @@ export default function MobileHeaderNew(props: any) {
   const [cartCount, setCartCount] = useState(0);
   const [fullAddress, setfullAddress] = useState<any>(null);
   const { updateCart, setUpdateCart } = useContext(GlobalContext);
+  const { globalCity, setglobalCity } = useContext<any>(GlobalContext);
   const SearchData: any = async (e: any) => {
     if (e?.length == 0) {
       setSearchDialoug(false);
@@ -162,24 +163,24 @@ export default function MobileHeaderNew(props: any) {
         data?.results[0]["address_components"][a]?.types[1] == "political" &&
         !localStorage.getItem("globalcity")
       ) {
-        setCityData(data?.results[0]["address_components"][a]["long_name"]);
-        localStorage.setItem(
-          "globalcity",
-          data?.results[0]["address_components"][a]["long_name"].toString()
-        );
+        var city = data?.results[0]["address_components"][a]["long_name"];
+        setCityData(city);
+        localStorage.setItem("globalcity", city.toString());
+        setglobalCity(city);
+        updateCity()
       }
 
-      if (
-        data?.results[0]["address_components"][a]?.types[0] == "neighborhood" &&
-        data?.results[0]["address_components"][a]?.types[1] == "political" &&
-        !fullAddress
-      ) {
-        localStorage.setItem(
-          "fulladdress",
-          data?.results[0]["address_components"][a]["long_name"].toString()
-        );
-        setfullAddress(data?.results[0]["address_components"][a]["long_name"]);
-      }
+      // if (
+      //   data?.results[0]["address_components"][a]?.types[0] == "neighborhood" &&
+      //   data?.results[0]["address_components"][a]?.types[1] == "political" &&
+      //   !fullAddress
+      // ) {
+      //   localStorage.setItem(
+      //     "fulladdress",
+      //     data?.results[0]["address_components"][a]["long_name"].toString()
+      //   );
+      //   setfullAddress(data?.results[0]["address_components"][a]["long_name"]);
+      // }
     }
   };
   const DataLocalStorage = async () => {
@@ -220,10 +221,42 @@ export default function MobileHeaderNew(props: any) {
     }
     setCityData(selectedCityData);
     localStorage.setItem("globalcity", selectedCityData);
+    setglobalCity(selectedCityData);
     localStorage.setItem("live_location", "false");
     setCityList(false);
     router.refresh();
   };
+
+  const updateCity = () => {
+    var sCty: any = localStorage?.getItem("globalcity");
+    if (!sCty) {
+      sCty = "Jeddah";
+    }
+    get(`only-city/${sCty}?lang=${props?.lang}`).then((responseJson: any) => {
+      if (responseJson?.cities) {
+        var city = "Jeddah";
+        if (isArabic) {
+          city = responseJson?.cities?.name_arabic;
+        }
+        if (isArabic == false) {
+          city = responseJson?.cities?.name;
+        }
+        localStorage?.setItem("globalcity", city);
+        setglobalCity(city);
+        setCityData(city);
+        setselectedCityData(city);
+      }
+    });
+  };
+
+  // Here is the issue
+  useEffect(() => {
+    var live: any = localStorage.getItem("live_location");
+    if (live == "false" || live == null) {
+      updateCity();
+    }
+  }, [props?.lang]);
+
   const MySwal = withReactContent(Swal);
   const topMessageAlartDanger = (title: any) => {
     MySwal.fire({
