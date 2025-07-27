@@ -7,7 +7,7 @@ import { Dialog, Transition } from '@headlessui/react'
 
 export default function Popup(props: any, request: any) {
     const [imgSrc, setImgSrc] = useState(
-        '/images/poupformobileupdate_2.webp'
+        '/images/TM50-mob-27July.webp'
     )
     const [isOpen, setIsOpen] = useState(false)
     useEffect(() => {
