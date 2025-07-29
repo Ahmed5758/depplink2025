@@ -1337,8 +1337,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     const iconPickupTime = "/icons/box-time.webp";
     const pickupStoreContent = isArabic ? "الاستلام من المعرض" : "Store Pick Up";
     const showroomName = isArabic
-        ? globalStore?.showroom_data?.name_arabic
-        : globalStore?.showroom_data?.name;
+        ? globalStore?.showroom_arabic
+        : globalStore?.showroom;
 
     const pickupStoreTimeText = isArabic ? (
         <>

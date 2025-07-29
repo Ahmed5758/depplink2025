@@ -19,9 +19,9 @@ const PickupStorePopup = (props: any) => {
     // const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(props?.direction);
 
     const filteredStores = props?.allStores.filter((city: any) =>
-        city?.showroom_data?.name?.toLowerCase().includes(storeSearch.toLowerCase()) ||
-        city?.showroom_data?.name_arabic?.toLowerCase().includes(storeSearch.toLowerCase()) ||
-        city.showroom_data?.address?.toLowerCase().includes(storeSearch.toLowerCase())
+        city?.waybill_city_data?.name.toLowerCase().includes(storeSearch.toLowerCase()) ||
+        city?.waybill_city_data?.name_arabic.toLowerCase().includes(storeSearch.toLowerCase()) ||
+        city.showroom_address?.toLowerCase().includes(storeSearch.toLowerCase())
     );
 
     const MySwal = withReactContent(Swal);
@@ -204,11 +204,11 @@ const PickupStorePopup = (props: any) => {
                                                                     return currentMinutes >= openMinutes && currentMinutes < closeMinutes;
                                                                 }
                                                                 const showroomNotFound = isArabic
-                                                                    ? (item?.showroom_data?.address_arabic || item?.showroom_data?.address)
-                                                                    : (item?.showroom_data?.address || item?.showroom_data?.address_arabic);
+                                                                    ? (item?.showroom_address || item?.showroom_address_arabic)
+                                                                    : (item?.showroom_address || item?.showroom_address_arabic);
                                                                 const addressShowroom = showroomNotFound || (isArabic ? "العنوان غير متوفر" : "Address not available")
                                                                 const showroomDirectionText = isArabic ? 'احصل على الاتجاه' : 'Get Direction';
-                                                                const showroomDirectionLink = item?.showroom_data?.direction_button ? item?.showroom_data?.direction_button : '#';
+                                                                const showroomDirectionLink = item?.showroom_location ? item?.showroom_location : '#';
                                                                 const checkQty = item?.qty > 0 || item?.livestock_qty > 0;
                                                                 return (
                                                                     <div className={`border ${checkQty ? 'border-[#20831E]' : 'border-primary opacity-45'} rounded-md mt-2`} key={i}>
@@ -224,7 +224,7 @@ const PickupStorePopup = (props: any) => {
                                                                                 <div className='flex items-center gap-3'>
                                                                                     <svg height="22" viewBox="-8 0 464 464.01771" width="22" xmlns="http://www.w3.org/2000/svg" id="fi_1356559"><path d="m16.007812 232.019531h416v232h-416zm0 0" fill="#668796"></path><path d="m304.007812 232.019531h16v232h-16zm0 0" fill="#4d6877"></path><path d="m48.007812 320.019531h232v72h-232zm0 0" fill="#fff"></path><path d="m16.007812 432.019531h296v32h-296zm0 0" fill="#4d6877"></path><path d="m408.007812 136.019531v-32h-368v32l-39.9999995 80v16h447.9999995v-16zm0 0" fill="#5cc4a6"></path><path d="m40.007812 104.019531h368v32h-368zm0 0" fill="#239172"></path><path d="m224.007812.0195312c-34.398437-.8007812-63.199218 25.5976568-64 59.9999998v5.597657c0 9.601562 2.402344 18.402343 6.402344 27.199218l57.597656 99.203125 57.601563-99.203125c4.800781-8 6.398437-17.597656 6.398437-27.199218v-5.597657c-.800781-34.402343-29.597656-60.800781-64-59.9999998zm0 0" fill="#ef4848"></path><path d="m248.007812 56.019531c0 13.253907-10.742187 24-24 24-13.253906 0-24-10.746093-24-24 0-13.257812 10.746094-24 24-24 13.257813 0 24 10.742188 24 24zm0 0" fill="#fff"></path><path d="m.0078125 232.019531v28c0 15.199219 12.8007815 28 27.9999995 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m112.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m168.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#2ab793"></path><path d="m224.007812 232.019531v28c0 15.199219-12.800781 28-28 28-15.199218 0-28-12.800781-28-28v-28" fill="#f7d289"></path><path d="m224.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m280.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><path d="m336.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#2ab793"></path><path d="m392.007812 232.019531v28c0 15.199219 12.800782 28 28 28 15.199219 0 28-12.800781 28-28v-28" fill="#f7d289"></path><g fill="#e4e7ea"><path d="m232.007812 392.019531h-32l72-72h8v24zm0 0"></path><path d="m168.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m104.007812 392.019531h-32l72-72h32zm0 0"></path><path d="m48.007812 384.019531v-32l32-32h32zm0 0"></path></g><path d="m336.007812 304.019531h80v144h-80zm0 0" fill="#fff"></path><path d="m336.007812 352.019531h16v16h-16zm0 0" fill="#668796"></path><path d="m336.007812 432.019531v-32l80-80v32zm0 0" fill="#e4e7ea"></path><path d="m392.007812 448.019531h-32l56-56v32zm0 0" fill="#e4e7ea"></path></svg>
                                                                                     <div>
-                                                                                        <h6 className='text-xs font-semibold'>{isArabic ? item?.showroom_data?.name_arabic : item?.showroom_data?.name}</h6>
+                                                                                        <h6 className='text-xs font-semibold'>{isArabic ? item?.showroom_arabic : item?.showroom}</h6>
                                                                                         <p className='text-xs mt-1'>{addressShowroom}</p>
                                                                                     </div>
                                                                                 </div>
@@ -281,8 +281,8 @@ const PickupStorePopup = (props: any) => {
                                                                                                 </svg>
                                                                                                 <div className='text-[#53616A] text-[10px]'>
                                                                                                     <h6 className='p-0 text-xs mb-1 font-semibold text-primary'>{isArabic ? 'ساعات العمل' : 'Working Hours'}</h6>
-                                                                                                    <p className='uppercase'>{weekDays}</p>
-                                                                                                    <p className='uppercase'>{weekEnds}</p>
+                                                                                                    <p className='uppercase'>Saturday to Thursday: 09:30 AM - 12:00 AM</p>
+                                                                                                    <p className='uppercase'>Friday: 03:30 PM - 12:00 AM</p>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <hr className="w-full my-3 opacity-10" />
