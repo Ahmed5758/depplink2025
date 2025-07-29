@@ -352,6 +352,17 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         }
     }
 
+    useEffect(() => {
+        (async () => {
+        if(activeTab3 == 2){
+            var points = getLoyalty()
+            var loyaltydata = await getLoyaltyData()
+            // setloyaltyPoints(points)
+            setloyaltyData(loyaltydata)
+        }
+        })();
+    }, [activeTab3]);
+
     // get cart
     const cartData: any = getCart();
 
@@ -367,11 +378,6 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                 topMessageAlartDangerNew(params.lang == 'ar' ? 'هناك بعض التحديثات في سلة التسوق الخاصة بك.' : 'There is some updates in your cart.')
                 router.push(`/${params.lang}/cart`);
             }
-
-            var points = getLoyalty()
-            var loyaltydata = await getLoyaltyData()
-            setloyaltyPoints(points)
-            setloyaltyData(loyaltydata)
         })();
         // getUser()
         if (typeof window !== 'undefined') {

@@ -1597,7 +1597,7 @@ const proceedToCheckout = async (city = false, lang: any, userDevice: any) => {
             localStorage?.setItem('orderId', responseJson.order_id)
         }
         setCart(cartdata)
-        if (cartdata.paymentMethod == 'cod')
+        if (cartdata.paymentMethod == 'cod' || cartdata.paymentMethod == 'loyalty')
             removeCart()
     })
     return response;
