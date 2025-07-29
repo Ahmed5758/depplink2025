@@ -19,8 +19,8 @@ const PickupStorePopup = (props: any) => {
     // const [direction, setDirection] = useState<"left-to-right" | "right-to-left">(props?.direction);
 
     const filteredStores = props?.allStores.filter((city: any) =>
-        city?.waybill_city_data?.name.toLowerCase().includes(storeSearch.toLowerCase()) ||
-        city?.waybill_city_data?.name_arabic.toLowerCase().includes(storeSearch.toLowerCase()) ||
+        city?.waybill_city_data?.name?.toLowerCase().includes(storeSearch.toLowerCase()) ||
+        city?.waybill_city_data?.name_arabic?.toLowerCase().includes(storeSearch.toLowerCase()) ||
         city.showroom_address?.toLowerCase().includes(storeSearch.toLowerCase())
     );
 
@@ -173,10 +173,15 @@ const PickupStorePopup = (props: any) => {
                                                                     return hours * 60 + minutes;
                                                                 }
 
-                                                                const normalDayOpen = formatTime(item?.showroom_data?.open_time, isArabic);
-                                                                const normalDayClose = formatTime(item?.showroom_data?.close_time, isArabic);
-                                                                const fridayOpen = formatTime(item?.showroom_data?.weekend_open_time, isArabic);
-                                                                const fridayClose = formatTime(item?.showroom_data?.weekend_close_time, isArabic);
+                                                                // const normalDayOpen = formatTime(item?.showroom_data?.open_time, isArabic);
+                                                                // const normalDayClose = formatTime(item?.showroom_data?.close_time, isArabic);
+                                                                // const fridayOpen = formatTime(item?.showroom_data?.weekend_open_time, isArabic);
+                                                                // const fridayClose = formatTime(item?.showroom_data?.weekend_close_time, isArabic);
+
+                                                                const normalDayOpen = '09:30 AM';
+                                                                const normalDayClose = '12:00 AM';
+                                                                const fridayOpen = '03:30 PM';
+                                                                const fridayClose = '12:00 AM';
 
                                                                 function isStoreOpen(): boolean {
                                                                     const now = new Date();

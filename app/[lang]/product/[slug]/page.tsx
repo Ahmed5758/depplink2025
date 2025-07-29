@@ -189,7 +189,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     const item_category: any = breadcrumbs[0] ? (isArabic ? breadcrumbs[0]?.name_arabic : breadcrumbs[0]?.name) : "";
     const item_category2: any = breadcrumbs[1] ? (isArabic ? breadcrumbs[1]?.name_arabic : breadcrumbs[1]?.name) : "";
     const item_category3: any = breadcrumbs[2] ? (isArabic ? breadcrumbs[2]?.name_arabic : breadcrumbs[2]?.name) : "";
-
+    const eligiblePickup = params?.data?.data.eligible_for_pickup == 1;
 
     const handleGTMAddToCart = () => {
         pushGTMEvent({
@@ -291,7 +291,9 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         checkStockAlertProduct()
         getRating()
         {/* Commented Pickup Store */ }
-        getStoreData()
+        if(eligiblePickup) {
+            getStoreData()
+        }
 
 
         setTimeout(() => {
@@ -1580,7 +1582,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         : null}
                                 </>
                             }
-                            {globalStore?.name_arabic || globalStore?.name ?
+                            {eligiblePickup && (globalStore?.name_arabic || globalStore?.name) ? 
                                 <button onClick={() => { setIsOpenModal(true) }} className='bg-primary text-white rounded-md p-2 text-sm w-full ltr:text-left rtl:text-right'>
                                     <div className='flex gap-2 md:gap-3 md:justify-between item-start md:items-center'>
                                         <Image src={iconPickupMan} alt="ExpressIcon" title="Express Icon" width="65" height="0" className='inline-block h-auto rounded-md' />
@@ -1599,7 +1601,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                     </div>
                                     <span className='bg-[#fde18d] px-2 py-1 mt-3 text-primary text-[0.60rem] rounded-md font-semibold animate-pulse float-end'>{stockText}</span>
                                 </button>
-                                : null}
+                            : null}
                         </div>
                         <div className="w-full mt-3">
                             {data?.short_description ?
