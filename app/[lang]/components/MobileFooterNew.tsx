@@ -311,12 +311,12 @@ export default function MobileFooterNew(props: any) {
       path.indexOf("projectsales") === -1 &&
       path.indexOf("giftcards") === -1 &&
       path.indexOf("giftcards/buy") === -1 ? (
-        <footer className="bg-white fixed bottom-0 w-full z-30 left-0 right-0 shadow-[0_-4px_8px_rgba(0,0,0,0.05)]">
-          <div className="flex justify-between items-end">
+        <footer className="bg-white fixed bottom-0 w-full px-3 z-30 left-0 right-0 shadow-[0_-4px_8px_rgba(0,0,0,0.05)]">
+          <div className="flex justify-between items-end gap-2">
             {navItems?.map((item, index) => (
               <li
                 key={item.label}
-                className={`relative md:px-[10px] list-none px-4 pb-4 pt-3 w-full h-full ${
+                className={`relative md:px-[10px] list-none pb-4 pt-3 w-fit h-full ${
                   activeIndex === index ? "active" : ""
                 }`}
                 onClick={() => setActiveIndex(index)}
@@ -349,7 +349,7 @@ export default function MobileFooterNew(props: any) {
                   </span>
                   {activeIndex === index && (
                     <span
-                      className="absolute duration-300 ease-in-out bottom-0 mb-2 w-[65%] h-[3px] rounded-t-full bg-[#004b7a]"
+                      className="absolute duration-300 ease-in-out bottom-0 mb-2 w-full h-[3px] rounded-t-full bg-[#004b7a]"
                       style={{ boxShadow: "0 -2px 2.5px 0.5px #f8be98" }}
                     ></span>
                   )}
