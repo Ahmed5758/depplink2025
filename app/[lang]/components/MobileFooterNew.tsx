@@ -176,7 +176,7 @@ export default function MobileFooterNew(props: any) {
         && path.indexOf('giftcards') === -1
         && path.indexOf('giftcards/buy') === -1
         ?
-        <footer className="bg-white fixed bottom-0 w-full z-30 px-4 left-0 right-0 shadow-[0_-4px_8px_rgba(0,0,0,0.05)]">
+        <footer className="bg-white fixed bottom-0 w-full z-30 left-0 right-0 shadow-[0_-4px_8px_rgba(0,0,0,0.05)]">
           <div className="flex justify-between items-end">
             {navItems?.map((item, index) => (
               <li
