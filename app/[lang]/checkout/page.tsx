@@ -410,7 +410,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
 
 
     const getPickupStoreData = () => {
-      get(`get-selected-warehouse/${localStorage.getItem('globalStore')}`).then((responseJson: any) => {
+      get(`get-selected-warehouse/${localStorage.getItem('globalStore')}?lang=${params?.lang}`).then((responseJson: any) => {
           if (responseJson?.warehouse) {
               setglobalStore(responseJson?.warehouse)
           }
