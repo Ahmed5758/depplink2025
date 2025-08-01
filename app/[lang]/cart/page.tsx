@@ -66,7 +66,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
 
         updateDeliveryMethod(0)
         const handleGlobalStoreChange = () => {
-            resetCart();
+            resetCart(false);
         };
         
         window.addEventListener("storage", () => {
@@ -173,7 +173,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
         })
     }
 
-    const resetCart = async () => {
+    const resetCart = async (isRun: any = true) => {
         removecheckoutdata()
         setcartData(getCart());
         setCartCount(getCartCount())
@@ -189,21 +189,22 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
         setexpressData(exp)
 
         {/* Commented Pickup Store */ }
-        const store: any = await getPickupStoreCart()
-        // if (store?.warehouses?.length < 1) {
-        // 	topMessageAlartDanger('Error! No store available for store pickup.')
-        // 	updateDeliveryMethod(0)
-        // }
-        setglobalStore(store?.warehouse_single)
-        localStorage.setItem('globalStore', store?.warehouse_single?.id)
-        setallStores(store?.warehouses)
-
-        setstoreData(store)
-
-        if(store?.success == false){
-			setstorePickup(0)
-			localStorage.setItem('globalStore', '0')
-		}
+        if(isRun == true){
+            const store: any = await getPickupStoreCart()
+            // if (store?.warehouses?.length < 1) {
+            // 	topMessageAlartDanger('Error! No store available for store pickup.')
+            // 	updateDeliveryMethod(0)
+            // }
+            setglobalStore(store?.warehouse_single)
+            localStorage.setItem('globalStore', store?.warehouse_single?.id)
+            setallStores(store?.warehouses)
+    
+            setstoreData(store)
+            if(store?.success == false){
+                setstorePickup(0)
+                localStorage.setItem('globalStore', '0')
+            }
+        }
 
         setLoaderStatus(false)
     }
