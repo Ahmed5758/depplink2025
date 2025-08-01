@@ -63,14 +63,22 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
             var wdata: any = localStorage.getItem('userWishlist')
             setProWishlistData(JSON.parse(wdata))
         }
+
         updateDeliveryMethod(0)
+        const handleGlobalStoreChange = () => {
+            resetCart();
+        };
+        
         window.addEventListener("storage", () => {
             refetch();
         });
+        window.addEventListener('globalStoreChanged', handleGlobalStoreChange);
+
         return () => {
             window.removeEventListener("storage", () => {
                 refetch();
             });
+            window.removeEventListener('globalStoreChanged', handleGlobalStoreChange);
         };
     }, []);
 
@@ -192,6 +200,11 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
 
         setstoreData(store)
 
+        if(store?.success == false){
+			setstorePickup(0)
+			localStorage.setItem('globalStore', '0')
+		}
+
         setLoaderStatus(false)
     }
 
@@ -212,8 +225,12 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
             storeId = globalStore?.id
             storetype = method
             // storeCity = globalStore?.showroom_data?.waybill_city
-            storeCity = isArabic ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name
+            storeCity = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
+            localStorage.setItem('globalStore', storeId)
         }
+        if(method == 0) {
+			localStorage.setItem('globalStore', '0')
+		}
         setPickupStoreCart(storeId, storetype, storeCity)
         resetCart()
     }

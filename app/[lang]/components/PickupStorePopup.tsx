@@ -221,6 +221,7 @@ const PickupStorePopup = (props: any) => {
                                                                             onClick={() => {
                                                                                 setglobalStore(item)
                                                                                 localStorage.setItem('globalStore', item?.id)
+                                                                                window.dispatchEvent(new Event('globalStoreChanged'));
                                                                                 props?.setModal(false)
                                                                                 topMessageAlartSuccess(isArabic ? 'نجاح! تم تغيير نقطة الالتقاط من المتجر بنجاح..' : 'Success! Pickup From Store Changed Successfully..')
                                                                             }}
