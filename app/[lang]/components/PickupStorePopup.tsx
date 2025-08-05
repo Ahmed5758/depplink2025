@@ -287,8 +287,8 @@ const PickupStorePopup = (props: any) => {
                                                                                                 </svg>
                                                                                                 <div className='text-[#53616A] text-[10px]'>
                                                                                                     <h6 className='p-0 text-xs mb-1 font-semibold text-primary'>{isArabic ? 'ساعات العمل' : 'Working Hours'}</h6>
-                                                                                                    <p className='uppercase'>Saturday to Thursday: 09:30 AM - 12:00 AM</p>
-                                                                                                    <p className='uppercase'>Friday: 03:30 PM - 12:00 AM</p>
+                                                                                                    <p className='uppercase'>{isArabic ? 'من السبت إلى الخميس: 09:30 صباحًا - 12:00 صباحًا' : 'Saturday to Thursday: 09:30 AM - 12:00 AM'}</p>
+                                                                                                    <p className='uppercase'>{isArabic ? 'الجمعة: 03:30 مساءً - 12:00 صباحًا' : 'Friday: 03:30 PM - 12:00 AM'}</p>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <hr className="w-full my-3 opacity-10" />
