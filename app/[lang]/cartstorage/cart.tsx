@@ -937,7 +937,7 @@ const setPickupStoreCart = (id: any, type: any, city: any) => {
     return cartdata;
 }
 
-const getPickupStoreCart = async (city: any = false) => {
+const getPickupStoreCart = async (lang: any = 'ar',city: any = false) => {
     // var proid = getProductids(true)
     var proid = getProductidsDuplicate(true)
     var setData: any = {
@@ -945,8 +945,8 @@ const getPickupStoreCart = async (city: any = false) => {
         qty: proid.quantity,
         city: city ? city : localStorage.getItem("globalcity"),
         store_id: localStorage.getItem("globalStore"),
-        type:localStorage.getItem("globalStore") ? 0 : 0
-        
+        type:localStorage.getItem("globalStore") ? 0 : 0,
+        lang: lang
     }
     var EXdata: never[] = [];
     await post(`get-warehouseCart`, setData).then((responseJson: any) => {

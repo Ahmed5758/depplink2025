@@ -190,7 +190,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
 
         {/* Commented Pickup Store */ }
         if(isRun == true){
-            const store: any = await getPickupStoreCart()
+            const store: any = await getPickupStoreCart(params?.lang, false)
             // if (store?.warehouses?.length < 1) {
             // 	topMessageAlartDanger('Error! No store available for store pickup.')
             // 	updateDeliveryMethod(0)
