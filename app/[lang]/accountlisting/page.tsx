@@ -178,7 +178,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
     return (
         <>
             <MobileHeader type="Third" lang={params.lang} pageTitle={params.lang === 'ar' ? 'حساب تعريفي' : 'Profile'} />
-            <div className="py-16 md:py-4">
+            <div className="pt-16 md:py-4">
                 <div className="container">
                     <Link href={`${origin}/${params?.lang}/account/profile`} className="bg-white shadow-md rounded-md p-3 flex items-center gap-3">
                         {userid ?
@@ -211,7 +211,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                     </Link>
                 </div>
                 <div className="mt-2 bg-white pb-32">
-                <Link href={`${origin}/${params?.lang}/account/loyaltyusagehistory`} className="border-b border-[#9CA4AB50] px-4 py-3 flex items-center justify-between text-[#004B7A] fill-[#004B7A]">
+                {/* <Link href={`${origin}/${params?.lang}/account/loyaltyusagehistory`} className="border-b border-[#9CA4AB50] px-4 py-3 flex items-center justify-between text-[#004B7A] fill-[#004B7A]">
                     <div className="flex items-center gap-x-2">
                         <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" width={23} fill="#004B7A"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M0 0h48v48H0z" fill="none"></path> <g id="Shopicon"> <path d="M40,14h-8V4L4,14v26c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V18C44,15.8,42.2,14,40,14z M36,29c0,1.105-0.895,2-2,2 c-1.105,0-2-0.895-2-2c0-1.105,0.895-2,2-2C35.105,27,36,27.895,36,29z M28,9.676V14H15.893L28,9.676z"></path> </g> </g></svg>
                         <h2 className="text-sm font-semibold">
@@ -219,13 +219,35 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                                 <>
                                 {params.lang == 'ar' ? "لديك" : "You have"} {" "}
                                 {/* <span className="h-3.5 font-bold text-blue-500 number-animation items-center"> */}
-                                <span className="h-3.5 font-bold text-blue-500 items-center">
+                                {/* <span className="h-3.5 font-bold text-blue-500 items-center">
                                 {/* <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyAmount)?.toLocaleString('EN-US')}</span> */}
-                                <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyPoints)?.toLocaleString('EN-US')}</span>
-                                </span> {params.lang == 'ar' ? "في محفظتك." : "in your wallet."} 
-                                </>
-                            }
+                                {/* <span className="font-bold text-blue-500 inline-flex items-center h-full">{parseInt(loyaltyPoints)?.toLocaleString('EN-US')}</span>
+                                </span> {params.lang == 'ar' ? "في محفظتك." : "in your wallet."}  */}
+                                {/* </> */}
+                            {/* } */}
+                        {/* </h2>
+                    </div>
+                    <svg height="26" viewBox="0 0 24 24" width="26" className="rotate-180" xmlns="http://www.w3.org/2000/svg" id="fi_2722991"><g id="_17" data-name="17"><path d="m15 19a1 1 0 0 1 -.71-.29l-6-6a1 1 0 0 1 0-1.41l6-6a1 1 0 0 1 1.41 1.41l-5.29 5.29 5.29 5.29a1 1 0 0 1 -.7 1.71z"></path></g></svg> */}
+                {/* // </Link>  */}
+                <Link prefetch={false} scroll={false} href={`${origin}/${params?.lang}/account/wishlist`} className="border-b border-[#9CA4AB50] px-4 py-3 align__center text-[#004B7A] fill-[#004B7A]">
+                    <div className="flex items-center gap-x-2">
+                        <svg
+                            width="26"
+                            height="26"
+                            viewBox="0 0 22 23"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                            d="M19.9315 6.12525C19.3836 5.25647 18.5812 4.57773 17.6336 4.18153C16.5598 3.73084 15.3538 3.64971 14.146 3.94751C13.0392 4.22045 11.9612 4.81243 10.9992 5.67119C10.0371 4.81235 8.95889 4.22034 7.85193 3.94744C6.6441 3.64952 5.43803 3.73072 4.36431 4.18172C3.41667 4.57804 2.61428 5.25691 2.06649 6.12582C1.4928 7.03272 1.20096 8.13558 1.2225 9.31507C1.31814 14.5586 9.129 19.3267 10.6938 20.2294C10.7867 20.2829 10.892 20.3111 10.9992 20.3111C11.1064 20.3111 11.2117 20.2829 11.3045 20.2294C12.8695 19.3266 20.6811 14.5577 20.7759 9.31415C20.7972 8.13474 20.5052 7.03199 19.9315 6.12525ZM19.5539 9.29219C19.5233 10.9876 18.3931 12.9642 16.2858 15.0082C14.3343 16.901 12.1144 18.3278 10.9992 18.9916C9.88388 18.3279 7.66439 16.9013 5.71304 15.0084C3.60561 12.9646 2.47544 10.9881 2.4445 9.29276C2.41073 7.44159 3.30537 5.95219 4.83762 5.30858C5.33977 5.09879 5.87889 4.9918 6.42311 4.99393C7.82848 4.99393 9.31509 5.67425 10.5634 6.94361C10.6203 7.00144 10.6881 7.04736 10.7629 7.07871C10.8377 7.11006 10.918 7.12621 10.9991 7.12621C11.0802 7.12621 11.1605 7.11006 11.2353 7.07871C11.3101 7.04736 11.3779 7.00144 11.4348 6.94361C13.1691 5.18017 15.3631 4.55366 17.1602 5.30846C18.6926 5.95185 19.5873 7.44102 19.5539 9.29208V9.29219Z"
+                            fill="#004b7a"
+                            />
+                        </svg>
+                        {/* <h2 className="text-sm font-semibold">{params.lang == 'ar' ? `لديك ${parseInt(discountAmount)?.toLocaleString('EN-US')} في محفظتك.` : `You have ${parseInt(discountAmount)?.toLocaleString('EN-US')} in your wallet.`}</h2> */}
+                        <h2 className="text-sm font-semibold">
+                            {params.lang === 'ar' ? 'اخر طلباتك' : 'Wishlist'}
                         </h2>
+
                     </div>
                     <svg height="26" viewBox="0 0 24 24" width="26" className="rotate-180" xmlns="http://www.w3.org/2000/svg" id="fi_2722991"><g id="_17" data-name="17"><path d="m15 19a1 1 0 0 1 -.71-.29l-6-6a1 1 0 0 1 0-1.41l6-6a1 1 0 0 1 1.41 1.41l-5.29 5.29 5.29 5.29a1 1 0 0 1 -.7 1.71z"></path></g></svg>
                 </Link>
@@ -349,7 +371,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                         </Link>*/}
                     </div>
                 </div >
-                <div className="fixed bottom-[60px] w-full p-3 bg-white shadow-md border-t border-[#5D686F26]">
+                <div className="fixed bottom-[77px] w-full p-3 bg-white shadow-md border-t border-[#5D686F26]">
                     {localStorage.getItem("userid") ?
                         <>
                             <button onClick={() => handleLogout()} className="focus-visible:outline-none btn border border-[#DC4E4E] bg-[#DC4E4E] p-2.5 rounded-md w-full text-white fill-white flex items-center justify-center font-medium gap-x-2">
@@ -364,7 +386,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                             {params.lang === 'ar' ? 'تسجيل الدخول' : 'Login'}
                         </button>
                     }
-                    <p className="text-sm mt-3 font-semibold text-center">{params.lang === 'ar' ? 'إصدار' : 'Version'}{' '}3.1</p>
+                    {/* <p className="text-sm mt-3 font-semibold text-center">{params.lang === 'ar' ? 'إصدار' : 'Version'}{' '}3.1</p> */}
                 </div>
             </div >
 

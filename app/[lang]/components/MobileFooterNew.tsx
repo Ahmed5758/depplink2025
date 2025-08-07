@@ -328,30 +328,25 @@ export default function MobileFooterNew(props: any) {
                   }}
                   className="flex flex-col items-center gap-y-2 w-full border-none outline-none"
                 >
-                  <div className="nav_icon relative">
-                    {React.cloneElement(item.icon, {
+                    <div className="nav_icon relative">
+                    {
+                      React.cloneElement(item.icon, {
                       className: `transition-all duration-200 ${
                         activeIndex === index ? "text-[#004b7a]" : "text-black"
                       } ${activeIndex === index ? "active" : ""}`,
-                    })}
-                    {index === 4 && cartCount > 0 && (
-                      <span className="bg-secondary absolute -top-1 right-0 text-[10px] text-white h-4 min-w-4 rounded-full flex justify-center items-center">
-                        {cartCount}
-                      </span>
+                      })
+                    }
+                    { index === 4 && cartCount > 0 && (
+                      <span className="bg-secondary absolute -top-1 right-0 text-[10px] text-white h-4 min-w-4 rounded-full flex justify-center items-center">{cartCount}</span>
                     )}
-                  </div>
-                  <span
-                    className={`text-xs duration-200 ${
-                      activeIndex === index ? "text-[#004b7a]" : "text-black"
-                    }`}
-                  >
+                    </div>
+                    <span
+                    className={`text-xs duration-200 ${activeIndex === index ? "text-[#004b7a]" : "text-black"}`}
+                    >
                     {item.label}
                   </span>
                   {activeIndex === index && (
-                    <span
-                      className="absolute duration-300 ease-in-out bottom-0 mb-2 w-full h-[3px] rounded-t-full bg-[#004b7a]"
-                      style={{ boxShadow: "0 -2px 2.5px 0.5px #f8be98" }}
-                    ></span>
+                    <span className="absolute duration-300 ease-in-out bottom-0 mb-2 w-full h-[3px] rounded-t-full bg-[#004b7a]" style={{boxShadow: '0 -2px 2.5px 0.5px #f8be98'}}></span>
                   )}
                 </button>
               </li>
