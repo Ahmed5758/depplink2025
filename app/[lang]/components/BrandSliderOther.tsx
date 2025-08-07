@@ -16,9 +16,9 @@ export default function BrandSliderOther(props: any) {
     }
     return (
         <>
-            <div className="inline-flex flex-col m-auto p-auto">
-                <div className="inline-flex overflow-x-scroll hide-scroll-bar py-1">
-                    <div className="inline-flex flex-nowrap items-center">
+            <div className="flex flex-col m-auto p-auto">
+                <div className="flex overflow-x-scroll hide-scroll-bar py-1">
+                    <div className="flex flex-nowrap items-center">
                         {BrandData?.map((data: any, i: React.Key | null | undefined) => {
                             return (
                                 <button
