@@ -178,7 +178,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
     return (
         <>
             <MobileHeader type="Third" lang={params.lang} pageTitle={params.lang === 'ar' ? 'حساب تعريفي' : 'Profile'} />
-            <div className="py-16 md:py-4">
+            <div className="pt-16 md:py-4">
                 <div className="container">
                     <Link href={`${origin}/${params?.lang}/account/profile`} className="bg-white shadow-md rounded-md p-3 flex items-center gap-3">
                         {userid ?
@@ -349,7 +349,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                         </Link>*/}
                     </div>
                 </div >
-                <div className="fixed bottom-[60px] w-full p-3 bg-white shadow-md border-t border-[#5D686F26]">
+                <div className="fixed bottom-[77px] w-full p-3 bg-white shadow-md border-t border-[#5D686F26]">
                     {localStorage.getItem("userid") ?
                         <>
                             <button onClick={() => handleLogout()} className="focus-visible:outline-none btn border border-[#DC4E4E] bg-[#DC4E4E] p-2.5 rounded-md w-full text-white fill-white flex items-center justify-center font-medium gap-x-2">
@@ -364,7 +364,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                             {params.lang === 'ar' ? 'تسجيل الدخول' : 'Login'}
                         </button>
                     }
-                    <p className="text-sm mt-3 font-semibold text-center">{params.lang === 'ar' ? 'إصدار' : 'Version'}{' '}3.1</p>
+                    {/* <p className="text-sm mt-3 font-semibold text-center">{params.lang === 'ar' ? 'إصدار' : 'Version'}{' '}3.1</p> */}
                 </div>
             </div >
 

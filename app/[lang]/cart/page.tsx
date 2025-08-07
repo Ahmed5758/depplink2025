@@ -951,7 +951,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                 />
                             </div>
                         </div>
-                        <div className="nc__278mainInnerCheckDiv left-0 !pb-16">
+                        <div className="nc__278mainInnerCheckDiv left-0 !bottom-[78px]">
                             <div className="nc__278mainInnerCheckFirstDiv" onClick={() => getCheckout()}>
                                 <button className="nc__278mainInnerCheckBtn" onClick={() => getCheckout()}>{proceedCheckout}</button>
                             </div>
