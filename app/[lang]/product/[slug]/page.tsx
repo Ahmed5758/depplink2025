@@ -185,6 +185,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     //         "image:" + product.featured_image.image;
     // }
 
+
     useEffect(() => {
         // formatProductCustom(params?.data?.data);
 
@@ -202,6 +203,23 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         if (!params?.devicetype)
             router.refresh()
     }, [params])
+
+    // useEffect(() => {
+    //     window.webengage?.track("Added To Cart", {
+    //         /* Numbers */
+    //         "Product ID": 1337,
+    //         "Price": 39.80,
+    //         "Quantity": 1,
+
+    //         /* Strings */
+    //         "Product": "Givenchy Pour Homme Cologne",
+    //         "Category": "Fragrance",
+    //         "Currency": "USD",
+
+    //         /* Boolean */
+    //         "Discounted": true
+    //     });
+    // }, []);
 
     const breadcrumbs: any = params?.data?.breadcrumbs ?? [];
     const item_category: any = breadcrumbs[0] ? (isArabic ? breadcrumbs[0]?.name_arabic : breadcrumbs[0]?.name) : "";
