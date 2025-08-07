@@ -203,7 +203,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
             if(store?.success == false){
                 setstorePickup(0)
                 localStorage.setItem('globalStore', '0')
-                updateDeliveryMethod(0)
+                updateDeliveryMethod(0, true)
             }
         }
 
@@ -218,24 +218,26 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     }, [cartData])
 
     {/* Commented Pickup Store */ }
-    const updateDeliveryMethod = (method: any) => {
-        setstorePickup(method)
-        var storeId: any = false
-        var storetype: any = 0
-        var storeCity: any = false
-        if (method == 1) {
-            storeId = globalStore?.id
-            storetype = method
-            // storeCity = globalStore?.showroom_data?.waybill_city
-            storeCity = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
-            localStorage.setItem('globalStore', storeId)
-        }
-        if(method == 0) {
+    const updateDeliveryMethod = (method: any, isSet: any = false) => {
+		setstorePickup(method)
+		var storeId: any = false
+		var storetype: any = 0
+		var storeCity: any = false
+		if (method == 1) {
+			storeId = globalStore?.id
+			storetype = method
+			// storeCity = globalStore?.showroom_data?.waybill_city
+			storeCity = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
+			localStorage.setItem('globalStore', storeId)
+		}
+		if(method == 0) {
 			localStorage.setItem('globalStore', '0')
 		}
-        setPickupStoreCart(storeId, storetype, storeCity)
-        resetCart()
-    }
+		setPickupStoreCart(storeId, storetype, storeCity)
+		if(isSet == false){
+			resetCart()
+		}
+	}
 
     const removeItem = (key: any) => {
         setLoaderStatus(true)
