@@ -175,19 +175,18 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         quantity.push({ value: i + 1, label: i + 1 });
     }
 
-    function formatProductCustom(product: ProductItem): string {
-        console.log("Product Rendered");
-        return "~p" +
-            "id:" + params?.data?.id + ";" +
-            "name:" + product.name + ";" +
-            "slug:" + product.slug + ";" +
-            "brand:" + product.brand.name + ";" +
-            "price:" + (product.sale_price ?? product.price) + ";" +
-            "image:" + product.featured_image.image;
-    }
+    // function formatProductCustom(product: ProductItem): string {
+    //     return "~p" +
+    //         "id:" + params?.data?.id + ";" +
+    //         "name:" + product.name + ";" +
+    //         "slug:" + product.slug + ";" +
+    //         "brand:" + product.brand.name + ";" +
+    //         "price:" + (product.sale_price ?? product.price) + ";" +
+    //         "image:" + product.featured_image.image;
+    // }
 
     useEffect(() => {
-        formatProductCustom(params?.data?.data);
+        // formatProductCustom(params?.data?.data);
 
         if (params?.data?.upsaleproductData?.products?.data) {
             pushGTMEvent({
