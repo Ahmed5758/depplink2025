@@ -109,12 +109,13 @@ export default function AboutUs({ params }: {
                                                 alt={params?.lang === 'ar' ? cat?.name_arabic : cat?.name}
                                                 title={params?.lang === 'ar' ? cat?.name_arabic : cat?.name}
                                                 height={0}
+                                                sizes="100vw"
                                                 width={0}
                                                 loading="lazy"
                                                 className="mx-auto shadow-md rounded-md w-full h-full"
                                             />
                                         </div>
-                                        {/* <h4 className="font-semibold mt-1.5 text-sm">{params?.lang === 'ar' ? cat?.name_arabic : cat?.name}</h4> */}
+                                        <h4 className="font-semibold mt-1.5 text-sm">{params?.lang === 'ar' ? cat?.name_arabic : cat?.name}</h4>
                                     </Link>
                                 )
                             })}

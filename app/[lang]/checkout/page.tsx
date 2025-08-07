@@ -83,6 +83,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     const [checkTermCondition, setCheckTermCondition] = useState(false)
 
     const [globalStore, setglobalStore] = useState<any>([]);
+    const isArabic = params?.lang === "ar";
     const { globalCity, setglobalCity } = useContext<any>(GlobalContext);
     const [deliveryDateData, setdeliveryDateData] = useState<any>(false);
     const [deliverydate, setdeliverydate] = useState<any>(false);
@@ -402,14 +403,14 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         if (cartData?.storeType != undefined && cartData?.storeType != null && cartData?.storeType == 1) {
         var storeId = globalStore?.id
         var storetype = 1
-        var storeCity = params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name
+        var storeCity = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
         setPickupStoreCart(storeId, storetype, storeCity)
         }
     }, [cartData])
 
 
     const getPickupStoreData = () => {
-      get(`get-selected-warehouse/${localStorage.getItem('globalStore')}`).then((responseJson: any) => {
+      get(`get-selected-warehouse/${localStorage.getItem('globalStore')}?lang=${params?.lang}`).then((responseJson: any) => {
           if (responseJson?.warehouse) {
               setglobalStore(responseJson?.warehouse)
           }
@@ -443,7 +444,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
               city = selectedaddres[0].state_data?.name
         }
         else{
-            var storeCity = globalStore?.showroom_data?.store_city ? globalStore?.showroom_data?.store_city?.name : 'Jeddah'
+            var storeCity = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
             city = storeCity
         }
         console.log('payment city:', city)
@@ -485,7 +486,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
         }
         else {
             (async () => {
-                var city: string = globalStore?.showroom_data?.store_city?.name
+                var city: string = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
                 await setDiscountRule(city);
                 await setDiscountRuleBogo(city);
             })();
@@ -691,7 +692,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                 city = selectedaddres[0].state_data?.name;
             }
             else {
-                var city: string = globalStore?.showroom_data?.store_city?.name
+                var city: string = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
             }
             setSummary(getSummary())
             setCheckoutData(getCart())
@@ -740,7 +741,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             if (selectedaddres?.length && selectedaddres[0].state_data?.name)
                 city = selectedaddres[0].state_data?.name;
         } else {
-            city= globalStore?.showroom_data?.store_city?.name
+            city= isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
         }
         var response:any = await getExpressDeliveryData(city);
         if (response) {
@@ -766,7 +767,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                 city = selectedaddres[0].state_data?.name;
             }
             else {
-                city = globalStore?.showroom_data?.store_city?.name
+                city = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
             }
             var response = await setCoupon(city, couponcode)
             if (!response && couponcode) {
@@ -873,7 +874,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
             if (selectedaddres?.length && selectedaddres[0].state_data?.name)
                 city = selectedaddres[0].state_data?.name;
             } else {
-            city = globalStore?.showroom_data?.store_city?.name
+            city = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
         }
         var recheck = await recheckcartdata(params.lang, city)
         if (recheck.success && getSubtotalSale() > 0) {
@@ -1214,7 +1215,13 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                 <div className="flex items-center rounded-md border border-[#dfdfdf] focus-visible:outline-[#004B7A] fill-primary pb-3 pt-2.5 px-3 text-sm gap-x-3 w-full mb-3 bg-white">
                                                     <svg id="fi_3514361" height="22" viewBox="0 0 256 256" width="22" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m128 138.184a5 5 0 0 1 -3.607-1.538c-2.075-2.16-50.808-53.259-50.808-82.228a54.415 54.415 0 1 1 108.83 0c0 28.969-48.733 80.068-50.808 82.228a5 5 0 0 1 -3.607 1.538zm0-128.184a44.465 44.465 0 0 0 -44.415 44.418c0 19.07 29.312 54.978 44.414 71.451 15.1-16.478 44.416-52.4 44.416-71.451a44.465 44.465 0 0 0 -44.415-44.418z"></path><path d="m128 76.153a21.735 21.735 0 1 1 21.735-21.735 21.759 21.759 0 0 1 -21.735 21.735zm0-33.47a11.735 11.735 0 1 0 11.735 11.735 11.748 11.748 0 0 0 -11.735-11.735z"></path><path d="m128.126 256a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.559a5 5 0 0 1 -2.5-4.331v-38.385a5 5 0 0 1 10 0v35.5l72.175 41.67 72.174-41.67v-35.88a5 5 0 0 1 10 0v38.765a5 5 0 0 1 -2.5 4.331l-77.174 44.556a4.992 4.992 0 0 1 -2.5.673z"></path><path d="m128.126 166.884a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.557a5 5 0 1 1 5-8.66l74.675 43.113 74.674-43.11a5 5 0 1 1 5 8.66l-77.174 44.557a4.992 4.992 0 0 1 -2.5.667z"></path><path d="m160.933 198.291a5 5 0 0 1 -3.459-1.389l-32.806-31.402a5 5 0 0 1 6.916-7.224l30.1 28.813 68.154-39.349-27.558-26.382-27.359-15.744a5 5 0 1 1 4.988-8.667l27.885 16.047a4.988 4.988 0 0 1 .964.721l32.806 31.407a5 5 0 0 1 -.958 7.942l-77.174 44.557a4.993 4.993 0 0 1 -2.499.67z"></path><path d="m95.067 198.525a4.985 4.985 0 0 1 -2.5-.67l-77.173-44.555a5 5 0 0 1 -.957-7.942l33.057-31.642a4.967 4.967 0 0 1 .957-.718l27.634-15.955a5 5 0 1 1 5 8.66l-27.112 15.653-27.807 26.616 68.154 39.348 30.349-29.048a5 5 0 1 1 6.914 7.224l-33.058 31.641a4.991 4.991 0 0 1 -3.458 1.388z"></path></svg>
                                                     <div className="h-5 w-[1px] bg-primary opacity-20" />
-                                                    <input id="iconLeft" value={address} type="text" placeholder={params.lang == 'ar' ? 'رقم الشقة / رقم المبنى / المنطقة أو أقرب معلم' : 'Flat Number / Building Number / Area or Nearest Land Mark'} className="focus-visible:outline-none w-full font-regular"
+                                                    <input id="iconLeft" value={address} type="text" 
+                                                    placeholder={
+                                                        params.lang == "ar"
+                                                            ? "اسم الحي / اسم الشارع / اقرب معلم / رقم الدور"
+                                                            : "District Name / Floor Number / Area Name / Land Mark"
+                                                    }
+                                                    className="focus-visible:outline-none w-full font-regular"
                                                         onChange={(e: any) => {
                                                             setAddress(e.target.value)
                                                         }} />
@@ -1481,9 +1488,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                                                                     <RadioGroup.Label as="p" className={`text-sm font-bold  mb-3 text-white`}>
                                                                                     {params?.lang == 'ar' ? 'متجر الاستلام' : 'Collect From Store'}
                                                                                     </RadioGroup.Label>
-                                                                                    <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</p>
-                                                                                    <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_data?.address_arabic : globalStore?.showroom_data?.address} | 8002444464</p>
-                                                                                    <p className={`mt-1.5 text-xs font-bold text-white`}>{params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_region?.name_arabic : globalStore?.showroom_data?.store_region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                                                                    <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_arabic : globalStore?.showroom}</p>
+                                                                                    <p className={`mt-1 text-xs text-white`}>{params?.lang == 'ar' ? globalStore?.showroom_address_arabic : globalStore?.showroom_address} | 8002444464</p>
+                                                                                    <p className={`mt-1.5 text-xs font-bold text-white`}>{params.lang == 'ar' ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_regions?.name_arabic : globalStore?.showroom_data?.store_regions?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
                                                                                     <div className="mt-3">
                                                                                         <p
                                                                                         className={`mt-3 text-xs font-bold text-white`}
@@ -2046,9 +2053,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                             <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] fill-[#004B7A] font-regular text-xs">
                                                 <svg id="fi_3514361" height="28" viewBox="0 0 256 256" width="28" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m128 138.184a5 5 0 0 1 -3.607-1.538c-2.075-2.16-50.808-53.259-50.808-82.228a54.415 54.415 0 1 1 108.83 0c0 28.969-48.733 80.068-50.808 82.228a5 5 0 0 1 -3.607 1.538zm0-128.184a44.465 44.465 0 0 0 -44.415 44.418c0 19.07 29.312 54.978 44.414 71.451 15.1-16.478 44.416-52.4 44.416-71.451a44.465 44.465 0 0 0 -44.415-44.418z"></path><path d="m128 76.153a21.735 21.735 0 1 1 21.735-21.735 21.759 21.759 0 0 1 -21.735 21.735zm0-33.47a11.735 11.735 0 1 0 11.735 11.735 11.748 11.748 0 0 0 -11.735-11.735z"></path><path d="m128.126 256a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.559a5 5 0 0 1 -2.5-4.331v-38.385a5 5 0 0 1 10 0v35.5l72.175 41.67 72.174-41.67v-35.88a5 5 0 0 1 10 0v38.765a5 5 0 0 1 -2.5 4.331l-77.174 44.556a4.992 4.992 0 0 1 -2.5.673z"></path><path d="m128.126 166.884a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.557a5 5 0 1 1 5-8.66l74.675 43.113 74.674-43.11a5 5 0 1 1 5 8.66l-77.174 44.557a4.992 4.992 0 0 1 -2.5.667z"></path><path d="m160.933 198.291a5 5 0 0 1 -3.459-1.389l-32.806-31.402a5 5 0 0 1 6.916-7.224l30.1 28.813 68.154-39.349-27.558-26.382-27.359-15.744a5 5 0 1 1 4.988-8.667l27.885 16.047a4.988 4.988 0 0 1 .964.721l32.806 31.407a5 5 0 0 1 -.958 7.942l-77.174 44.557a4.993 4.993 0 0 1 -2.499.67z"></path><path d="m95.067 198.525a4.985 4.985 0 0 1 -2.5-.67l-77.173-44.555a5 5 0 0 1 -.957-7.942l33.057-31.642a4.967 4.967 0 0 1 .957-.718l27.634-15.955a5 5 0 1 1 5 8.66l-27.112 15.653-27.807 26.616 68.154 39.348 30.349-29.048a5 5 0 1 1 6.914 7.224l-33.058 31.641a4.991 4.991 0 0 1 -3.458 1.388z"></path></svg>
                                                 <div>
-                                                    <p className="font-medium text-xs">{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</p>
-                                                    <label className="">{params?.lang == 'ar' ? globalStore?.showroom_data?.address_arabic : globalStore?.showroom_data?.address} | 8002444464</label>
-                                                    <p className="font-medium text-xs">{params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_region?.name_arabic : globalStore?.showroom_data?.store_region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                                    <p className="font-medium text-xs">{params?.lang == 'ar' ? globalStore?.showroom_arabic : globalStore?.showroom}</p>
+                                                    <label className="">{params?.lang == 'ar' ? globalStore?.showroom_address_arabic : globalStore?.showroom_address} | 8002444464</label>
+                                                    <p className="font-medium text-xs">{params.lang == 'ar' ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_regions?.name_arabic : globalStore?.showroom_data?.store_regions?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
                                                 </div>
                                             </div>
                                             {cartData?.storeType == 0 && cartData?.storeId == false && (
@@ -2268,9 +2275,9 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
                                         <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] fill-[#004B7A] font-regular text-xs">
                                             <svg id="fi_3514361" height="28" viewBox="0 0 256 256" width="28" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m128 138.184a5 5 0 0 1 -3.607-1.538c-2.075-2.16-50.808-53.259-50.808-82.228a54.415 54.415 0 1 1 108.83 0c0 28.969-48.733 80.068-50.808 82.228a5 5 0 0 1 -3.607 1.538zm0-128.184a44.465 44.465 0 0 0 -44.415 44.418c0 19.07 29.312 54.978 44.414 71.451 15.1-16.478 44.416-52.4 44.416-71.451a44.465 44.465 0 0 0 -44.415-44.418z"></path><path d="m128 76.153a21.735 21.735 0 1 1 21.735-21.735 21.759 21.759 0 0 1 -21.735 21.735zm0-33.47a11.735 11.735 0 1 0 11.735 11.735 11.748 11.748 0 0 0 -11.735-11.735z"></path><path d="m128.126 256a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.559a5 5 0 0 1 -2.5-4.331v-38.385a5 5 0 0 1 10 0v35.5l72.175 41.67 72.174-41.67v-35.88a5 5 0 0 1 10 0v38.765a5 5 0 0 1 -2.5 4.331l-77.174 44.556a4.992 4.992 0 0 1 -2.5.673z"></path><path d="m128.126 166.884a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.557a5 5 0 1 1 5-8.66l74.675 43.113 74.674-43.11a5 5 0 1 1 5 8.66l-77.174 44.557a4.992 4.992 0 0 1 -2.5.667z"></path><path d="m160.933 198.291a5 5 0 0 1 -3.459-1.389l-32.806-31.402a5 5 0 0 1 6.916-7.224l30.1 28.813 68.154-39.349-27.558-26.382-27.359-15.744a5 5 0 1 1 4.988-8.667l27.885 16.047a4.988 4.988 0 0 1 .964.721l32.806 31.407a5 5 0 0 1 -.958 7.942l-77.174 44.557a4.993 4.993 0 0 1 -2.499.67z"></path><path d="m95.067 198.525a4.985 4.985 0 0 1 -2.5-.67l-77.173-44.555a5 5 0 0 1 -.957-7.942l33.057-31.642a4.967 4.967 0 0 1 .957-.718l27.634-15.955a5 5 0 1 1 5 8.66l-27.112 15.653-27.807 26.616 68.154 39.348 30.349-29.048a5 5 0 1 1 6.914 7.224l-33.058 31.641a4.991 4.991 0 0 1 -3.458 1.388z"></path></svg>
                                             <div>
-                                                <p className="font-medium text-xs">{params?.lang == 'ar' ? globalStore?.showroom_data?.name_arabic : globalStore?.showroom_data?.name}</p>
-                                                <label className="">{params?.lang == 'ar' ? globalStore?.showroom_data?.address_arabic : globalStore?.showroom_data?.address} | 8002444464</label>
-                                                <p className="font-medium text-xs">{params.lang == 'ar' ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_region?.name_arabic : globalStore?.showroom_data?.store_region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                                <p className="font-medium text-xs">{params?.lang == 'ar' ? globalStore?.showroom_arabic : globalStore?.showroom}</p>
+                                                <label className="">{params?.lang == 'ar' ? globalStore?.showroom_address_arabic : globalStore?.showroom_address} | 8002444464</label>
+                                                <p className="font-medium text-xs">{params.lang == 'ar' ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name}, {params.lang == 'ar' ? globalStore?.showroom_data?.store_regions?.name_arabic : globalStore?.showroom_data?.store_regions?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
                                             </div>
                                         </div>
                                         <hr className="opacity-10 my-3" />

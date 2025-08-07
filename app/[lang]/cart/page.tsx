@@ -63,14 +63,22 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
             var wdata: any = localStorage.getItem('userWishlist')
             setProWishlistData(JSON.parse(wdata))
         }
+
         updateDeliveryMethod(0)
+        const handleGlobalStoreChange = () => {
+            resetCart(false);
+        };
+        
         window.addEventListener("storage", () => {
             refetch();
         });
+        window.addEventListener('globalStoreChanged', handleGlobalStoreChange);
+
         return () => {
             window.removeEventListener("storage", () => {
                 refetch();
             });
+            window.removeEventListener('globalStoreChanged', handleGlobalStoreChange);
         };
     }, []);
 
@@ -165,7 +173,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
         })
     }
 
-    const resetCart = async () => {
+    const resetCart = async (isRun: any = true) => {
         removecheckoutdata()
         setcartData(getCart());
         setCartCount(getCartCount())
@@ -181,16 +189,23 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
         setexpressData(exp)
 
         {/* Commented Pickup Store */ }
-        const store: any = await getPickupStoreCart()
-        // if (store?.warehouses?.length < 1) {
-        // 	topMessageAlartDanger('Error! No store available for store pickup.')
-        // 	updateDeliveryMethod(0)
-        // }
-        setglobalStore(store?.warehouse_single)
-        localStorage.setItem('globalStore', store?.warehouse_single?.id)
-        setallStores(store?.warehouses)
-
-        setstoreData(store)
+        if(isRun == true){
+            const store: any = await getPickupStoreCart(params?.lang, false)
+            // if (store?.warehouses?.length < 1) {
+            // 	topMessageAlartDanger('Error! No store available for store pickup.')
+            // 	updateDeliveryMethod(0)
+            // }
+            setglobalStore(store?.warehouse_single)
+            localStorage.setItem('globalStore', store?.warehouse_single?.id)
+            setallStores(store?.warehouses)
+    
+            setstoreData(store)
+            if(store?.success == false){
+                setstorePickup(0)
+                localStorage.setItem('globalStore', '0')
+                updateDeliveryMethod(0, true)
+            }
+        }
 
         setLoaderStatus(false)
     }
@@ -203,20 +218,26 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     }, [cartData])
 
     {/* Commented Pickup Store */ }
-    const updateDeliveryMethod = (method: any) => {
-        setstorePickup(method)
-        var storeId: any = false
-        var storetype: any = 0
-        var storeCity: any = false
-        if (method == 1) {
-            storeId = globalStore?.id
-            storetype = method
-            // storeCity = globalStore?.showroom_data?.waybill_city
-            storeCity = isArabic ? globalStore?.showroom_data?.store_city?.name_arabic : globalStore?.showroom_data?.store_city?.name
-        }
-        setPickupStoreCart(storeId, storetype, storeCity)
-        resetCart()
-    }
+    const updateDeliveryMethod = (method: any, isSet: any = false) => {
+		setstorePickup(method)
+		var storeId: any = false
+		var storetype: any = 0
+		var storeCity: any = false
+		if (method == 1) {
+			storeId = globalStore?.id
+			storetype = method
+			// storeCity = globalStore?.showroom_data?.waybill_city
+			storeCity = isArabic ? globalStore?.waybill_city_data?.name_arabic : globalStore?.waybill_city_data?.name
+			localStorage.setItem('globalStore', storeId)
+		}
+		if(method == 0) {
+			localStorage.setItem('globalStore', '0')
+		}
+		setPickupStoreCart(storeId, storetype, storeCity)
+		if(isSet == false){
+			resetCart()
+		}
+	}
 
     const removeItem = (key: any) => {
         setLoaderStatus(true)
@@ -411,7 +432,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const itemText = isArabic ? 'منتجات متاحة' : 'items available';
     const itemPreText = isArabic ? 'من' : 'of';
     const fastDeiveryImg = 'https://cdn-icons-png.flaticon.com/512/9720/9720868.png';
-    const fastDeliveryText = isArabic ? 'خيارات توصيل أسرع حسب العناصر المحددة والمنطقة والوقت. اختر عند الخروج.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.';
+    const fastDeliveryText = isArabic ? 'خيارات توصيل السريح حسب المنتجات المحددة والمنطقة والوقت. اختر عند الدفع.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.';
    // const srText = isArabic ? ' ر.س' : 'SR ';
     const percentageText = isArabic ? 'خصم %' : '% OFF ';
     const saveText = isArabic ? 'وفر ' : 'Save ';
@@ -932,7 +953,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                 />
                             </div>
                         </div>
-                        <div className="nc__278mainInnerCheckDiv left-0 !pb-16">
+                        <div className="nc__278mainInnerCheckDiv left-0 !bottom-[78px]">
                             <div className="nc__278mainInnerCheckFirstDiv" onClick={() => getCheckout()}>
                                 <button className="nc__278mainInnerCheckBtn" onClick={() => getCheckout()}>{proceedCheckout}</button>
                             </div>
