@@ -2353,8 +2353,9 @@ section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected
 		font-size: 5.76px;
 	}
 
-	.productBadge_topImg img {
-		height: 14px;
+	.productBadge_topImg {
+		height: 13px;
+		width: 50px;
 	}
 
 	.headingHomeMain {
