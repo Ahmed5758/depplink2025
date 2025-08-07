@@ -356,10 +356,10 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     useEffect(() => {
         (async () => {
         if(activeTab3 == 2){
-            var points = getLoyalty()
-            var loyaltydata = await getLoyaltyData()
-            // setloyaltyPoints(points)
-            setloyaltyData(loyaltydata)
+            // var points = getLoyalty()
+            // var loyaltydata = await getLoyaltyData()
+            // // setloyaltyPoints(points)
+            // setloyaltyData(loyaltydata)
         }
         })();
     }, [activeTab3]);
