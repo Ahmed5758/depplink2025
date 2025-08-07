@@ -902,7 +902,7 @@ export default function MobileHeaderNew(props: any) {
                               </button>
                             )}
                           </div>
-                          <div className="overflow-y-auto h-[28rem] px-2 ios-scroll">
+                          <div className="searchList overflow-y-auto h-[calc(100vh_-_220px)] px-2 ios-scroll">
                             <RadioGroup
                               value={selectedCityData}
                               onChange={(e) => {
