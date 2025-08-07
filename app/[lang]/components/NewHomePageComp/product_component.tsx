@@ -681,7 +681,7 @@ export default function product_component(props: any) {
       <div className="tamkeenProduct_card relative w-full h-fit">
         <div className="flex items-end justify-between px-4 w-full">
           {productBadgeTop ? (
-            <div className={`text-[0.589rem] md:text-[0.589rem] font-semibold py-[0.150rem] px-[0.308rem] rounded-tr-lg rounded-tl-lg w-auto text-center text-white`}
+            <div className={`productBadge_topText text-[0.589rem] md:text-[0.589rem] font-semibold py-[0.150rem] px-[0.308rem] rounded-tr-lg rounded-tl-lg w-auto text-center text-white`}
               style={{ backgroundColor: productBadgeLeftBackgroundColor }}
             >
               {productBadgeTop}
@@ -691,7 +691,7 @@ export default function product_component(props: any) {
             null
           }
           {ProExtraData?.expressdeliveryData ? (
-            <div className="rtl:mr-auto ltr:ml-auto">
+            <div className="productBadge_topImg rtl:mr-auto ltr:ml-auto w-[60px] h-[18px] relative">
               <Image
                 alt={expressTitle}
                 title={expressTitle}
