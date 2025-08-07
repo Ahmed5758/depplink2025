@@ -429,7 +429,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     const itemText = isArabic ? 'منتجات متاحة' : 'items available';
     const itemPreText = isArabic ? 'من' : 'of';
     const fastDeiveryImg = 'https://cdn-icons-png.flaticon.com/512/9720/9720868.png';
-    const fastDeliveryText = isArabic ? 'خيارات توصيل أسرع حسب العناصر المحددة والمنطقة والوقت. اختر عند الخروج.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.';
+    const fastDeliveryText = isArabic ? 'خيارات توصيل السريح حسب المنتجات المحددة والمنطقة والوقت. اختر عند الدفع.' : 'Faster delivery options depending on the selected items, area, and time. Choose when you checkout.';
    // const srText = isArabic ? ' ر.س' : 'SR ';
     const percentageText = isArabic ? 'خصم %' : '% OFF ';
     const saveText = isArabic ? 'وفر ' : 'Save ';
