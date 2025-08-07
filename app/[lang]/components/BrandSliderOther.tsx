@@ -16,13 +16,13 @@ export default function BrandSliderOther(props: any) {
     }
     return (
         <>
-            <div className="flex flex-col m-auto p-auto">
-                <div className="flex overflow-x-scroll hide-scroll-bar py-1">
-                    <div className="flex flex-nowrap items-center">
+            <div className="inline-flex flex-col m-auto p-auto">
+                <div className="inline-flex overflow-x-scroll hide-scroll-bar py-1">
+                    <div className="inline-flex flex-nowrap items-center">
                         {BrandData?.map((data: any, i: React.Key | null | undefined) => {
                             return (
                                 <button
-                                    className={`focus-visible:outline-none ltr:mr-2.5 rtl:ml-2.5 w-24 py-3 md:mr-3.5 md:w-36 h-full md:py-4 max-w-xs overflow-hidden rounded-lg shadow-md transition-shadow duration-300 ease-in-out text-primary border hover:border-[#004B7A] hover:text-[#004B7A] hover:bg-[#004B7A05]
+                                    className={`focus-visible:outline-none ltr:mr-2.5 rtl:ml-2.5 w-24 py-3 md:mr-3.5 md:w-36 md:py-4 max-w-xs overflow-hidden rounded-lg shadow-md transition-shadow duration-300 ease-in-out text-primary border hover:border-[#004B7A] hover:text-[#004B7A] hover:bg-[#004B7A05]
                                     ${props.BrandData[data?.name] ? 'border-[#004B7A] bg-[#004B7A05] font-mdium' : 'border-white bg-white '}
                                     `}
                                     key={i}
