@@ -1290,6 +1290,7 @@ const setDiscountRule = async (city: any = false) => {
             coupon: cartdata?.discounts?.coupon ? cartdata?.discounts?.coupon?.id : false,
             paymentmethod: cartdata?.paymentMethod ? cartdata?.paymentMethod : false,
             //subtotal: getSubtotal(),
+            store_id: localStorage.getItem("globalStore"),
             subtotal: getTotal(),
             extradata: cartdata?.extradata ? cartdata?.extradata : null,
             // discountType: 0,
