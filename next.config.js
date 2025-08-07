@@ -40,11 +40,6 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'tamkeenstores.com.sa',
                 pathname: '/images/**',
             },
             {
@@ -82,58 +77,54 @@ const nextConfig = {
                 hostname: 'onelink.to',
                 pathname: '/**',
             },
-        ],
-        unoptimized: false, // Enable optimization
-        deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
-        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        remotePatterns: [
             {
                 protocol: 'https',
                 hostname: '**.tamkeenstores.com.sa',
-                port: '',
-            },
-            {
-                protocol: 'https',
-                hostname: 'onelink.to',
-                port: '',
+                pathname: '/**',
             },
         ],
+        unoptimized: false,
+        deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
+        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     },
     async headers() {
         return [
             {
                 source: '/:path*',
                 headers: [
-                    { key: 'X-DNS-Prefetch-Control', value: 'off' },
+                    {
+                        key: 'X-DNS-Prefetch-Control',
+                        value: 'off',
+                    },
                 ],
             },
-            // {
-            //     source: '/_next/static/(.*)',
-            //     headers: [
-            //         {
-            //             key: 'Cache-Control',
-            //             value: 'public, max-age=31536000, immutable',
-            //         },
-            //     ],
-            // },
-            // {
-            //     source: '/:path*\\.(svg|jpg|jpeg|png|gif|webp|avif)',
-            //     headers: [
-            //         {
-            //             key: 'Cache-Control',
-            //             value: 'public, max-age=31536000, immutable',
-            //         },
-            //     ],
-            // },
-            // {
-            //     source: '/:path*\\.(js|css|html)',
-            //     headers: [
-            //         {
-            //             key: 'Cache-Control',
-            //             value: 'public, max-age=3600, stale-while-revalidate=86400',
-            //         },
-            //     ],
-            // },
+            {
+                source: '/_next/static/:path*',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable',
+                    },
+                ],
+            },
+            {
+                source: '/:path*\\.(svg|jpg|jpeg|png|gif|webp|avif)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=31536000, immutable',
+                    },
+                ],
+            },
+            {
+                source: '/:path*\\.(js|css|html)',
+                headers: [
+                    {
+                        key: 'Cache-Control',
+                        value: 'public, max-age=3600, stale-while-revalidate=86400',
+                    },
+                ],
+            },
         ];
     },
     eslint: {

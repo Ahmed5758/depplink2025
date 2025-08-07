@@ -84,7 +84,6 @@ export default async function RootLayout({ children, params }: { children: React
         <div className="fixed top-0 w-full z-50">
           <div className="h-1.5" id="loader-spin"></div>
         </div>
-        <div className='py-12'></div>
         <MobileFooterNew lang={params?.lang} dict={dict} />
         </GlobalProvider>
       </body>
