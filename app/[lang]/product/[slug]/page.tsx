@@ -118,7 +118,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
     {/* Commented Pickup Store */ }
     const getStoreData = () => {
-        get(`pickup-from-store/${params.data?.data?.sku}/${getCookie('selectedCity')}/${localStorage.getItem('globalStore') ? 0 : 0}?lang=${params?.lang}&sortCity=${getCookie('selectedCity')}`).then((responseJson: any) => {
+        get(`pickup-from-store/${params.data?.data?.sku}/${getCookie('selectedCity')}/${localStorage.getItem('globalStore') ? 0 : 0}?lang=${params?.lang}&sortCity=${getCookie('selectedCity')}&product_qty=${sqty}`).then((responseJson: any) => {
             if (responseJson?.warehouse_single) {
                 setfoundStore(true)
                 var check = setglobalStore(responseJson?.warehouse_single)
@@ -132,6 +132,12 @@ export default function Product({ params, searchParams }: { params: { lang: stri
             }
         })
     }
+    useEffect(() => {
+        if (eligiblePickup) {
+            getStoreData()
+        }
+    }, [sqty])
+
     {/* Commented Pickup Store */ }
 
     function detectPlatform() {
@@ -1481,7 +1487,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 </div>
                             </div>
                         </div>
-                        <div className="sm:w-1/6 mx-auto">
+                        <div className="w-1/6 mx-auto">
                             {data?.gallery?.length > 3 ?
                                 <button id="scroll-leftPopup" className="ltr:ml-4 rtl:mr-6 pb-2 text-primary rotate-90 hover:text-primary rounded-full outline-none focus-visible:outline-none" onClick={scrollTop}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
