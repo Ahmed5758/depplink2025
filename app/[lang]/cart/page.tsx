@@ -524,7 +524,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                             <div className="p-3 w-full mt-3">
                                 <h6 className='text-sm font-semibold'>{subHeading}</h6>
                                 <div className="space-y-3 mt-3">
-                                    <div className='border border-[#004B7A] rounded-md p-3 flex justify-between items-center w-full'>
+                                    <label htmlFor='delivery' className='border border-[#004B7A] rounded-md p-3 flex justify-between items-center w-full'>
                                         <div className="flex gap-2 justify-start items-center">
                                             <input value={0} checked={storePickup == 0} onChange={(e: any) => {
                                                 {/* Commented Pickup Store */ }
@@ -533,9 +533,9 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                             }} type="radio" name='delivery' id='delivery' className='form-radio' />
                                             <label className='text-sm'>{deliveryText}</label>
                                         </div>
-                                    </div>
+                                    </label>
                                     {storeData?.warehouses?.length >= 1 ?
-                                        <div className='border border-[#004B7A] rounded-md p-3 flex justify-between items-cente w-full'>
+                                        <label htmlFor='storePickup' className='border border-[#004B7A] rounded-md p-3 flex justify-between items-cente w-full'>
                                             <div className="flex gap-2 justify-start items-center">
                                                 <input value={1} checked={storePickup == 1} onChange={(e: any) => {
                                                     updateDeliveryMethod(e.target.value)
@@ -544,7 +544,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                                 <label className='text-sm'>{pickupText}</label>
                                             </div>
                                             <h6 className='text-sm text-[#EF7E2C]'>{storeData?.success ? cartData?.products?.length : 0} {itemPreText} {cartData?.products?.length} {itemText}</h6>
-                                        </div>
+                                        </label>
                                         : null}
                                 </div>
                                 {storePickup == 1 ?
