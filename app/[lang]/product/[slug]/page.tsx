@@ -118,7 +118,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
     {/* Commented Pickup Store */ }
     const getStoreData = () => {
-        get(`pickup-from-store/${params.data?.data?.sku}/${getCookie('selectedCity')}/${localStorage.getItem('globalStore') ? 0 : 0}?lang=${params?.lang}&sortCity=${getCookie('selectedCity')}`).then((responseJson: any) => {
+        get(`pickup-from-store/${params.data?.data?.sku}/${getCookie('selectedCity')}/${localStorage.getItem('globalStore') ? 0 : 0}?lang=${params?.lang}&sortCity=${getCookie('selectedCity')}&product_qty=${sqty}`).then((responseJson: any) => {
             if (responseJson?.warehouse_single) {
                 setfoundStore(true)
                 var check = setglobalStore(responseJson?.warehouse_single)
@@ -132,6 +132,12 @@ export default function Product({ params, searchParams }: { params: { lang: stri
             }
         })
     }
+    useEffect(() => {
+        if (eligiblePickup) {
+            getStoreData()
+        }
+    }, [sqty])
+
     {/* Commented Pickup Store */ }
 
     function detectPlatform() {

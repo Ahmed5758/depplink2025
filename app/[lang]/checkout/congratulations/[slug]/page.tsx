@@ -418,20 +418,34 @@ export default function Congratulations({ params }: { params: { lang: string, sl
                                 </div>
                                 <hr className="opacity-10 my-3" />
                             </div>
-                            <div>
+                            {params?.data?.orderdata?.order_type == 1 ? (
+                                <>
                                 <div className="flex items-center justify-between text-sm">
-                                    <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'العنوان' : 'Address'}</label>
+                                    <label className="font-regular text-[#5D686F]">{params?.lang == 'ar' ? 'متجر الاستلام' : 'Collect From Store'}</label>
                                 </div>
                                 <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] fill-[#004B7A] font-regular text-sm">
                                     <svg id="fi_3514361" height="28" viewBox="0 0 256 256" width="28" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m128 138.184a5 5 0 0 1 -3.607-1.538c-2.075-2.16-50.808-53.259-50.808-82.228a54.415 54.415 0 1 1 108.83 0c0 28.969-48.733 80.068-50.808 82.228a5 5 0 0 1 -3.607 1.538zm0-128.184a44.465 44.465 0 0 0 -44.415 44.418c0 19.07 29.312 54.978 44.414 71.451 15.1-16.478 44.416-52.4 44.416-71.451a44.465 44.465 0 0 0 -44.415-44.418z"></path><path d="m128 76.153a21.735 21.735 0 1 1 21.735-21.735 21.759 21.759 0 0 1 -21.735 21.735zm0-33.47a11.735 11.735 0 1 0 11.735 11.735 11.748 11.748 0 0 0 -11.735-11.735z"></path><path d="m128.126 256a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.559a5 5 0 0 1 -2.5-4.331v-38.385a5 5 0 0 1 10 0v35.5l72.175 41.67 72.174-41.67v-35.88a5 5 0 0 1 10 0v38.765a5 5 0 0 1 -2.5 4.331l-77.174 44.556a4.992 4.992 0 0 1 -2.5.673z"></path><path d="m128.126 166.884a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.557a5 5 0 1 1 5-8.66l74.675 43.113 74.674-43.11a5 5 0 1 1 5 8.66l-77.174 44.557a4.992 4.992 0 0 1 -2.5.667z"></path><path d="m160.933 198.291a5 5 0 0 1 -3.459-1.389l-32.806-31.402a5 5 0 0 1 6.916-7.224l30.1 28.813 68.154-39.349-27.558-26.382-27.359-15.744a5 5 0 1 1 4.988-8.667l27.885 16.047a4.988 4.988 0 0 1 .964.721l32.806 31.407a5 5 0 0 1 -.958 7.942l-77.174 44.557a4.993 4.993 0 0 1 -2.499.67z"></path><path d="m95.067 198.525a4.985 4.985 0 0 1 -2.5-.67l-77.173-44.555a5 5 0 0 1 -.957-7.942l33.057-31.642a4.967 4.967 0 0 1 .957-.718l27.634-15.955a5 5 0 1 1 5 8.66l-27.112 15.653-27.807 26.616 68.154 39.348 30.349-29.048a5 5 0 1 1 6.914 7.224l-33.058 31.641a4.991 4.991 0 0 1 -3.458 1.388z"></path></svg>
-                                    <div>
-                                        <p className="font-bold mb-1.5">{orderDetails?.orderdata?.address?.address_label == 1 ? params.lang == 'ar' ? 'الــمنـــزل' : 'Home' : params.lang == 'ar' ? 'مكتب' : 'Office'}</p>
-                                        <label className="">{orderDetails?.orderdata?.address?.address}</label>
-                                        <p className="font-medium text-xs">{params.lang == 'ar' ? orderDetails?.orderdata?.address?.state_data?.name_arabic : orderDetails?.orderdata?.address?.state_data?.name}, {params.lang == 'ar' ? orderDetails?.orderdata?.address?.state_data?.region?.name_arabic : orderDetails?.orderdata?.address?.state_data?.region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                    <div><p className={`font-bold mb-1.5`}>{params?.lang == 'ar' ? orderDetails?.orderdata?.warehouse.showroom_arabic : orderDetails?.orderdata?.warehouse.showroom}</p>
+                                        <p className={``}>{params?.lang == 'ar' ? orderDetails?.orderdata?.warehouse?.showroom_address_arabic : orderDetails?.orderdata?.warehouse?.showroom_address} | 8002444464</p>
+                                        <p className={`ont-medium text-xs`}>{params.lang == 'ar' ? orderDetails?.orderdata?.warehouse?.waybill_city_data?.name_arabic : orderDetails?.orderdata?.warehouse?.waybill_city_data?.name}, {params.lang == 'ar' ? orderDetails?.orderdata?.warehouse?.store_regions?.name_arabic : orderDetails?.orderdata?.warehouse?.store_regions?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p><div className="mt-3"></div>
                                     </div>
                                 </div>
-                                <hr className="opacity-10 my-3" />
-                            </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="flex items-center justify-between text-sm">
+                                        <label className="font-regular text-[#5D686F]">{params.lang == 'ar' ? 'العنوان' : 'Address'}</label>
+                                    </div>
+                                    <div className="flex items-center gap-x-2 mt-1 rtl:mt-2 text-[#004B7A] fill-[#004B7A] font-regular text-sm">
+                                        <svg id="fi_3514361" height="28" viewBox="0 0 256 256" width="28" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m128 138.184a5 5 0 0 1 -3.607-1.538c-2.075-2.16-50.808-53.259-50.808-82.228a54.415 54.415 0 1 1 108.83 0c0 28.969-48.733 80.068-50.808 82.228a5 5 0 0 1 -3.607 1.538zm0-128.184a44.465 44.465 0 0 0 -44.415 44.418c0 19.07 29.312 54.978 44.414 71.451 15.1-16.478 44.416-52.4 44.416-71.451a44.465 44.465 0 0 0 -44.415-44.418z"></path><path d="m128 76.153a21.735 21.735 0 1 1 21.735-21.735 21.759 21.759 0 0 1 -21.735 21.735zm0-33.47a11.735 11.735 0 1 0 11.735 11.735 11.748 11.748 0 0 0 -11.735-11.735z"></path><path d="m128.126 256a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.559a5 5 0 0 1 -2.5-4.331v-38.385a5 5 0 0 1 10 0v35.5l72.175 41.67 72.174-41.67v-35.88a5 5 0 0 1 10 0v38.765a5 5 0 0 1 -2.5 4.331l-77.174 44.556a4.992 4.992 0 0 1 -2.5.673z"></path><path d="m128.126 166.884a4.992 4.992 0 0 1 -2.5-.67l-77.175-44.557a5 5 0 1 1 5-8.66l74.675 43.113 74.674-43.11a5 5 0 1 1 5 8.66l-77.174 44.557a4.992 4.992 0 0 1 -2.5.667z"></path><path d="m160.933 198.291a5 5 0 0 1 -3.459-1.389l-32.806-31.402a5 5 0 0 1 6.916-7.224l30.1 28.813 68.154-39.349-27.558-26.382-27.359-15.744a5 5 0 1 1 4.988-8.667l27.885 16.047a4.988 4.988 0 0 1 .964.721l32.806 31.407a5 5 0 0 1 -.958 7.942l-77.174 44.557a4.993 4.993 0 0 1 -2.499.67z"></path><path d="m95.067 198.525a4.985 4.985 0 0 1 -2.5-.67l-77.173-44.555a5 5 0 0 1 -.957-7.942l33.057-31.642a4.967 4.967 0 0 1 .957-.718l27.634-15.955a5 5 0 1 1 5 8.66l-27.112 15.653-27.807 26.616 68.154 39.348 30.349-29.048a5 5 0 1 1 6.914 7.224l-33.058 31.641a4.991 4.991 0 0 1 -3.458 1.388z"></path></svg>
+                                        <div>
+                                            <p className="font-bold mb-1.5">{orderDetails?.orderdata?.address?.address_label == 1 ? params.lang == 'ar' ? 'الــمنـــزل' : 'Home' : params.lang == 'ar' ? 'مكتب' : 'Office'}</p>
+                                            <label className="">{orderDetails?.orderdata?.address?.address}</label>
+                                            <p className="font-medium text-xs">{params.lang == 'ar' ? orderDetails?.orderdata?.address?.state_data?.name_arabic : orderDetails?.orderdata?.address?.state_data?.name}, {params.lang == 'ar' ? orderDetails?.orderdata?.address?.state_data?.region?.name_arabic : orderDetails?.orderdata?.address?.state_data?.region?.name} | {params.lang == 'ar' ? 'المملكة العربية السعودية' : 'Saudi Arabia'}</p>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                             <div className="text-sm font-medium">
                                 <p className="font-regular text-[#5D686F] text-sm">{params.lang == 'ar' ? 'الوقت المتوقع للتوصيل' : 'Expected time for delivery'}</p>
                                 <label className="text-[#004B7A] font-regular text-sm mt-1">{moment().add(DeliveryDate, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
@@ -597,19 +611,19 @@ export default function Congratulations({ params }: { params: { lang: string, sl
                                             {data?.product_data?.regular_price > data?.product_data?.price ? <div className='text-[#EA4335] text-xs absolute ltr:left-0 rtl:right-0 top-0 bg-[#EA433520] px-3.5 py-1 rtl:rounded-bl-lg ltr:rounded-br-lg ltr:rounded-tl-lg'>{params.lang == 'ar' ? Math.round(((data?.product_data?.regular_price - data?.product_data?.price) * 100) / data?.product_data?.regular_price) + '% خصم' : Math.round(((data?.product_data?.regular_price - data?.product_data?.price) * 100) / data?.product_data?.regular_price) + '% OFF'}</div> : null}
                                         </div>
                                         <div className="w-full">
-                                            {data?.expressproduct ?
+                                            {data?.expressproduct && orderDetails?.orderdata?.order_type != 1 ?
                                                 <>
                                                     <p className="text-xs text-[#DC4E4E] font-medium">{params?.lang === 'ar' ? 'اطلب مسبقًا الآن' : 'Express Delivery'}</p>
                                                     <p className="text-xs text-primary font-medium mb-2">{params?.lang === 'ar' ? 'سلمت بواسطة' : 'Delivered by'}: {moment().add(orderDetails?.orderdata?.express_days, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM DD, YYYY")}</p>
                                                 </>
                                                 : null}
-                                            {data?.pre_order ?
+                                            {data?.pre_order && orderDetails?.orderdata?.order_type != 1 ?
                                                 <>
                                                     <p className="text-sm text-[#DC4E4E] font-medium">{params?.lang === 'ar' ? 'اطلب مسبقًا الآن' : 'Pre-Order Now'}</p>
                                                     <p className="text-sm text-primary font-medium">{params?.lang === 'ar' ? 'سلمت بواسطة' : 'Delivered by'}: {moment().add(data?.pre_order_day, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM DD, YYYY")}</p>
                                                 </>
                                                 : null}
-                                            {data?.express ?
+                                            {data?.express && orderDetails?.orderdata?.order_type != 1 ?
                                                 <p className="text-sm text-[#DC4E4E] font-medium">{params?.lang === 'ar' ? 'تسليم سريع' : 'Express Delivery'}</p>
                                                 : null}
                                             <h4 className="text-primary text-sm line-clamp-2">{params.lang == 'ar' ? data?.product_data?.name_arabic : data?.product_data?.name}</h4>
