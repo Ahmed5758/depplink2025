@@ -203,6 +203,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
             if(store?.success == false){
                 setstorePickup(0)
                 localStorage.setItem('globalStore', '0')
+                updateDeliveryMethod(0)
             }
         }
 
