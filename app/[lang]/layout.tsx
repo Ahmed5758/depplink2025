@@ -73,7 +73,7 @@ export default async function RootLayout({ children, params }: { children: React
     <html lang={params?.lang} dir={params.lang == 'ar' ? 'rtl' : 'ltr'} className='nprogress-busy'>
       <head>
         <GTM />
-        {/* <WebEngage /> */}
+        <WebEngage />
       </head>
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
         <GlobalProvider>
