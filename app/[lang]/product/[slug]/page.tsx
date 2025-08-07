@@ -175,7 +175,19 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         quantity.push({ value: i + 1, label: i + 1 });
     }
 
+    // function formatProductCustom(product: ProductItem): string {
+    //     return "~p" +
+    //         "id:" + params?.data?.id + ";" +
+    //         "name:" + product.name + ";" +
+    //         "slug:" + product.slug + ";" +
+    //         "brand:" + product.brand.name + ";" +
+    //         "price:" + (product.sale_price ?? product.price) + ";" +
+    //         "image:" + product.featured_image.image;
+    // }
+
     useEffect(() => {
+        // formatProductCustom(params?.data?.data);
+
         if (params?.data?.upsaleproductData?.products?.data) {
             pushGTMEvent({
                 type: 'view_item_list',
@@ -297,7 +309,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         checkStockAlertProduct()
         getRating()
         {/* Commented Pickup Store */ }
-        if(eligiblePickup) {
+        if (eligiblePickup) {
             getStoreData()
         }
 
@@ -889,7 +901,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         var fbt_false: any = false
         setCartItems(item, gifts, fbt_false)
         getCriteoAddToCart()
-         // router.push(`/${params.lang}/checkout`);
+        // router.push(`/${params.lang}/checkout`);
         router.push(`/${params.lang}/cart`);
 
     }
@@ -1474,7 +1486,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 </div>
                             </div>
                         </div>
-                        <div className="sm:w-1/6 mx-auto">
+                        <div className="w-1/6 mx-auto">
                             {data?.gallery?.length > 3 ?
                                 <button id="scroll-leftPopup" className="ltr:ml-4 rtl:mr-6 pb-2 text-primary rotate-90 hover:text-primary rounded-full outline-none focus-visible:outline-none" onClick={scrollTop}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1588,7 +1600,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         : null}
                                 </>
                             }
-                            {eligiblePickup && (globalStore?.name_arabic || globalStore?.name) ? 
+                            {eligiblePickup && (globalStore?.name_arabic || globalStore?.name) ?
                                 <button onClick={() => { setIsOpenModal(true) }} className='bg-primary text-white rounded-md p-2 text-sm w-full ltr:text-left rtl:text-right'>
                                     <div className='flex gap-2 md:gap-3 md:justify-between item-start md:items-center'>
                                         <Image src={iconPickupMan} alt="ExpressIcon" title="Express Icon" width="65" height="0" className='inline-block h-auto rounded-md' />
@@ -1607,7 +1619,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                     </div>
                                     <span className='bg-[#fde18d] px-2 py-1 mt-3 text-primary text-[0.60rem] rounded-md font-semibold animate-pulse float-end'>{stockText}</span>
                                 </button>
-                            : null}
+                                : null}
                         </div>
                         <div className="w-full mt-3">
                             {data?.short_description ?
