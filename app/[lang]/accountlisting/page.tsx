@@ -245,7 +245,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                         </svg>
                         {/* <h2 className="text-sm font-semibold">{params.lang == 'ar' ? `لديك ${parseInt(discountAmount)?.toLocaleString('EN-US')} في محفظتك.` : `You have ${parseInt(discountAmount)?.toLocaleString('EN-US')} in your wallet.`}</h2> */}
                         <h2 className="text-sm font-semibold">
-                            {params.lang === 'ar' ? 'اخر طلباتك' : 'Wishlist'}
+                            {params.lang === 'ar' ? 'المفضلة' : 'Wishlist'}
                         </h2>
 
                     </div>
