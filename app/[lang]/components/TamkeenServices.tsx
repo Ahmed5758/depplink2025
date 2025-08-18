@@ -47,7 +47,7 @@ const TamkeenServices = (props: any) => {
                                 : 'Our home appliance return & exchange policy ensures your satisfaction.',
                         imgSrc:
                             `${NewMedia}35490fbd7c9f30b09bf693ed356203c71713958087.svg`,
-                        route: `${origin}/${isArabic ? "ar" : "en"}/repalcement-and-retrieval-policy`,
+                        route: `${origin}/${isArabic ? "ar" : "en"}/returnexchange`,
                     },
                     {
                         title: isArabic ? 'خدمة العملاء' : 'Customer Care',
