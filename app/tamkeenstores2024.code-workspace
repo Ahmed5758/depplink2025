@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "../../tamkeenstores2024"
+		},
+		{
+			"path": "../../TamkeenDashboard2023"
+		},
+		{
+			"path": "../../tamkeenstores2025"
+		},
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../../Applications/XAMPP/xamppfiles/htdocs/techenixdashboard"
+		},
+		{
+			"path": "../../Documents/TamkeenDeliveryApp"
+		},
+		{
+			"path": "../../TamkeenStores"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive",
+		"java.compile.nullAnalysis.mode": "automatic"
+	}
+}

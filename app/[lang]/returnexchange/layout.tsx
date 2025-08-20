@@ -1,7 +1,7 @@
 import { Api } from "../api/Api";
 
 const fetcher = async (params: any) => {
-    const slug = "repalcement-and-retrieval-policy";
+    const slug = "returnexchange";
     const res: any = await fetch(`${Api}/footer_pages/${slug}`, { next: { revalidate: 86400 } })
     return res.json()
 }

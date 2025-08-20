@@ -13,6 +13,8 @@ import LayoutWrapper from './LayoutWrapper'
 import GTM from './components/GTM'
 import LoginGuard from './components/LoginGuard'
 import { GlobalProvider } from './GlobalContext';
+import Script from 'next/script';
+// import WebEngage from './components/WebEngagge'
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -72,19 +74,21 @@ export default async function RootLayout({ children, params }: { children: React
     <html lang={params?.lang} dir={params.lang == 'ar' ? 'rtl' : 'ltr'} className='nprogress-busy'>
       <head>
         <GTM />
+        <Script src="/WebEngagge.js" strategy="afterInteractive" />
+        {/* <WebEngage /> */}
       </head>
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
         <GlobalProvider>
-        <Providers>
-          <LayoutWrapper homepageProps={homepageProps}>
-            <LoginGuard />
-            {children}
-          </LayoutWrapper>
-        </Providers>
-        <div className="fixed top-0 w-full z-50">
-          <div className="h-1.5" id="loader-spin"></div>
-        </div>
-        <MobileFooterNew lang={params?.lang} dict={dict} />
+          <Providers>
+            <LayoutWrapper homepageProps={homepageProps}>
+              <LoginGuard />
+              {children}
+            </LayoutWrapper>
+          </Providers>
+          <div className="fixed top-0 w-full z-50">
+            <div className="h-1.5" id="loader-spin"></div>
+          </div>
+          <MobileFooterNew lang={params?.lang} dict={dict} />
         </GlobalProvider>
       </body>
     </html>

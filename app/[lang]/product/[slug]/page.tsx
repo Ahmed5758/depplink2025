@@ -175,7 +175,20 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         quantity.push({ value: i + 1, label: i + 1 });
     }
 
+    // function formatProductCustom(product: ProductItem): string {
+    //     return "~p" +
+    //         "id:" + params?.data?.id + ";" +
+    //         "name:" + product.name + ";" +
+    //         "slug:" + product.slug + ";" +
+    //         "brand:" + product.brand.name + ";" +
+    //         "price:" + (product.sale_price ?? product.price) + ";" +
+    //         "image:" + product.featured_image.image;
+    // }
+
+
     useEffect(() => {
+        // formatProductCustom(params?.data?.data);
+
         if (params?.data?.upsaleproductData?.products?.data) {
             pushGTMEvent({
                 type: 'view_item_list',
@@ -190,6 +203,23 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         if (!params?.devicetype)
             router.refresh()
     }, [params])
+
+    // useEffect(() => {
+    //     window.webengage?.track("Added To Cart", {
+    //         /* Numbers */
+    //         "Product ID": 1337,
+    //         "Price": 39.80,
+    //         "Quantity": 1,
+
+    //         /* Strings */
+    //         "Product": "Givenchy Pour Homme Cologne",
+    //         "Category": "Fragrance",
+    //         "Currency": "USD",
+
+    //         /* Boolean */
+    //         "Discounted": true
+    //     });
+    // }, []);
 
     const breadcrumbs: any = params?.data?.breadcrumbs ?? [];
     const item_category: any = breadcrumbs[0] ? (isArabic ? breadcrumbs[0]?.name_arabic : breadcrumbs[0]?.name) : "";
@@ -297,7 +327,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         checkStockAlertProduct()
         getRating()
         {/* Commented Pickup Store */ }
-        if(eligiblePickup) {
+        if (eligiblePickup) {
             getStoreData()
         }
 
@@ -889,7 +919,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
         var fbt_false: any = false
         setCartItems(item, gifts, fbt_false)
         getCriteoAddToCart()
-         // router.push(`/${params.lang}/checkout`);
+        // router.push(`/${params.lang}/checkout`);
         router.push(`/${params.lang}/cart`);
 
     }
@@ -1474,7 +1504,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 </div>
                             </div>
                         </div>
-                        <div className="sm:w-1/6 mx-auto">
+                        <div className="w-1/6 mx-auto">
                             {data?.gallery?.length > 3 ?
                                 <button id="scroll-leftPopup" className="ltr:ml-4 rtl:mr-6 pb-2 text-primary rotate-90 hover:text-primary rounded-full outline-none focus-visible:outline-none" onClick={scrollTop}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1588,7 +1618,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         : null}
                                 </>
                             }
-                            {eligiblePickup && (globalStore?.name_arabic || globalStore?.name) ? 
+                            {eligiblePickup && (globalStore?.name_arabic || globalStore?.name) ?
                                 <button onClick={() => { setIsOpenModal(true) }} className='bg-primary text-white rounded-md p-2 text-sm w-full ltr:text-left rtl:text-right'>
                                     <div className='flex gap-2 md:gap-3 md:justify-between item-start md:items-center'>
                                         <Image src={iconPickupMan} alt="ExpressIcon" title="Express Icon" width="65" height="0" className='inline-block h-auto rounded-md' />
@@ -1607,7 +1637,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                     </div>
                                     <span className='bg-[#fde18d] px-2 py-1 mt-3 text-primary text-[0.60rem] rounded-md font-semibold animate-pulse float-end'>{stockText}</span>
                                 </button>
-                            : null}
+                                : null}
                         </div>
                         <div className="w-full mt-3">
                             {data?.short_description ?
@@ -1751,7 +1781,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                     <p>{isArabic ? 'ابلغني عن انخفاض السعر' : 'Setup Low Price Notification'}</p>
                                 </button>
                             }
-                            <Link className='focus-visible:outline-none flex items-center gap-x-2 text-xs' href={`${origin}/${params?.lang}/repalcement-and-retrieval-policy`} aria-label="repalcement and retrieval policy">
+                            <Link className='focus-visible:outline-none flex items-center gap-x-2 text-xs' href={`${origin}/${params?.lang}/returnexchange`} aria-label="repalcement and retrieval policy">
                                 <svg height="20" viewBox="0 0 60 57" width="20" xmlns="http://www.w3.org/2000/svg" id="fi_3639103"><g id="Page-1" fill="none" fillRule="evenodd"><g id="012---Stacked-Boxes" fill="rgb(0,0,0)" fillRule="nonzero"><path id="Shape" d="m57 24h-9.786c.5015341-.5457648.7817569-1.2587999.786-2v-19c0-1.65685425-1.3431458-3-3-3h-19c-.7639211.00024057-1.4986774.29335573-2.053.819l-9.212 6.47c-1.0551795.4906837-1.7314083 1.54731563-1.735 2.711v14c-.7639211.0002406-1.4986774.2933557-2.053.819l-9.212 6.47c-1.05517947.4906837-1.73140831 1.5473156-1.735 2.711v20c0 1.6568542 1.34314575 3 3 3h21c.740399-.0026037 1.4533329-.2806479 2-.78.5466671.4993521 1.259601.7773963 2 .78h21c.8113742-.0004402 1.5876103-.3311529 2.15-.916l7.958-7.958c.570437-.5603504.8918383-1.3263808.892-2.126v-19c-.0082058-1.6534434-1.3465566-2.9917942-3-3zm-6.666 7.327c-.4129299-.2119451-.8698636-.3239521-1.334-.327h-8.766l5-5h11.188zm-26.334-.327h-8c-.5522847 0-1-.4477153-1-1v-20c0-.55228475.4477153-1 1-1h21c.5522847 0 1 .44771525 1 1v20c.0008743.2617573-.1015372.5132943-.285.7l-.02.02c-.1862728.1804188-.4356784.2808987-.695.28zm15.727-22.234 6.273-5.489v18.723c-.0014251.2642598-.1096223.5167198-.3.7l-5.7 5.709v-18.409c-.0011951-.42617997-.0943131-.84708685-.273-1.234zm-1.393-1.439c-.4129299-.21194509-.8698636-.32395209-1.334-.327h-7.085l6.428-5h8.079zm-13.169-4.919c.0506099-.03555351.0978121-.07572565.141-.12.183311-.18524278.4333915-.28902259.694-.288l7.085-.00000749-6.428 5.00000749h-8.03zm-13 24c.0506099-.0355535.0978121-.0757257.141-.12.183311-.1852428.4333915-.2890226.694-.288v4c.0033144.3414397.0655622.679743.184 1h-7.557zm-9.165 28.592c-.55228475 0-1-.4477153-1-1v-20c0-.5522847.44771525-1 1-1h21c.5522847 0 1 .4477153 1 1v20c-.0000381.2617729-.1027208.5130941-.286.7l-.018.017c-.1859805.1818493-.4358891.2834644-.696.283zm25 0c-.5522847 0-1-.4477153-1-1v-20c0-.5522847.4477153-1 1-1h21c.5522847 0 1 .4477153 1 1v20c-.0017673.255461-.1012377.5005589-.278.685l-.022.015-.014.016c-.1837482.1791927-.4293608.2808749-.686.284zm29.7-8.3-5.7 5.7v-18.4c-.0011951-.42618-.0943131-.8470868-.273-1.234l6.273-5.489v18.723c-.0014251.2642598-.1096223.5167198-.3.7z"></path><path id="Shape" d="m23 23h-4c-1.1045695 0-2 .8954305-2 2v2c0 1.1045695.8954305 2 2 2h4c1.1045695 0 2-.8954305 2-2v-2c0-1.1045695-.8954305-2-2-2zm-4 4v-2h4v2z"></path><path id="Shape" d="m35 23h-3c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h3c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1z"></path><path id="Shape" d="m35 27h-3c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h3c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1z"></path><path id="Shape" d="m10 47h-4c-1.1045695 0-2 .8954305-2 2v2c0 1.1045695.8954305 2 2 2h4c1.1045695 0 2-.8954305 2-2v-2c0-1.1045695-.8954305-2-2-2zm-4 4v-2h4v2z"></path><path id="Shape" d="m22 47h-3c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h3c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1z"></path><path id="Shape" d="m22 51h-3c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h3c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1z"></path><path id="Shape" d="m35 47h-4c-1.1045695 0-2 .8954305-2 2v2c0 1.1045695.8954305 2 2 2h4c1.1045695 0 2-.8954305 2-2v-2c0-1.1045695-.8954305-2-2-2zm-4 4v-2h4v2z"></path><path id="Shape" d="m47 47h-3c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h3c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1z"></path><path id="Shape" d="m47 51h-3c-.5522847 0-1 .4477153-1 1s.4477153 1 1 1h3c.5522847 0 1-.4477153 1-1s-.4477153-1-1-1z"></path></g></g></svg>
                                 <p>{isArabic ? 'لديك 14 يوم الي الاسترجاع' : '14 Days Return Policy'}</p>
                             </Link>
