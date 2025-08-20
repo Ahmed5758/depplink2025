@@ -297,7 +297,7 @@ export default function ContactUs({ params }: { params: { lang: string } }) {
                             <Link href="mailto:contact@tamkeenstores.com.sa" className="text-xs font-semibold underline">contact@tamkeenstores.com.sa</Link>
                         </div>
                         <div className="flex items-center gap-2 mb-2">
-                            <label className="font-semibold text-xs md:w-1/12">{params.lang == 'ar' ? 'ارقام الهواتف:' : 'Phone Number:'}</label>
+                            <label className="font-semibold text-xs md:w-1/12">{params.lang == 'ar' ? 'رقم التليفون:' : 'Phone Number:'}</label>
                             <Link href="tel:8002444464" className="text-xs font-semibold underline">8002444464</Link>
                         </div>
                     </div>
