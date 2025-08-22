@@ -496,12 +496,31 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     }
     }, [addressid])
 
+    // useEffect(() => {
+    //     setPaymentMethod(paymentMethod)
+    //     if (paymentMethod) {
+    //         resetCheckout()
+    //     }
+    // }, [paymentMethod])
     useEffect(() => {
-        setPaymentMethod(paymentMethod)
-        if (paymentMethod) {
-            resetCheckout()
+        console.log("paymentMethod", paymentMethod);
+        setPaymentMethod(paymentMethod);
+        if (couponcode && getCoupon().amount) {
+          (async () => {
+            // couponremove();
+            unsetcoupon();
+            await couponApplied()
+          })();
         }
-    }, [paymentMethod])
+        if (paymentMethod != false) {
+          (async () => {
+            await setDiscountRule(city?.label);
+            await expressDelivery();
+            setLoaderStatus(true);
+            resetCheckout();
+          })();
+        }
+    }, [paymentMethod]);
 
     useEffect(() => {
         if (activeTab3 == 2) {
