@@ -1398,7 +1398,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     const stockText = isArabic ? "متوفر في المعرض" : "Item in Stock for Pickup";
 
     const badgeImageLink = data?.badge_image_link ? data?.badge_image_link : isArabic ? "/icons/express_logo/express_logo_ar.png" : "/icons/express_logo/express_logo_en.png";
-    const badgePromoTitle = isArabic ? data?.badge_promo_title_arabic : data?.badge_promo_title;
+    const badgePromoTitle = isArabic ? (data?.badge_promo_title_arabic ?? "السعر بعد الخصم يشمل الاسترداد النقدي") : (data?.badge_promo_title ?? "Sale Price Included Cashback");
     const badgeBackgroundColor = data?.badge_bg_color ? data?.badge_bg_color : "#fde18d";
     const badgeHeadingColor = data?.badge_heading_color ? data?.badge_heading_color : "#000000";
     const badgePriceColor = data?.badge_price_color ? data?.badge_price_color : "#219EBC";
