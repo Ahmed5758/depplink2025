@@ -1589,7 +1589,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                         </div>
                         <hr className='my-2 opacity-5' />
                         <div className='bg-white p-2 my-2 w-full rounded-md'>
-                             {data?.promotional_price > 0 || data?.promotional_price != null ?
+                            {data?.promotional_price > 0 && data?.promotional_price != null && data?.sale_price ?
                                                  <div className='flex items-center gap-4 my-2 bg-[#fde18d] rounded-md p-2 w-full'>
                                                     <Image
                                                         src={isArabic ? "/icons/express_logo/express_logo_ar.png" : "/icons/express_logo/express_logo_en.png"}
