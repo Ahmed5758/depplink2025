@@ -1397,6 +1397,12 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
     const stockText = isArabic ? "متوفر في المعرض" : "Item in Stock for Pickup";
 
+    const badgeImageLink = data?.badge_image_link ? data?.badge_image_link : isArabic ? "/icons/express_logo/express_logo_ar.png" : "/icons/express_logo/express_logo_en.png";
+    const badgePromoTitle = isArabic ? data?.badge_promo_title_arabic : data?.badge_promo_title;
+    const badgeBackgroundColor = data?.badge_bg_color ? data?.badge_bg_color : "#fde18d";
+    const badgeHeadingColor = data?.badge_heading_color ? data?.badge_heading_color : "#000000";
+    const badgePriceColor = data?.badge_price_color ? data?.badge_price_color : "#219EBC";
+
 
     return (
         <>
@@ -1590,14 +1596,14 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                         <hr className='my-2 opacity-5' />
                         <div className='bg-white p-2 my-2 w-full rounded-md'>
                             {data?.promotional_price > 0 && data?.promotional_price != null && data?.sale_price ?
-                                                 <div className='flex items-center gap-4 my-2 bg-[#fde18d] rounded-md p-2 w-full'>
+                                                 <div className='flex items-center gap-4 my-2 rounded-md p-2' style={{backgroundColor : badgeBackgroundColor}}>
                                                     <Image
-                                                        src={isArabic ? "/icons/express_logo/express_logo_ar.png" : "/icons/express_logo/express_logo_en.png"}
-                                                        width="65" height="0" alt="express_delivery" title='Express Delivery' className='bg-white p-2.5 rounded-md'
+                                                        src={badgeImageLink}
+                                                        width="65" height="0" alt={badgePromoTitle} title={badgePromoTitle} className='bg-white p-2.5 rounded-md'
                                                     />
                                                     <div className='text-sm font-normal'>
-                                                        <h6 className='font-bold'>{params?.lang == "ar" ? "السعر بعد خصم الاسترداد النقدي" : "Sale Price Included Cashback"}</h6>
-                                                        <span className="text-[#219EBC] font-bold flex items-center gap-1">{data?.sale_price}{currencyExtraSmallSymbol}</span>
+                                                        <h6 className='font-bold' style={{color:badgeHeadingColor}}>{badgePromoTitle}</h6>
+                                                        <span className="font-bold flex items-center gap-1" style={{color:badgePriceColor}}>{data?.sale_price}{currencyExtraSmallSymbol}</span>
                                                     </div>
                                                 </div>
                                             : null}
