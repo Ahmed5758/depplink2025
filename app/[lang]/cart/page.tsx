@@ -271,20 +271,20 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
     }
 
     const getCheckout: any = async () => {
-        setLoaderStatus(true)
-        // abandoned cart work
-        var data = {
-            user_id: localStorage.getItem("userid"),
-            cart_data: getCart(),
-        }
-        post('abandoned-cart-store', data).then((responseJson: any) => {
-        })
-        // abandoned cart work
-        if (localStorage.getItem("userid")) {
-            router.push(`/${params.lang}/checkout`);
-        } else {
-            router.push(`/${params.lang}/login?type=checkout`)
-        }
+        // setLoaderStatus(true)
+        // // abandoned cart work
+        // var data = {
+        //     user_id: localStorage.getItem("userid"),
+        //     cart_data: getCart(),
+        // }
+        // post('abandoned-cart-store', data).then((responseJson: any) => {
+        // })
+        // // abandoned cart work
+        // if (localStorage.getItem("userid")) {
+        //     router.push(`/${params.lang}/checkout`);
+        // } else {
+        //     router.push(`/${params.lang}/login?type=checkout`)
+        // }
     }
 
     const WishlistProduct = (i: number, id: number) => {

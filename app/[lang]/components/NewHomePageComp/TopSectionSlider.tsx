@@ -42,13 +42,13 @@ const TopSectionSlider: React.FC<TopSectionSliderData> = ({
           const sliderLink: any = item?.redirection_link ? origin + '/' + lang + '/' + item?.redirection_link : '';
           return (
             <SwiperSlide key={item?.id}>
-              <Link
+              {/* <Link
                 prefetch={false}
                 scroll={false}
                 href={sliderLink}
                 className='rounded-b-2xl w-full cursor-grab'
                 aria-label={`Go to ${sliderLink}`}
-              >
+              > */}
                 <div className={`relative w-full`}>
                   <Image
                     src={sliderImage}
@@ -62,7 +62,7 @@ const TopSectionSlider: React.FC<TopSectionSliderData> = ({
                     priority={true}
                   />
                 </div>
-              </Link>
+              {/* </Link> */}
             </SwiperSlide>
           );
         })}
