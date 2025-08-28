@@ -1679,7 +1679,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 :
                                 null
                             }
-                            {extraData?.badgeData ?
+                            {/* {extraData?.badgeData ?
                                 <Image
                                     src={extraData?.badgeData?.badge_slider ? NewMedia + extraData?.badgeData?.badge_slider?.image : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png'}
                                     alt={extraData?.badgeData?.badge_slider ? isArabic ? extraData?.badgeData?.badge_slider?.alt_arabic : extraData?.badgeData?.badge_slider?.alt : ''}
@@ -1690,7 +1690,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                     className="rounded-md h-auto w-full shadow-md mt-2.5"
                                     sizes='(max-width: 640px) 150px, (max-width: 768px) 150px, (max-width: 1024px) 150px, 100vw'
                                 />
-                                : null}
+                                : null} */}
                         </div>
                         <div className="align__center gap-2 mt-3">
                             <div className="px-2 pt-2 bg-[#C3E6F170] rounded-md w-1/2 h-32">
