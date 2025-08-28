@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prebuild": "node scripts/bump-cache-key.cjs && node -e \"require.resolve('tailwindcss/package.json')\"",
     "dev": "node server.js",
     "build": "next build",
+    "predev": "node scripts/bump-cache-key.cjs",
     "start": "NODE_ENV=production node server.js",
     "lint": "next lint",
-    "build:css": "postcss src/tailwind.css -o static/dist/tailwind.css",
-    "watch": "watch 'npm run build:css' ./layouts",
-    "analyze": "cross-env ANALYZE=true next build"
+    "analyze": "cross-env ANALYZE=true next build",
+    "watch": "watch 'npm run build:css' ./layouts"
   },
   "dependencies": {
     "@firebase/app": "^0.9.28",
@@ -60,6 +61,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-flatpickr": "^3.8.11",
     "@types/react-google-recaptcha": "^2.1.9",
     "@types/react-text-mask": "^5.4.14",
     "@types/uuid": "^9.0.8",
