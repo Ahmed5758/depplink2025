@@ -384,7 +384,7 @@ const setCartItems = async (data: product, gift: [product], fbt: [product]) => {
 }
 
 const setCartExpiry = () => {
-    var addexpirytime = 43200000;
+    var addexpirytime = 172800000;
     // var addexpirytime = 60000;
     const cacheExpireDate: any = Date.now() + addexpirytime;
     localStorage.setItem("cartexpiry", cacheExpireDate);

@@ -670,7 +670,7 @@ export default function NewCart({ params }: { params: { lang: string, data: any,
                                                             }),
                                                         }}
                                                         value={{ value: pro.quantity, label: pro.quantity }}
-                                                        options={[...Array(pro?.total_quantity)].map((item: any, qi: any) => {
+                                                        options={[...Array(parseInt(pro?.bogo ? pro.quantity : pro?.total_quantity))].map((item: any, qi: any) => {
                                                             return {
                                                                 value: qi + 1,
                                                                 label: qi + 1
