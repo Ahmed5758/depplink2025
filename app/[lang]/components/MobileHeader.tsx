@@ -1,12 +1,50 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RWebShare } from "react-web-share"
 import { useRouter } from "next-nprogress-bar";
 
 
 export default function MobileHeader(props: any) {
     const router = useRouter()
+
+    var timerLoader: any = 0;
+    var interval:any;
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+            
+            interval = setInterval(() => {
+                timerLoader += 1;
+            }, 1000);
+    
+            } else if (document.visibilityState === 'visible') {
+            if (interval) {
+                clearInterval(interval);
+            }
+    
+            if (timerLoader >= 3600) {
+                const url = window.location.href;
+    
+                if (url.includes('/cart') || url.includes('/checkout') ||
+                url.includes('/login') || url.includes('/signup')) {
+                window.location.href = `/${props.lang}`;
+                } else {
+                window.location.reload();
+                }
+            }
+            timerLoader = 0;
+            }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+        return () => {
+            if (interval) {
+            clearInterval(interval);
+            }
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, []);
     const goBack = () => {
         if (props.redirect) {
             router.push(`/${props.lang}/${props.redirect}`);
