@@ -14,7 +14,7 @@ import GTM from './components/GTM'
 import LoginGuard from './components/LoginGuard'
 import { GlobalProvider } from './GlobalContext';
 import Script from 'next/script';
-// import WebEngage from './components/WebEngagge'
+import ReloadRefresh from './components/ReloadRefresh';
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -80,6 +80,7 @@ export default async function RootLayout({ children, params }: { children: React
       <body className={params.lang == "ar" ? cairo.className : notoSans.className} suppressHydrationWarning={true}>
         <GlobalProvider>
           <Providers>
+            <ReloadRefresh lang={params?.lang} idleMs={30 * 60 * 1000} /> {/* 30 mins */}
             <LayoutWrapper homepageProps={homepageProps}>
               <LoginGuard />
               {children}
