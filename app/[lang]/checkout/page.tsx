@@ -503,22 +503,22 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
     //     }
     // }, [paymentMethod])
     useEffect(() => {
-        console.log("paymentMethod", paymentMethod);
+        // console.log("paymentMethod", paymentMethod);
         setPaymentMethod(paymentMethod);
-        if (couponcode && getCoupon().amount) {
-          (async () => {
-            // couponremove();
-            unsetcoupon();
-            await couponApplied()
-          })();
-        }
+        // if (couponcode && getCoupon().amount) {
+        //   (async () => {
+        //     // couponremove();
+        //     unsetcoupon();
+        //     await couponApplied();
+        //   })();
+        // }
         if (paymentMethod != false) {
-          (async () => {
+        (async () => {
             await setDiscountRule(city?.label);
             await expressDelivery();
             setLoaderStatus(true);
             resetCheckout();
-          })();
+        })();
         }
     }, [paymentMethod]);
 
