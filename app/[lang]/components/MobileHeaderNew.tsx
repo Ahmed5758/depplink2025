@@ -7,6 +7,7 @@ import { RWebShare } from "react-web-share";
 import { useUserAgent } from "next-useragent";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState, useEffect, Fragment, useContext } from "react";
+import { getCookie } from 'cookies-next';
 import {
   Dialog,
   Transition,
@@ -353,7 +354,7 @@ export default function MobileHeaderNew(props: any) {
   };
 
   const updateCity = () => {
-    var sCty: any = localStorage?.getItem("globalcity");
+    var sCty: any = getCookie('selectedCity');
     if (!sCty) {
       sCty = "Jeddah";
     }

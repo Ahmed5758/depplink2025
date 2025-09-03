@@ -179,6 +179,7 @@ export default function Checkout({ params }: { params: { lang: string, devicetyp
 
     const getCustomerAddressData = async () => {
         if (localStorage.getItem('userid')) {
+            getCitiesData(params?.lang);
             await get(`user-addresses/${localStorage.getItem('userid')}`).then((responseJson: any) => {
                 if (responseJson?.addresses?.length) {
                     setAddressData(responseJson?.addresses)
