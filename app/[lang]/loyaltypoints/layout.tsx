@@ -1,37 +1,42 @@
+// app/[lang]/loyaltypoints/layout.tsx
+import type { Metadata, ResolvingMetadata, Viewport } from 'next';
+import { Api } from '../api/Api';
 
-import type { Metadata, ResolvingMetadata } from 'next'
-import { get } from "../api/ApiCalls"
-import { headers } from 'next/headers'
+type Params = { lang: string };
+type LayoutProps = { children: React.ReactNode; params: Promise<Params> };
 
-// import Loading from './loading'
-type Props = {
-    params: { slug: string, lang: string, data: any }
-}
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://tamkeenstores.com.sa';
+const OG_IMAGE = `${BASE_URL}/images/metaLogo.jpg`;
 
-export const viewport = {
+export const viewport: Viewport = {
     width: 'device-width',
     initialScale: 1,
     maximumScale: 1,
-    // userScalable: false,
-    // Also supported by less commonly used
-    // interactiveWidget: 'resizes-visual',
+};
+
+async function fetchFooter() {
+    const res = await fetch(`${Api}/footer_pages/loyaltypoints`, { next: { revalidate: 7200 } });
+    if (!res.ok) throw new Error('Failed to load loyaltypoints footer');
+    return res.json();
 }
 
+export async function generateMetadata(
+    { params }: { params: Promise<Params> },
+    _parent: ResolvingMetadata
+): Promise<Metadata> {
+    const { lang } = await params;
+    const data = await fetchFooter(); // de-duped with layout
+    const meta = data?.data ?? {};
+    const title =
+        lang === 'ar' ? meta.meta_title_ar ?? 'نقاط الولاء' : meta.meta_title_en ?? 'Loyalty Points';
+    const description =
+        lang === 'ar' ? meta.meta_description_ar ?? '' : meta.meta_description_en ?? '';
+    const pageLink = meta.page_link ?? 'loyaltypoints';
+    const url = `${BASE_URL}/${lang}/${pageLink}`;
 
-const fetcher = async (params: any) => {
-    const slug = "loyaltypoints";
-    var data;
-    await get('footer_pages/' + slug).then((responseJson: any) => {
-        data = responseJson
-    })
-    return data
-}
-
-export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     return {
-        title: params.lang == 'ar' ? params?.data?.data?.meta_title_ar : params?.data?.data?.meta_title_en,
-        description: params.lang == 'ar' ? params?.data?.data?.meta_description_ar : params?.data?.data?.meta_description_en,
-        keywords: [params.lang == 'ar' ? params?.data?.data?.meta_tag_ar : params?.data?.data?.meta_tag_en],
+        title,
+        description,
         referrer: 'origin-when-cross-origin',
         robots: {
             index: true,
@@ -46,91 +51,79 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
                 'max-snippet': -1,
             },
         },
-        formatDetection: {
-            email: false,
-            address: true,
-            telephone: true,
-        },
+        formatDetection: { email: false, address: true, telephone: true },
         openGraph: {
-            siteName: params.lang == 'ar' ? params?.data?.data?.meta_title_ar : params?.data?.data?.meta_title_en,
-            title: params.lang == 'ar' ? params?.data?.data?.meta_title_ar : params?.data?.data?.meta_title_en,
-            description: params.lang == 'ar' ? params?.data?.data?.meta_description_ar : params?.data?.data?.meta_description_en,
-            locale: params.lang,
+            siteName: 'Tamkeen Stores',
+            title,
+            description,
+            locale: lang,
             type: 'website',
-            images: [
-                {
-                    url: '/images/metaLogo.jpg', // Must be an absolute URL
-                    width: 800,
-                    height: 800,
-                    alt: 'logo',
-                },
-            ],
-            url: `https://tamkeenstores.com.sa/${params.lang}/${params?.data?.data?.page_link}`,
+            images: [{ url: OG_IMAGE, width: 800, height: 800, alt: title }],
+            url,
         },
         alternates: {
-            canonical: `https://tamkeenstores.com.sa/${params.lang}/${params?.data?.data?.page_link}`, //This will be current link will come
+            canonical: url,
             languages: {
-                'en': `https://tamkeenstores.com.sa/en/${params?.data?.data?.page_link}`,
-                'ar': `https://tamkeenstores.com.sa/ar/${params?.data?.data?.page_link}`,
+                en: `${BASE_URL}/en/${pageLink}`,
+                ar: `${BASE_URL}/ar/${pageLink}`,
             },
         },
         appLinks: {
             ios: {
                 url: 'https://apps.apple.com/sa/app/tamkeen-stores-%D9%85%D8%B9%D8%A7%D8%B1%D8%B6-%D8%AA%D9%85%D9%83%D9%8A%D9%86/id1546482321',
-                app_store_id: 'com.tamkeen.tamkeenstore',
+                app_store_id: '1546482321',
             },
             android: {
-                package: 'https://play.google.com/store/apps/details?id=com.tamkeen.tamkeenstores&hl=en&gl=US&pli=1',
+                package: 'com.tamkeen.tamkeenstores',
                 app_name: 'com.tamkeen.tamkeenstores',
             },
-            web: {
-                url: `https://tamkeenstores.com.sa/${params.lang}/${params?.data?.data?.page_link}`,
-                should_fallback: true,
-            },
+            web: { url, should_fallback: true },
         },
         twitter: {
             card: 'summary_large_image',
-            title: params.lang == 'ar' ? params?.data?.data?.meta_title_ar : params?.data?.data?.meta_title_en,
-            description: params.lang == 'ar' ? params?.data?.data?.meta_description_ar : params?.data?.data?.meta_description_en,
-            siteId: '@TamkeenStores',
-            creator: 'Muhammad Usman Siddiqui | usman@tamkeen-ksa.com',
-            images: ['/images/metaLogo.jpg'], // Must be an absolute URL
+            title,
+            description,
+            site: '@TamkeenStores',
+            creator: '@TamkeenStores',
+            images: [OG_IMAGE],
         },
-    }
+    };
 }
 
-export default async function LoyaltyPointsLayout({ children, params }: { children: React.ReactNode, params: { slug: string, data: any, lang: string} }) {
-    const footerdata = await fetcher(params);
-    params.data = footerdata;
+export default async function LoyaltyPointsLayout({ children, params }: LayoutProps) {
+    const { lang } = await params;
+    const footerdata = await fetchFooter();
+
     const jsonLd = [
         {
-            "@id": "#breadcrumb",
-            "@context": "http://schema.org",
-            "@type": "BreadcrumbList",
+            '@id': '#breadcrumb',
+            '@context': 'http://schema.org',
+            '@type': 'BreadcrumbList',
             itemListElement: [
                 {
-                    "@type": "ListItem",
+                    '@type': 'ListItem',
                     position: 1,
-                    name: params.lang == 'ar' ? 'الصفحة الرئيسي' : 'Home Page',
-                    item: "https://tamkeenstores.com.sa/" + params.lang,
+                    name: lang === 'ar' ? 'الصفحة الرئيسية' : 'Home Page',
+                    item: `${BASE_URL}/${lang}`,
                 },
                 {
-                    "@type": "ListItem",
+                    '@type': 'ListItem',
                     position: 2,
-                    name: "Loyalty Points",
-                    item: "https://tamkeenstores.com.sa/" + params.lang + "/loyaltypoints",
+                    name: lang === 'ar' ? 'نقاط الولاء' : 'Loyalty Points',
+                    item: `${BASE_URL}/${lang}/loyaltypoints`,
                 },
             ],
         },
-    ]
+    ];
 
     return (
         <>
             <script
                 type="application/ld+json"
+                // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
             {children}
         </>
-    )
+    );
 }
