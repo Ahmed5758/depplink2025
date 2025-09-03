@@ -458,7 +458,7 @@ export default function Category({ params, searchParams }: { params: { lang: str
       </div>
       <>
         <Transition appear show={filterMobile} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={() => setFilterMobile(false)}>
+          <Dialog as="div" className="relative z-30" onClose={() => setFilterMobile(false)}>
             <div className="fixed inset-0 bg-dark/40" aria-hidden="true" />
             <div className="fixed inset-0 overflow-y-auto">
               <Transition.Child
