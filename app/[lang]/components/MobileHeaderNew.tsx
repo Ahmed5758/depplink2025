@@ -75,40 +75,40 @@ export default function MobileHeaderNew(props: any) {
   };
 
   var timerLoader: any = 0;
-  var interval:any;
+  var interval: any;
   useEffect(() => {
     const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') {
-        
+      if (document.visibilityState === 'hidden') {
+
         interval = setInterval(() => {
-            timerLoader += 1;
+          timerLoader += 1;
         }, 1000);
 
-        } else if (document.visibilityState === 'visible') {
+      } else if (document.visibilityState === 'visible') {
         if (interval) {
-            clearInterval(interval);
+          clearInterval(interval);
         }
 
         if (timerLoader >= 3600) {
-            const url = window.location.href;
+          const url = window.location.href;
 
-            if (url.includes('/cart') || url.includes('/checkout') ||
+          if (url.includes('/cart') || url.includes('/checkout') ||
             url.includes('/login') || url.includes('/signup')) {
             window.location.href = `/${props.lang}`;
-            } else {
+          } else {
             window.location.reload();
-            }
+          }
         }
         timerLoader = 0;
-        }
+      }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-        if (interval) {
+      if (interval) {
         clearInterval(interval);
-        }
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -137,51 +137,138 @@ export default function MobileHeaderNew(props: any) {
   }, []);
 
   useEffect(() => {
-    if (!localStorage.getItem("globalcity")) {
-      setTimeout(function () {
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("/firebase-messaging-sw.js");
-        }
-        if (localStorage.getItem("default_address") != "yes") {
-          var live = localStorage.getItem("live_location");
-          if (live != "false") {
-            if ("geolocation" in navigator) {
-              // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
-              navigator.geolocation.getCurrentPosition(({ coords }) => {
-                setLatitude(coords.latitude);
-                setLongitude(coords.longitude);
-                const latitude = coords.latitude;
-                const longitude = coords.longitude;
-                // if (!localStorage.getItem("globalcity"))
-                fetchApiData({ latitude, longitude });
-              });
-            }
-          }
-        }
-      }, 5000);
-    }
-    // DataLocalStorage()
+    if (typeof window === 'undefined') return; // SSR guard
 
-    // for address
-    if (!fullAddress) {
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/firebase-messaging-sw.js");
-      }
-      if ("geolocation" in navigator) {
-        // Retrieve latitude & longitude coordinates from `navigator.geolocation` Web API
-        navigator.geolocation.getCurrentPosition(({ coords }) => {
-          setLatitude(coords.latitude);
-          setLongitude(coords.longitude);
-          const latitude = coords.latitude;
-          const longitude = coords.longitude;
-          // if (!localStorage.getItem("globalcity"))
-          fetchApiData({ latitude, longitude });
-        });
-      }
-    } else {
-      setfullAddress(localStorage.getItem("fulladdress"));
+    const ls = window.localStorage;
+    const hasGlobalCity = !!ls.getItem('globalcity');
+    const defaultAddressYes = ls.getItem('default_address') === 'yes';
+    const liveAllowed = ls.getItem('live_location') !== 'false';
+
+    // Sync fullAddress from localStorage if we don't already have it
+    const lsAddress = ls.getItem('fulladdress');
+    if (!fullAddress && lsAddress) {
+      setfullAddress(lsAddress);
     }
-  }, [props]);
+
+    // Decide whether we should try geolocation at all
+    const shouldGeo =
+      !defaultAddressYes && liveAllowed && !fullAddress; // don’t geolocate if user has a default address or already has a full address
+
+    if (!shouldGeo) return;
+
+    let cancelled = false;
+    let timeoutId: number | undefined;
+    let watchId: number | undefined;
+
+    const doFetch = (coords: GeolocationCoordinates) => {
+      if (cancelled) return;
+      setLatitude(coords.latitude);
+      setLongitude(coords.longitude);
+      fetchApiData({ latitude: coords.latitude, longitude: coords.longitude });
+    };
+
+    const getOnce = () =>
+      new Promise<GeolocationCoordinates>((resolve, reject) => {
+        if (!('geolocation' in navigator)) return reject(new Error('No geolocation'));
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve(pos.coords),
+          err => reject(err),
+          { timeout: 7000, maximumAge: 60_000, enableHighAccuracy: false }
+        );
+      });
+
+    const fallbackWatch = () => {
+      if (!('geolocation' in navigator)) return;
+      watchId = navigator.geolocation.watchPosition(
+        pos => {
+          if (watchId !== undefined) navigator.geolocation.clearWatch(watchId);
+          doFetch(pos.coords);
+        },
+        err => {
+          console.warn('Geolocation watch failed:', err);
+        },
+        { enableHighAccuracy: false, maximumAge: 0 }
+      );
+    };
+
+    // Strategy:
+    // - Try once (uses cache if fresh)
+    // - If POSITION_UNAVAILABLE/TIMEOUT, fall back to watch for first fix
+    const attempt = async () => {
+      try {
+        const coords = await getOnce();
+        doFetch(coords);
+      } catch (e: any) {
+        // 2: POSITION_UNAVAILABLE, 3: TIMEOUT
+        if (e?.code === 2 || e?.code === 3) fallbackWatch();
+        else console.warn('Geolocation failed:', e);
+      }
+    };
+
+    // If no global city set, delay first attempt (mirrors your original 5s delay)
+    if (!hasGlobalCity) {
+      timeoutId = window.setTimeout(attempt, 5000);
+    } else {
+      attempt();
+    }
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      if (watchId !== undefined) navigator.geolocation.clearWatch(watchId);
+    };
+    // Only run on mount / fullAddress changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fullAddress]); // removed [props]
+
+  // useEffect(() => {
+  //   if (typeof window === "undefined") return; // SSR guard
+
+  //   if (!localStorage.getItem("globalcity")) {
+  //     setTimeout(function () {
+  //       if (localStorage.getItem("default_address") !== "yes") {
+  //         const live = localStorage.getItem("live_location");
+  //         if (live !== "false" && "geolocation" in navigator) {
+  //           navigator.geolocation.getCurrentPosition(
+  //             ({ coords }) => {
+  //               setLatitude(coords.latitude);
+  //               setLongitude(coords.longitude);
+  //               const latitude = coords.latitude;
+  //               const longitude = coords.longitude;
+  //               fetchApiData({ latitude, longitude });
+  //             },
+  //             (err) => {
+  //               console.warn("Geolocation (initial) failed:", err);
+  //             },
+  //             { timeout: 7000, maximumAge: 60_000 }
+  //           );
+  //         }
+  //       }
+  //     }, 5000);
+  //   }
+
+  //   // for address
+  //   if (!fullAddress) {
+  //     if ("geolocation" in navigator) {
+  //       navigator.geolocation.getCurrentPosition(
+  //         ({ coords }) => {
+  //           setLatitude(coords.latitude);
+  //           setLongitude(coords.longitude);
+  //           const latitude = coords.latitude;
+  //           const longitude = coords.longitude;
+  //           fetchApiData({ latitude, longitude });
+  //         },
+  //         (err) => {
+  //           console.warn("Geolocation (address) failed:", err);
+  //         },
+  //         { timeout: 7000, maximumAge: 60_000 }
+  //       );
+  //     }
+  //   } else {
+  //     setfullAddress(localStorage.getItem("fulladdress") || "");
+  //   }
+  // }, [props]);
+
 
   const fetchApiData = async ({
     latitude,

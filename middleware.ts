@@ -28,7 +28,7 @@ export function middleware(request: any) {
             new URL(`/${defaultLocale}/${pathname}`, request.url)
         )
     }
-    const { device } : any = userAgent(request)
+    const { device }: any = userAgent(request)
     const deviceType: string = device.type === 'mobile' ? 'mobile' : 'desktop'
     // const deviceVendor: string = device.vendor
     // const deviceModel: string = device.model
@@ -46,12 +46,18 @@ export function middleware(request: any) {
 //   matcher: '/about/:path*',
 // }
 
+// export const config = {
+//     matcher: [
+//         // Skip all internal paths (_next)
+//         '/((?!api|_next/static|_next/image|favicon.ico).*)',
+//         // '/((?!api|_next/static|_next/image|images|favicon.ico).*)',
+//         // Optional: only run on root (/) URL
+//         // '/'
+//     ],
+// }
+
 export const config = {
     matcher: [
-        // Skip all internal paths (_next)
-        '/((?!api|_next/static|_next/image|favicon.ico).*)',
-        // '/((?!api|_next/static|_next/image|images|favicon.ico).*)',
-        // Optional: only run on root (/) URL
-        // '/'
+        '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|images|icons|api/internal).*)',
     ],
-}
+};

@@ -19,7 +19,7 @@ import ReloadRefresh from './components/ReloadRefresh';
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
   const slug = url
-  const res: any = await fetch(`${Api}${slug}`, { next: { revalidate: 86400 } })
+  const res: any = await fetch(`${Api}${slug}`, { next: { revalidate: 7200 } })
   return res.json()
 }
 

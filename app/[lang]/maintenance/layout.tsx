@@ -4,7 +4,7 @@ import { cacheKey } from '../GlobalVar'
 
 const fetcher = async (params: any) => {
     const slug = "maintenance";
-    const res: any = await fetch(`${Api}/footer_pages/${slug}?${cacheKey}`, { next: { revalidate: 86400 } })
+    const res: any = await fetch(`${Api}/footer_pages/${slug}?${cacheKey}`, { next: { revalidate: 7200 } })
     return res.json()
 }
 

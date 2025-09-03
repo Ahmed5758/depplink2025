@@ -312,7 +312,6 @@ export default function StoreLocator({ params,searchParams }: { params: { lang: 
                                             defaultZoom={15}
                                             options={{
                                                 //zoom:false
-                                                fullscreenControlOptions: false,
                                                 isFractionalZoomEnabled: false,
                                                 mapTypeControl: false,
                                                 rotateControl: false,

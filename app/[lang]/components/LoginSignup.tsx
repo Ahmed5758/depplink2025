@@ -406,7 +406,7 @@ export default function LoginSingup(props: any) {
                                                             maxLength={1}
                                                             onChange={(e: any) => handleChange(e.target.value, index)}
                                                             onKeyUp={(e: any) => handleBackspaceAndEnter(e, index)}
-                                                            ref={(reference) => (otpBoxReference.current[index] = reference)}
+                                                            ref={(reference: any) => (otpBoxReference.current[index] = reference)}
                                                             className={`border border-[#D0D5DD] w-14 h-auto text-primary p-2 rounded-md focus:border-[#f0660c] outline-none focus-visible:outline-none appearance-none text-center  font-semibold text-lg`}
                                                         />
                                                     ))}

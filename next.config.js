@@ -83,7 +83,7 @@ const nextConfig = {
                 pathname: '/**',
             },
         ],
-        unoptimized: false,
+        unoptimized: true,
         deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     },

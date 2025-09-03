@@ -6,7 +6,7 @@ const next = require('next');
 const dev = process.env.NODE_ENV !== 'production';
 // Bind to the DO-assigned port and all interfaces
 const PORT = parseInt(process.env.PORT, 10) || 3000;
-const HOST = '127.0.0.1';
+const HOST = '0.0.0.0';
 
 // Do NOT pass hostname/port into next() unless you really need middleware hostname checks
 const app = next({ dev });
