@@ -1562,16 +1562,16 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 : null}
                         </div>
                     </div>
-                    <div>
+                    <div className="my-2 w-fit rounded-md">
                         {data?.promotional_price > 0 && data?.promotional_price != null && data?.sale_price ?
-                            <div className='flex items-center gap-4 my-2 rounded-md p-2' style={{backgroundColor : badgeBackgroundColor}}>
+                            <div className='flex items-center gap-4 rounded-md py-2 px-3' style={{backgroundColor : badgeBackgroundColor}}>
                                 <Image
                                     src={badgeImageLink}
                                     width="65" height="0" alt={badgePromoTitle} title={badgePromoTitle} className='bg-white p-2.5 rounded-md'
                                 />
                                 <div className='text-sm font-normal'>
-                                    <h6 className='font-bold' style={{color:badgeHeadingColor}}>{badgePromoTitle}</h6>
-                                    <span className="font-bold flex items-center gap-1" style={{color:badgePriceColor}}>{data?.sale_price}{currencyExtraSmallSymbol}</span>
+                                    <h6 className='text-sm font-bold' style={{color:badgeHeadingColor}}>{badgePromoTitle}</h6>
+                                    <span className="font-bold flex items-center gap-1 text-base" style={{color:badgePriceColor}}>{data?.sale_price}{currencyExtraSmallSymbol}</span>
                                 </div>
                             </div>
                         : null}
