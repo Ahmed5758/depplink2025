@@ -251,8 +251,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                     </div>
                     <svg height="26" viewBox="0 0 24 24" width="26" className="rotate-180" xmlns="http://www.w3.org/2000/svg" id="fi_2722991"><g id="_17" data-name="17"><path d="m15 19a1 1 0 0 1 -.71-.29l-6-6a1 1 0 0 1 0-1.41l6-6a1 1 0 0 1 1.41 1.41l-5.29 5.29 5.29 5.29a1 1 0 0 1 -.7 1.71z"></path></g></svg>
                 </Link>
-                {
-                    localStorage.getItem("userid") ?
+                {userid ?
                         <>
                             <Link href={`${origin}/${params?.lang}/account/addressbook`} className="border-b border-[#9CA4AB50] px-4 py-3 flex items-center justify-between text-[#004b7a] fill-[#004B7A]">
                                 <div className="flex items-center gap-x-2">
@@ -372,7 +371,7 @@ export default function AccountListing({ params }: { params: { dict: any; lang: 
                     </div>
                 </div >
                 <div className="fixed bottom-[77px] w-full p-3 bg-white shadow-md border-t border-[#5D686F26]">
-                    {localStorage.getItem("userid") ?
+                    {userid ?
                         <>
                             <button onClick={() => handleLogout()} className="focus-visible:outline-none btn border border-[#DC4E4E] bg-[#DC4E4E] p-2.5 rounded-md w-full text-white fill-white flex items-center justify-center font-medium gap-x-2">
                                 {params.lang === 'ar' ? 'تسجيل خروج' : 'Log Out'}
