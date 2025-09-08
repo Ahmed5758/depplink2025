@@ -15,6 +15,7 @@ import LoginGuard from './components/LoginGuard'
 import { GlobalProvider } from './GlobalContext';
 import Script from 'next/script';
 import ReloadRefresh from './components/ReloadRefresh';
+import ConnectionStatus from './components/ConnectionStatus';
 
 type Props = { params: { lang: string, data: any, slidersdataone: any } }
 const fetcher = async (url: any, options: RequestInit = {}) => {
@@ -84,6 +85,7 @@ export default async function RootLayout({ children, params }: { children: React
             <LayoutWrapper homepageProps={homepageProps}>
               <LoginGuard />
               {children}
+              <ConnectionStatus />
             </LayoutWrapper>
           </Providers>
           <div className="fixed top-0 w-full z-50">
