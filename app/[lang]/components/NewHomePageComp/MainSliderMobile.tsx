@@ -43,7 +43,7 @@ const MainSliderMobile: React.FC<MainSliderMobileProps> = ({
                 modules={[Autoplay, Navigation, Pagination]}
                 className="swiperProductSlider"
             >
-                {data?.map((item: any, index: any) => {
+                {(data || [])?.map((item: any, index: any) => {
                     const sliderImage: any = item?.image ? NewMedia2 + item?.image : '';
                     const sliderLink: any = item?.redirection_link ? origin + '/' + lang + '/' + item?.redirection_link : '';
                     return (
