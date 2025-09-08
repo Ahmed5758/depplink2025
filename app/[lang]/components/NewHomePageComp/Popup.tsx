@@ -13,7 +13,7 @@ export default function Popup(props: any, request: any) {
     useEffect(() => {
         const hasShown = localStorage.getItem('hasShown');
         const isAuthenticated = localStorage.getItem("userid");
-
+        // Show popup if the user has never seen it or if they are logged in for the first time
         if (hasShown !== 'true' || (isAuthenticated && hasShown !== 'true')) {
             setIsOpen(true);
             localStorage.setItem('hasShown', 'true');
