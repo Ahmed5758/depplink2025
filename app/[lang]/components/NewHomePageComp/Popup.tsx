@@ -11,10 +11,12 @@ export default function Popup(props: any, request: any) {
     )
     const [isOpen, setIsOpen] = useState(false)
     useEffect(() => {
-        const hasShown = sessionStorage.getItem('hasShown');
-        if (!hasShown) {
+        const hasShown = localStorage.getItem('hasShown');
+        const isAuthenticated = localStorage.getItem("userid");
+
+        if (hasShown !== 'true' || (isAuthenticated && hasShown !== 'true')) {
             setIsOpen(true);
-            sessionStorage.setItem('hasShown', 'true');
+            localStorage.setItem('hasShown', 'true');
         }
     }, []);
 
