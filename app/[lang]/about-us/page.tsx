@@ -22,7 +22,7 @@ export default function AboutUs({ params }: { params: { lang: string, data: any 
 
     return (
         <>
-            <div className="container py-4">
+            <div className="container pt-4 pb-20">
                 {/* BreadCrumbs */}
                 <ol className="flex text-gray-500  font-semibold dark:text-white-dark">
                     <li className="text-sm text-[#5D686F] font-semibold"><Link href={'/' + params.lang}>{params.lang == 'ar' ? 'الصفحة الرئيسي' : 'Home'}</Link></li>

@@ -98,7 +98,7 @@ export default function BrandSlider(props: any) {
     return (
         <>
             {/* Subscription Section */}
-            <div className="bg-white block pb-12">
+            <div className="bg-white block pb-24">
                 <div className={`container pt-3 items-center`}>
                     <div>
                         <h3 className="headingHomeMain">

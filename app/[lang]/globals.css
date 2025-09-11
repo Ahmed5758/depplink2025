@@ -898,7 +898,7 @@ input[type='range']:focus {
 
 /* Start Wp__310 */
 .Wp__310mainDiv {
-	@apply container py-4
+	@apply container md:py-4 pt-4 pb-20
 }
 
 .Wp__310mainInnerOL {

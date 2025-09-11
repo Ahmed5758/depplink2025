@@ -21,7 +21,7 @@ export default function RepalcementandRetrievalPolicy({ params }: { params: { la
     return (
         <>
         <MobileHeader type="Third"  lang={params.lang} pageTitle={params.lang == 'ar' ? 'سياسة الاستبدال والاسترجاع' : 'Exchange and Return Policy'} />
-            <div className="container py-16 md:py-4">
+            <div className="container pt-16 pb-24 md:py-4">
                 <div className="md:my-6 w-full">
                     <div className="text-sm text-[#5D686F] mt-3" dangerouslySetInnerHTML={{ __html: params.lang == 'ar' ? data?.page_content_ar : data?.page_content_en }}></div>
                 </div>
