@@ -2546,12 +2546,12 @@ span.flatpickr-weekday {
 	margin: -1px -4px !important;
 }
 
-/* .category_topbar{
+.category_topbar{
 	background-image:url("../../public/images/categoryNew/topbar_bg.png")
 }
 .category_sec_1{
 	background-image:url("../../public/images/categoryNew/banner_bg.png")
-} */
+}
 
 .testimonials_sec .swiper.swiper-initialized{
 	@apply !pb-12 md:!pb-16

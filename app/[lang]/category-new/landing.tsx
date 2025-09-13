@@ -243,13 +243,13 @@ export default function NewCategory({
         }
       })}
 
-      <section className="relative mb-8">
+      {/* <section className="relative mb-8">
         <Testimonial
           isArabic={isArabic}
           isMobileOrTablet={isMobileOrTablet}
           origin={origin}
         />
-      </section>
+      </section> */}
 
       <section className={`${containerClass} bg-[#F3F9FC] border-t border-b border-primary py-3 relative`}>
         <div data-section="18">

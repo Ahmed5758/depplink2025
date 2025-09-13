@@ -107,15 +107,15 @@ export default function ProductLoopComponent(props: any) {
           slidesPerView={5}
           breakpoints={{
             320: {
-              slidesPerView: 2.2,
+              slidesPerView: 1.2,
               spaceBetween: 6,
             },
             640: {
-              slidesPerView: 2.2,
+              slidesPerView: 1.2,
               spaceBetween: 6,
             },
             768: {
-              slidesPerView: 2.2,
+              slidesPerView: 1.2,
               spaceBetween: 6,
             },
             1024: {
