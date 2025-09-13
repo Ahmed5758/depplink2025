@@ -6,6 +6,7 @@ import { NewMedia } from "../../api/Api";
 
 interface FilterProps {
   isArabic: boolean;
+  isMobileOrTablet: boolean;
   devicetype: string;
   brands: { id: string; name: string; name_arabic: string; brand_media_image?: { image: string } }[];
   selectedbrands: Record<string, boolean>;
@@ -156,7 +157,14 @@ export default function FilterVertical(props: FilterProps) {
                   aria-label={isArabic ? tagchild.name_arabic : tagchild.name}
                 >
                   {tagchild.icon ? (
-                    <div dangerouslySetInnerHTML={{ __html: tagchild.icon }} />
+                    // <div
+                    //   dangerouslySetInnerHTML={{ __html: tagchild.icon }}
+                    // />
+                    <div className="text-[#121212] font-bold tracking-[0.00544rem]">
+                      <p className="text-[.5rem] leading-[.625rem]">
+                        {isArabic ? tagchild.name_arabic : tagchild.name}
+                      </p>
+                    </div>
                   ) : (
                     <div className="text-[#121212] font-bold tracking-[0.00544rem]">
                       <p className="text-[.5rem] leading-[.625rem]">

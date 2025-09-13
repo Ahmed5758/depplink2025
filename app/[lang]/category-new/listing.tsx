@@ -69,6 +69,7 @@ export default function SubCategoryNew({
   const router = useRouter();
   const [dict, setDict] = useState<any>([]);
   const [CatData, setCatData] = useState<any>(params?.data);
+  const [brandData, setBrandData] = useState<any>(params?.data?.productData?.brands);
   const [loaderStatus, setLoaderStatus] = useState<any>(false);
   const [currentPage, setcurrentPage] = useState<any>(
     params?.data?.productData?.products?.current_page
@@ -83,6 +84,8 @@ export default function SubCategoryNew({
   const [sort, setsort] = useState<any>(false);
   const [products, setproducts] = useState<any>([]);
   const [view, setview] = useState<any>("grid");
+  const [min, setMin] = useState<any>(params?.data?.productData?.min || 0); // Adjust default as needed
+  const [max, setMax] = useState<any>(params?.data?.productData?.max || 0); // Adjust default as needed
   const SortingProduct = [
     { value: "", label: params?.lang == "ar" ? "الأكثر تطابقاً" : "Relevance" },
     {
@@ -304,7 +307,6 @@ export default function SubCategoryNew({
         }
       }
     })();
-    console.log("test paramsdata", params?.data);
     // var prodata = products
     // if (params?.data?.productData?.products?.current_page == 1)
     //   prodata = []
@@ -522,6 +524,7 @@ export default function SubCategoryNew({
             <FilterHorizontal
               isArabic={isArabic}
               isMobileOrTablet={isMobileOrTablet}
+              devicetype={params?.devicetype}
               tags={CatData?.productData?.tags}
               selectedtags={selectedtags}
               onChangetags={(tagchild: any) => {
@@ -538,7 +541,7 @@ export default function SubCategoryNew({
               }}
               brands={CatData?.productData?.brands}
               selectedbrands={selectedbrands}
-              setBrandData={(id: number, name: string) => {
+              setBrandData={(id: any, name: string) => {
                 var bdata = selectedbrands;
                 if (!bdata[name]) {
                   bdata[name] = true;
@@ -579,6 +582,7 @@ export default function SubCategoryNew({
               <FilterVertical
                 isArabic={isArabic}
                 isMobileOrTablet={isMobileOrTablet}
+                devicetype={params?.devicetype}
                 tags={CatData?.productData?.tags}
                 selectedtags={selectedtags}
                 onChangetags={(tagchild: any) => {
@@ -595,7 +599,7 @@ export default function SubCategoryNew({
                 }}
                 brands={CatData?.productData?.brands}
                 selectedbrands={selectedbrands}
-                setBrandData={(id: string, name: string) => {
+                setBrandData={(id: any, name: string) => {
                   var bdata = selectedbrands;
                   if (!bdata[name]) {
                     bdata[name] = true;
@@ -717,7 +721,7 @@ export default function SubCategoryNew({
                     onClick={() => {
                       setFilterModal(!filterModal);
                     }}
-                    className="bestProButton bg-white shadow-md !text-sm !rounded-[.625rem] !font-semibold flex gap-2 items-center w-fit whitespace-nowrap selected !py-1 !px-4 !text-[000] !border-0 hover:text-white hover:fill-white hover:bg-primary"
+                    className="bestProButton bg-white shadow-md !text-sm !rounded-[.625rem] !font-semibold flex gap-2 items-center !w-fit whitespace-nowrap selected !py-1 !px-4 !text-[000] !border-0 hover:text-white hover:fill-white hover:bg-primary"
                   >
                     {applyFiltersText}
                     <svg
@@ -1092,6 +1096,7 @@ export default function SubCategoryNew({
           setFilterModal={setFilterModal}
           tags={CatData?.productData?.tags}
           isArabic={isArabic}
+          devicetype={params?.devicetype}
           isMobileOrTablet={isMobileOrTablet}
           selectedtags={selectedtags}
           onChangetags={(tagchild: any) => {
@@ -1108,7 +1113,7 @@ export default function SubCategoryNew({
           }}
           brands={CatData?.productData?.brands}
           selectedbrands={selectedbrands}
-          setBrandData={(id: string, name: string) => {
+          setBrandData={(id: any, name: string) => {
             var bdata = selectedbrands;
             if (!bdata[name]) {
               bdata[name] = true;

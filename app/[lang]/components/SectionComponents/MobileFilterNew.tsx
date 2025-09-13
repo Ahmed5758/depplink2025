@@ -6,6 +6,7 @@ import { NewMedia } from "../../api/Api";
 
 interface FilterProps {
   isArabic: boolean;
+  isMobileOrTablet: boolean;
   devicetype: string;
   brands: { id: string; name: string; name_arabic: string; brand_media_image?: { image: string } }[];
   selectedbrands: Record<string, boolean>;
@@ -114,7 +115,7 @@ export default function MobileFilterNew(props: FilterProps) {
           >
             {clearText}
           </button>
-          : null}
+          :null}
         </div>
 
         <div className="flex items-center flex-wrap gap-2">
@@ -147,8 +148,8 @@ export default function MobileFilterNew(props: FilterProps) {
 
       {/* Brand Section */}
       {props.brands?.length > 0 && (
-        <div className="mb-4 p-4 rounded-[.25rem] border border-[#E8E8E8]">
-          <div className="text-xs text-[#252B42] font-bold flex items-center justify-between gap-4 w-full mb-4">
+        <div className="mb-4 py-4 px-9 rounded-[.25rem] border border-[#E8E8E8]">
+          <div className={`text-xs text-[#252B42] font-bold flex items-center justify-between gap-4 w-full ${openFilter["FilterByBrand"] ? 'mb-4' : ''}`}>
             <span className="line-clamp-1">{brandText}</span>
             <button
               onClick={() => toggleFilter("FilterByBrand")}
@@ -194,8 +195,8 @@ export default function MobileFilterNew(props: FilterProps) {
 
       {/* Tags Section */}
       {props.tags?.map((tagdata, t) => (
-        <div key={t} className="mb-4 p-4 rounded-[.25rem] border border-[#E8E8E8]">
-          <div className="text-xs text-[#252B42] font-bold flex items-center justify-between gap-4 w-full mb-4">
+        <div key={t} className="mb-4 py-4 px-9 rounded-[.25rem] border border-[#E8E8E8]">
+          <div className={`text-xs text-[#252B42] font-bold flex items-center justify-between gap-4 w-full ${openFilter[`FilterBy${tagdata.name}`] ? 'mb-4' : ''} `}>
             <span className="line-clamp-1">{isArabic ? tagdata.name_arabic : tagdata.name}</span>
             <button
               onClick={() => toggleFilter(`FilterBy${tagdata.name}`)}
@@ -218,7 +219,14 @@ export default function MobileFilterNew(props: FilterProps) {
                     aria-label={isArabic ? tagchild.name_arabic : tagchild.name}
                   >
                     {tagchild.icon ? (
-                      <div dangerouslySetInnerHTML={{ __html: tagchild.icon }} />
+                      // <div dangerouslySetInnerHTML={{ __html: tagchild.icon }} />
+                      <>
+                      <div className="text-[#121212] font-bold tracking-[0.00544rem]">
+                        <p className="text-[.5rem] leading-[.625rem]">
+                          {isArabic ? tagchild.name_arabic : tagchild.name}
+                        </p>
+                      </div>
+                      </>
                     ) : (
                       <div className="text-[#121212] font-bold tracking-[0.00544rem]">
                         <p className="text-[.5rem] leading-[.625rem]">

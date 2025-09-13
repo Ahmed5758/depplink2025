@@ -51,21 +51,6 @@ const Pagination: React.FC<PaginationProps> = ({
   const numberFormatter = (num: number) => isArabic ? num.toLocaleString("ar-EG") : num;
 
   if (isMobileOrTablet) {
-    const prevIcon = (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="14"
-        height="15"
-        viewBox="0 0 14 15"
-        fill="none"
-      >
-        <path
-          d="M4.07651 4.24507L7.68647 7.86529L4.07651 11.4855L6.09686 13.5161L11.7579 7.85503L6.09686 2.21447L4.07651 4.24507Z"
-          fill="#1D428A"
-        />
-      </svg>
-    );
-
     const nextIcon = (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -75,8 +60,23 @@ const Pagination: React.FC<PaginationProps> = ({
         fill="none"
       >
         <path
+          d="M4.07651 4.24507L7.68647 7.86529L4.07651 11.4855L6.09686 13.5161L11.7579 7.85503L6.09686 2.21447L4.07651 4.24507Z"
+          fill="currentColor"
+        />
+      </svg>
+    );
+
+    const prevIcon = (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="15"
+        viewBox="0 0 14 15"
+        fill="none"
+      >
+        <path
           d="M2.24112 7.86529L7.89194 13.5161L9.92255 11.4855L6.30233 7.86529L9.92255 4.24507L7.89194 2.21447L2.24112 7.86529Z"
-          fill="#004B7A"
+          fill="currentColor"
         />
       </svg>
     );
@@ -115,7 +115,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Previous Button */}
         <button
           onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-          className={`px-2 py-1 rounded-full bg-white hover:bg-primary group ${
+          className={`px-2 py-1 rounded-full bg-white hover:bg-primary text-[#004B7A] hover:text-white group ${
             currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
           }`}
           disabled={currentPage === 1}
@@ -126,7 +126,7 @@ const Pagination: React.FC<PaginationProps> = ({
         {/* Next Button */}
         <button
           onClick={() => currentPage < lastPage && setCurrentPage(currentPage + 1)}
-          className={`px-1 py-1 rounded-full bg-white hover:bg-primary group ${
+          className={`px-1 py-1 rounded-full bg-white hover:bg-primary group text-[#004B7A] hover:text-white ${
             currentPage === lastPage ? "opacity-50 cursor-not-allowed" : ""
           }`}
           disabled={currentPage === lastPage}
@@ -148,7 +148,7 @@ const Pagination: React.FC<PaginationProps> = ({
     >
       <path
         d="M0.315426 7.70802L7.5117 14.9043L10.0977 12.3183L5.48734 7.70802L10.0977 3.09771L7.5117 0.51175L0.315426 7.70802Z"
-        fill="#004B7A"
+        fill="currentColor"
       />
     </svg>
   );
@@ -163,7 +163,7 @@ const Pagination: React.FC<PaginationProps> = ({
     >
       <path
         d="M4.40503 6.09868L9.00228 10.709L4.40503 15.3193L6.97792 17.9053L14.1873 10.6959L6.97792 3.51273L4.40503 6.09868Z"
-        fill="#1D428A"
+        fill="currentColor"
       />
     </svg>
   );
@@ -181,7 +181,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {/* Previous Button */}
       <button
         onClick={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
-        className={`px-2 py-2 rounded-full bg-white hover:bg-primary group ${
+        className={`px-2 py-2 rounded-full bg-white !text-primary hover:bg-primary hover:!text-white group ${
           currentPage === 1 ? "opacity-50 cursor-not-allowed" : ""
         }`}
         disabled={currentPage === 1}
@@ -192,7 +192,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {/* Next Button */}
       <button
         onClick={() => currentPage < lastPage && setCurrentPage(currentPage + 1)}
-        className={`px-2 py-2 rounded-full bg-white hover:bg-primary group ${
+        className={`px-2 py-2 rounded-full bg-white !text-primary hover:bg-primary hover:!text-white group ${
           currentPage === lastPage ? "opacity-50 cursor-not-allowed" : ""
         }`}
         disabled={currentPage === lastPage}

@@ -10,6 +10,7 @@ import "swiper/css/navigation";
 
 interface FilterProps {
   isArabic: boolean;
+  isMobileOrTablet: boolean;
   devicetype: string;
   brands: { id: string; name: string; name_arabic: string; brand_media_image?: { image: string } }[];
   selectedbrands: Record<string, boolean>;
@@ -221,9 +222,16 @@ export default function FilterHorizontal(props: FilterProps) {
                           }
                         >
                           {tagchild.icon ? (
-                            <div
-                              dangerouslySetInnerHTML={{ __html: tagchild.icon }}
-                            />
+                            // <div
+                            //   dangerouslySetInnerHTML={{ __html: tagchild.icon }}
+                            // />
+                            <>
+                            <div className="text-[#121212] font-bold tracking-[0.00544rem]">
+                              <p className="2xl:text-[0.675rem] text-[0.625rem]">
+                                {isArabic ? tagchild.name_arabic : tagchild.name}
+                              </p>
+                            </div>
+                            </>
                           ) : (
                             <div className="text-[#121212] font-bold tracking-[0.00544rem]">
                               <p className="2xl:text-[0.675rem] text-[0.625rem]">
@@ -409,9 +417,16 @@ export default function FilterHorizontal(props: FilterProps) {
                           }
                         >
                           {tagchild.icon ? (
-                            <div
-                              dangerouslySetInnerHTML={{ __html: tagchild.icon }}
-                            />
+                            // <div
+                            //   dangerouslySetInnerHTML={{ __html: tagchild.icon }}
+                            // />
+                            <>
+                            <div className="text-[#121212] font-bold tracking-[0.00544rem]">
+                              <p className="2xl:text-[0.675rem] text-[0.625rem]">
+                                {isArabic ? tagchild.name_arabic : tagchild.name}
+                              </p>
+                            </div>
+                            </>
                           ) : (
                             <div className="text-[#121212] font-bold tracking-[0.00544rem]">
                               <p className="2xl:text-[0.675rem] text-[0.625rem]">

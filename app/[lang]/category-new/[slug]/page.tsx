@@ -12,7 +12,6 @@ export default function CategoryNew({ params, searchParams }: { params: { lang: 
     const [data, setData] = useState<any>(params);
     const [data2, setData2] = useState<any>(searchParams);
     useEffect(() => {
-        console.log('paramsdata changed', params);
         setData(params);
         setData2(searchParams);
     }, [params, searchParams])
