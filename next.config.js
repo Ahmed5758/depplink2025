@@ -1,10 +1,5 @@
 const withPWA = require('next-pwa')({
-    dest: 'public',
-    // Don’t even consider .map files for the precache manifest
-    buildExcludes: [/\.map$/],
-    // Optional: if you still see the warning for other large assets, bump the limit:
-    // maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
-    disable: process.env.NODE_ENV === 'development',
+    dest: 'public'
 });
 
 /** @type {import('next').NextConfig} */
@@ -17,7 +12,9 @@ const nextConfig = {
         );
         return config;
     },
-    reactStrictMode: false,
+    reactStrictMode: true,
+      productionBrowserSourceMaps: true, // Generate source maps for production
+      compress: false,
     transpilePackages: ['crypto-js'],
     async redirects() {
         return [
@@ -33,105 +30,72 @@ const nextConfig = {
             },
         ];
     },
-    // next.config.js
     images: {
         formats: ['image/avif', 'image/webp'],
+        unoptimized: false, // Enable optimization
+        deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
+        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
         remotePatterns: [
             {
                 protocol: 'https',
                 hostname: 'via.placeholder.com',
-                pathname: '/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'tamkeenstores.com.sa',
-                pathname: '/images/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'partners.tamkeenstores.com.sa',
-                pathname: '/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'adminpanelapis.tamkeenstores.com.sa',
-                pathname: '/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'images.tamkeenstores.com.sa',
-                pathname: '/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'media.tamkeenstores.com.sa',
-                pathname: '/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'cdn-media.tamkeenstores.com.sa',
-                pathname: '/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'cyberadmin.tamkeenstores.com.sa',
-                pathname: '/',
+                pathname: '/**',
             },
             {
                 protocol: 'https',
                 hostname: 'onelink.to',
-                pathname: '/',
+                pathname: '/**',
             },
-            {
-                protocol: 'https',
-                hostname: '.tamkeenstores.com.sa',
-                pathname: '/',
-            },
-            {
-                protocol: 'https',
-                hostname: 'tamkeenstores.lon1.digitaloceanspaces.com'
-            },
-            {
-                protocol: 'https',
-                hostname: 'tamkeenstores.lon1.cdn.digitaloceanspaces.com'
-            },
-            {
-                protocol: 'https',
-                hostname: 'cdn-images.tamkeenstores.com.sa'
-            }
         ],
-        unoptimized: false,
+      	unoptimized: true,
         deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
         imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     },
     async headers() {
         return [
             {
-                source: '/.well-known/apple-app-site-association',
-                headers: [
-                    { key: 'Content-Type', value: 'application/json' }, // (optional, but fine)
-                    { key: 'Cache-Control', value: 'public, max-age=3600' }
-                ],
-            },
-            {
-                // if you added the root copy too
-                source: '/apple-app-site-association',
-                headers: [
-                    { key: 'Content-Type', value: 'application/json' },
-                    { key: 'Cache-Control', value: 'public, max-age=3600' }
-                ],
-            },
-            {
                 source: '/:path*',
                 headers: [
-                    {
-                        key: 'X-DNS-Prefetch-Control',
-                        value: 'off',
-                    },
+                    { key: 'X-DNS-Prefetch-Control', value: 'off' },
                 ],
             },
             {
-                source: '/_next/static/:path*',
+                source: '/_next/static/(.*)',
                 headers: [
                     {
                         key: 'Cache-Control',

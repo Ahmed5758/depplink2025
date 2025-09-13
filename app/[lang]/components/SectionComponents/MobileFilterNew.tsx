@@ -106,6 +106,7 @@ export default function MobileFilterNew(props: FilterProps) {
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2.5">
           <h2 className="headingHomeMain !text-base !text-dark">{filterText}</h2>
+          {Object.keys(props.selectedbrands).length > 0 || Object.keys(props.selectedtags).length > 0 ?
           <button
             className="clear_all text-xs text-[#BE0404] font-semibold"
             onClick={props.setClear}
@@ -113,6 +114,7 @@ export default function MobileFilterNew(props: FilterProps) {
           >
             {clearText}
           </button>
+          : null}
         </div>
 
         <div className="flex items-center flex-wrap gap-2">
