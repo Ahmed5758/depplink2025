@@ -2564,3 +2564,24 @@ span.flatpickr-weekday {
 .categories_items .swiper-slide {
 	@apply !mr-0
 }
+/* Hide scrollbar but keep scroll working */
+
+.hide_scrollbar::-webkit-scrollbar {
+  height: 5px;
+}
+
+/* Track */
+.hide_scrollbar::-webkit-scrollbar-track {
+  background: none; 
+}
+ 
+/* Handle */
+.hide_scrollbar::-webkit-scrollbar-thumb {
+  background: #034b7a; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.hide_scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #034b7a; 
+}

@@ -1,0 +1,2566 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+	.min-h-custom {
+		min-height: calc(630px - 0rem);
+	}
+
+	.h-proBoxMobile {
+		height: 35.5rem;
+	}
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+:root {
+	--foreground-rgb: 0, 255, 255;
+	--background-start-rgb: 249, 253, 255;
+	--background-end-rgb: 249, 253, 255;
+	--swiper-theme-color: '#004B7A' !important;
+	--swiper-navigation-size: 1.3rem !important;
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		--foreground-rgb: 249, 253, 255;
+		--background-start-rgb: 249, 253, 255;
+		--background-end-rgb: 249, 253, 255;
+	}
+}
+
+.kuXgun {
+	background: #f7f7fa !important;
+}
+
+.ios-scroll {
+	-webkit-overflow-scrolling: touch;
+	overflow-y: auto;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+
+.no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+body {
+	/* color: rgb(var(--foreground-rgb)); */
+	/* background: linear-gradient(to bottom,
+		transparent,
+		rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb)); */
+	background: #F7F7FA;
+	/* #ebf2fd; */
+}
+
+.backTopbar {
+	background-image: url('/images/bgTopImg.png');
+	background-size: cover;
+	background-repeat: repeat;
+	background-position: center;
+	display: flex;
+}
+
+.specificationImagesProduct {
+	height: 26px;
+	width: 36px;
+	object-fit: contain;
+}
+
+.WhatsappBeforeHover {
+	@apply fill-[#ECF8EE] px-1 py-1.5 justify-center items-center opacity-80 bg-[#ECF8EE] shadow-md h-10 absolute top-52 rtl:right-0 ltr:left-0 rtl:rounded-l-2xl ltr:rounded-r-2xl
+}
+
+.whatsappLayout {
+	@apply px-1 py-1.5 justify-center items-center opacity-80 bg-[#ECF8EE] shadow-md h-10 absolute top-52 rtl:right-0 ltr:left-0 rtl:rounded-l-2xl ltr:rounded-r-2xl
+}
+
+.mobileSwiperTransaction {
+	transform: scale(0.9) !important;
+	opacity: 0.7;
+	/* Optional */
+	z-index: 1;
+	/* Keep them behind the center */
+}
+
+.swiper-slide {
+	transition: transform 0.3s ease;
+}
+
+.hide-scroll-bar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+.hide-scroll-bar::-webkit-scrollbar {
+	display: none;
+}
+
+input[type='range']:focus {
+	outline: none !important;
+}
+
+[type='checkbox']:checked:hover,
+[type='checkbox']:checked:focus,
+[type='radio']:checked:hover,
+[type='radio']:checked:focus {
+	border-color: transparent;
+	/* background-color: #20831E; */
+	outline: none;
+}
+
+
+.nextButtonSlider {
+	@apply absolute z-10 !flex items-center justify-center right-auto bg-white/40 p-3 rounded-full;
+	top: var(--swiper-navigation-top-offset, 46%);
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	right: var(--swiper-navigation-sides-offset, 8px) !important;
+}
+
+.prevButtonSlider {
+	@apply absolute z-10 !flex items-center justify-center left-auto bg-white/40 p-3 rounded-full;
+	top: var(--swiper-navigation-top-offset, 46%);
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	left: var(--swiper-navigation-sides-offset, 8px) !important;
+}
+
+.nextButtonSliderThird {
+	@apply absolute z-10 flex items-center justify-center right-auto bg-dark/40 rounded-full;
+}
+
+.prevButtonSliderThird {
+	@apply absolute z-10 flex items-center justify-center left-auto bg-dark/40 rounded-full;
+}
+
+.nextButtonSliderPro {
+	@apply absolute z-10 flex items-center justify-center right-auto bg-white/40 p-3 rounded-full;
+	top: var(--swiper-navigation-top-offset, 46%);
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	right: var(--swiper-navigation-sides-offset, 8px) !important;
+}
+
+.prevButtonSliderPro {
+	@apply absolute z-10 flex items-center justify-center left-auto bg-white/40 p-3 rounded-full;
+	top: var(--swiper-navigation-top-offset, 46%);
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	left: var(--swiper-navigation-sides-offset, 8px) !important;
+}
+
+.proNextButtonSlider {
+	position: absolute;
+	top: var(--swiper-navigation-top-offset, 47%);
+	z-index: 10;
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	left: var(--swiper-navigation-sides-offset, -50px) !important;
+	right: auto;
+	/* background-color: #00000050; */
+	padding: 1rem;
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+.proPrevButtonSlider {
+	position: absolute;
+	top: var(--swiper-navigation-top-offset, 47%);
+	z-index: 10;
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: var(--swiper-navigation-sides-offset, -40px) !important;
+	left: auto;
+	/* background-color: #00000050; */
+	padding: 1rem;
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+.prevButtonSliderThird {
+	position: absolute;
+	top: var(--swiper-navigation-top-offset, 47%);
+	z-index: 10;
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: var(--swiper-navigation-sides-offset, 6px) !important;
+	left: auto;
+	/* background-color: #00000050; */
+	padding: 0.75rem;
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+.nextButtonSliderThird {
+	position: absolute;
+	top: var(--swiper-navigation-top-offset, 47%);
+	z-index: 10;
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: auto;
+	left: var(--swiper-navigation-sides-offset, 6px) !important;
+	/* background-color: #00000050; */
+	padding: 0.75rem;
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+.prevButtonEmbla {
+	position: absolute;
+	top: 42% !important;
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2)) !important;
+	left: var(--swiper-navigation-sides-offset, 10px) !important;
+	right: auto;
+	background-color: #00000050;
+}
+
+.nextButtonEmbla {
+	position: absolute;
+	top: 42% !important;
+	margin-top: calc(0px - (var(--swiper-navigation-size) / 2)) !important;
+	right: var(--swiper-navigation-sides-offset, 10px) !important;
+	left: auto;
+	background-color: #00000050;
+}
+
+.embla {
+	/* max-width: 48rem; */
+	margin: auto;
+	--slide-height: auto;
+	--slide-spacing: 0.75rem;
+	--slide-size: 100%;
+}
+
+.embla__two {
+	max-width: 100%;
+	margin: auto;
+	--slide-height: auto;
+	--slide-spacing: 0.75rem;
+	--slide-size: 25%;
+}
+
+.embla__three {
+	max-width: 100%;
+	margin: auto;
+	--slide-height: auto;
+	--slide-spacing: 0.75rem;
+	--slide-size: 16%;
+}
+
+.embla__three_mobile {
+	max-width: 100%;
+	margin: auto;
+	--slide-height: auto;
+	--slide-spacing: 0.75rem;
+	--slide-size: 44%;
+}
+
+.embla__three_mobile_product {
+	max-width: 100%;
+	margin: auto;
+	--slide-height: auto;
+	--slide-spacing: 0.75rem;
+	--slide-size: 40%;
+}
+
+.embla__viewport {
+	overflow: hidden;
+}
+
+.embla__container {
+	backface-visibility: hidden;
+	display: flex;
+	touch-action: pan-y pinch-zoom;
+	margin-left: calc(var(--slide-spacing) * -1);
+}
+
+.embla__slide {
+	flex: 0 0 var(--slide-size);
+	min-width: 0;
+	padding-left: var(--slide-spacing);
+}
+
+.embla__slide__number {
+	box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+	border-radius: 1.8rem;
+	font-size: 4rem;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: var(--slide-height);
+}
+
+.embla__controls {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	justify-content: space-between;
+	gap: 1.2rem;
+	margin-top: 1.8rem;
+}
+
+@media only screen and (max-width: 990px) {
+	.embla {
+		/* --slide-size: 90%; This is the old size for mobile */
+		--slide-size: 100%;
+		--slide-spacing: 0.50rem;
+	}
+
+	.emblafull {
+		--slide-size: 100%;
+		--slide-spacing: 0.50rem;
+	}
+
+	.categoryEmbla {
+		--slide-size: 100% !important;
+		--slide-spacing: 0rem !important;
+	}
+
+	.emblaSingleSlide {
+		--slide-size: 100%;
+		--slide-spacing: 0.50rem;
+	}
+
+	.proNextButtonSlider {
+		display: none
+	}
+
+	.proPrevButtonSlider {
+		display: none
+	}
+}
+
+@media only screen and (max-width: 1380px) {
+	.menuResponsive {
+		width: 7.5rem;
+	}
+
+	.menuResponsiveLogin {
+		width: 9rem;
+	}
+}
+
+.iTvdwG {
+	background-color: rgb(249 253 255) !important;
+}
+
+.embla__controls {
+	display: grid;
+	grid-template-columns: auto 1fr;
+	justify-content: space-between;
+	gap: 1.2rem;
+	margin-top: 1.8rem;
+}
+
+.embla__buttons {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 0.6rem;
+	align-items: center;
+}
+
+.embla__button {
+	-webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+	-webkit-appearance: none;
+	appearance: none;
+	background-color: #00000080;
+	touch-action: manipulation;
+	display: inline-flex;
+	text-decoration: none;
+	cursor: pointer;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
+	width: 2.8rem;
+	height: 2.8rem;
+	z-index: 1;
+	border-radius: 50%;
+	color: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.embla__button:disabled {
+	color: var(--detail-high-contrast);
+}
+
+.embla__button__svg {
+	width: 35%;
+	height: 35%;
+}
+
+.embla__dots {
+	@apply flex flex-wrap justify-center items-center absolute w-full bottom-4;
+	margin-right: calc((2.6rem - 1.4rem) / 2 * -1);
+}
+
+.embla__dot {
+	@apply appearance-none bg-white/50 touch-manipulation decoration-clone cursor-pointer border-none p-0 m-0 h-1 w-3.5 flex items-center justify-center gap-2 ml-1 rounded-full;
+	-webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
+}
+
+.embla__dot:after {
+	@apply shadow-md w-3.5 h-1 rounded-full flex items-center;
+	content: '';
+}
+
+.embla__dot--selected:after {
+	@apply shadow-md bg-white;
+}
+
+.index-digit {
+	color: #004B7A;
+	line-height: 1;
+	text-shadow: -2px 2px 0 #FFD400, 2px 2px 0 #FFD400, 2px -2px 0 #FFD400, -2px -2px 0 #FFD400;
+	text-shadow: -0.2rem 0.2rem 0 #FFD400, 0.2rem 0.2rem 0 #FFD400, 0.2rem -0.2rem 0 #FFD400, -0.2rem -0.2rem 0 #FFD400;
+}
+
+.rightBigDigit {
+	right: calc(100% - 23%);
+}
+
+#flix-lg-inpage,
+#inpage_container,
+#flix-lg {
+	max-width: 100% !important
+}
+
+#flix-lg-inpage.flix-lg5 #inpage_container {
+	max-width: 100% !important;
+}
+
+.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
+.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+	margin: 0 var(--swiper-pagination-bullet-horizontal-gap, 2px) !important;
+}
+
+.swiper-pagination-bullet-active {
+	background: #034b7a !important;
+	width: 12px !important;
+	border-radius: 3px !important;
+	height: 5px !important;
+}
+
+.swiper-pagination-bullet {
+	background: #034b7a !important;
+	width: 12px !important;
+	border-radius: 3px !important;
+	height: 5px !important;
+}
+
+
+/* Custom CSS */
+
+.headingHomeMain {
+	@apply text-[1.375rem] font-bold text-primary
+}
+
+.bestProButton {
+	@apply border border-[#004B7A] text-[#004B7A] hover:bg-[#004B7A] hover:text-white px-4 py-[11px] rounded-full text-xs md:text-[0.875rem] font-semibold w-full md:w-auto transition-all duration-300 ease-in-out
+}
+
+.tamkeenSales_btns_light .bestProButton {
+	@apply border border-[#004B7A] text-[#004B7A] bg-white hover:bg-transparent hover:border-white hover:text-white px-3.5 py-2.5 rounded-full text-xs font-semibold w-full md:w-auto transition-all duration-300 ease-in-out
+}
+
+.tamkeenSales_btns_light .bestProButton.selected {
+	@apply bg-white bg-transparent border-white text-white
+}
+
+
+.tamkeenSales_btns .tamkeenBtns.bestProButton:hover, .tamkeenSales_btns .tamkeenBtns.bestProButton.selected {
+	@apply bg-[#3d759a] !text-white
+}
+
+.paraHomeMain {
+	@apply text-xs text-[#5D686F] md:block
+}
+
+.btnWhiteSpecial {
+	@apply bg-white text-dark border border-white hover:bg-[#004B7A] hover:text-white hover:border-primary px-3.5 py-3 rounded-lg text-sm font-bold
+}
+
+.btnWhiteSpecialMobile {
+	@apply bg-white text-dark border border-white hover:bg-[#004B7A] hover:text-white hover:border-primary px-2.5 py-2 rounded-md text-xs font-bold
+}
+
+.btnPrimarySpecial {
+	@apply bg-primary text-white border border-primary hover:bg-dark hover:text-white hover:border-dark px-2.5 py-2 md:px-3.5 md:py-3 rounded-md md:rounded-lg text-xs md:text-sm font-bold
+}
+
+.gridentBg {
+	background: linear-gradient(to right, #000000, #565656, #000000);
+}
+
+.gridentBgPrimary {
+	background: linear-gradient(to right, #00243b, #004B7A, #00243b);
+}
+
+/* Products Classes Start From Here */
+.proBox {
+	@apply bg-white rounded-md p-5 border border-[#d9dbdf] text-xs h-full flex-1 min-h-custom
+}
+
+.proBoxMob {
+	@apply bg-white rounded-md p-1 border border-[#d9dbdf] text-xs h-proBoxMobile flex-1
+}
+
+.swiper-autoheight .swiper-wrapper {
+	@apply mb-1
+}
+
+.sectionClass {
+	@apply py-4 mx-auto
+}
+
+.productSliderBtns {
+	@apply bg-primary/25 p-1.5 rounded-full fill-primary shadow-md hover:bg-primary hover:fill-white
+}
+
+.productSliderBtnsMobile {
+	@apply p-1 hover:bg-primary hover:fill-white
+}
+
+.heading__sm {
+	@apply text-sm font-bold
+}
+
+.heading__bsm {
+	@apply text-sm font-bold mb-1.5 ltr:text-left rtl:text-right
+}
+
+.heading__base {
+	@apply text-base font-bold
+}
+
+.para__xs {
+	@apply text-xs text-[#5D686F] hidden md:block line-clamp-2
+}
+
+.headingHomeMobile {
+	@apply text-[1.125rem] text-primary font-bold
+}
+
+.text__txs {
+	@apply font-normal text-xs
+}
+
+.para__bsm {
+	@apply mt-2 font-bold w-20 text-center text-sm
+}
+
+.align__center {
+	@apply flex items-center justify-between
+}
+
+.readmore__btn {
+	@apply mt-2 md:mt-8 border border-[#004B7A] text-[#004B7A] hover:bg-[#004B7A] hover:text-white px-3.5 py-3 rounded-md text-xs
+}
+
+/* Start h__312 */
+.h__312mainCat {
+	@apply px-[4.8rem] mt-2
+}
+
+.h__312mainUnderCatOne {
+	@apply grid grid-cols-3 gap-2
+}
+
+.h__312mainUnderCatTwo {
+	@apply col-span-2 rounded-md relative
+}
+
+.h__312mainCatImage {
+	@apply h-auto w-full mx-auto rounded-md
+}
+
+.h__312mainCatSliderNavBtn {
+	@apply cursor-pointer fill-white focus-visible:outline-none
+}
+
+.h__312mainCatSecSliderDiv {
+	@apply rounded-md relative
+}
+
+.h__312mainCatSecImage {
+	@apply rounded-md h-auto w-auto
+}
+
+.h__312mainCatInnerFirstDiv {
+	@apply flex items-center justify-between text-sm font-bold mb-2
+}
+
+.h__312mainAllLinks {
+	@apply text-[#219EBC] hover:underline
+}
+
+.h__312mainCatNameHeading {
+	@apply font-bold mt-2 text-[0.65rem] xl:text-xs line-clamp-1 md:line-clamp-2 leading-4 text-xs text-center
+}
+
+.h__312mainCatSkeletonSliderDiv {
+	@apply bg-white py-2 px-1 rounded-lg shadow-md text-center text-primary
+}
+
+.h__312mainCatSkeletonSliderDivOne {
+	@apply animate-pulse
+}
+
+.h__312mainCatSkeletonSliderDivTwo {
+	@apply rounded-md bg-dark/10 p-2.5 h-[8.5rem] lg:h-[13.5rem] w-full
+}
+
+.h__312mainCatSliderLeftButton {
+	@apply transform transition duration-150 ease-in-out -rotate-90
+}
+
+.h__312mainCatSliderRightButton {
+	@apply transform transition duration-150 ease-in-out rotate-90
+}
+
+.h__312mainAllSecHeading {
+	@apply text-sm xl:text-base
+}
+
+.h__312mainOffersDiv {
+	@apply grid md:grid-cols-3 gap-2 my-5
+}
+
+.h__312mainOffersInnerFirstDiv {
+	@apply bg-white shadow-md rounded-md px-2 pt-2
+}
+
+.h__312mainOffersInnerSecDiv {
+	@apply flex items-center justify-between mb-5 relative
+}
+
+.h__312SmHeading {
+	@apply text-sm font-bold
+}
+
+.h__312mainSecOffersDiv {
+	@apply bg-white shadow-md rounded-md p-2
+}
+
+.h__312mainSecOffersInnerFirstDiv {
+	@apply grid grid-cols-2 gap-2 mt-3
+}
+
+.h__312mainSecOffersImgSlider {
+	@apply bg-cover bg-no-repeat bg-center w-auto h-[448px] rounded-md
+}
+
+.h__312SubSecOffersImgSlider {
+	@apply bg-cover bg-no-repeat bg-center w-auto h-[218px] rounded-md
+}
+
+.h__312mainSiderRightBtn {
+	@apply transform transition duration-150 ease-in-out -rotate-90
+}
+
+.h__312mainSiderLeftBtn {
+	@apply transform transition duration-150 ease-in-out rotate-90
+}
+
+.h__312XlHeading {
+	@apply text-xl text-white font-bold
+}
+
+.h__312mainBestSellerInnerSecDiv {
+	@apply flex flex-col m-auto p-[auto]
+}
+
+.h__312mainBestSellerInnerThirdDiv {
+	@apply flex overflow-x-scroll hide-scroll-bar py-1
+}
+
+.h__312mainBestSellerInnerFourDiv {
+	@apply flex flex-nowrap items-center gap-2 my-4
+}
+
+.h__312mainCatNameBtn {
+	@apply text-white border rounded-full px-4 py-1.5 text-xs md:text-sm w-36
+}
+
+.h__312mainBestSellerProductDiv {
+	@apply grid grid-cols-4 gap-16 mt-10
+}
+
+.h__312mainDownloadAppImage {
+	@apply w-full h-full shadow-md
+}
+
+.h__312BaseHeading {
+	@apply text-base font-bold
+}
+
+.h__312mainTSSDiv {
+	@apply my-5 xl:my-10 max-md:mb-32 max-md:mt-5
+}
+
+.h__312mainTSSInnerFirstDiv {
+	@apply grid grid-cols-2 sm:grid-cols-4 gap-4 mt-2
+}
+
+.h__312mainTSSInnerSecDiv {
+	@apply bg-white shadow-md rounded-lg py-2 md:py-6 px-2 md:px-8 text-center
+}
+
+.h__312mainTSSInnerThirdDiv {
+	@apply h-24 w-24 bg-[#219EBC20] fill-[#219EBC] flex items-center justify-center rounded-full mx-auto
+}
+
+.h__312XsPara {
+	@apply text-xs text-[#5D686F] mt-3 hidden md:block
+}
+
+.h__312mainReadMoreBtn {
+	@apply mt-2 md:mt-8 border border-[#004B7A] text-[#004B7A] hover:bg-[#004B7A] hover:text-white px-3.5 py-3 rounded-md text-xs
+}
+
+.h__312mainSearchModalDialog {
+	@apply relative z-10
+}
+
+.h__312mainSearchModalDiv {
+	@apply fixed inset-0 overflow-y-auto
+}
+
+.h__312mainSearchModalDialogPanel {
+	@apply w-full h-[-webkit-fill-available] container transform overflow-hidden bg-white text-left align-middle shadow-xl transition-all
+}
+
+.h__312mainSearchModalInnerFisrtDiv {
+	@apply flex items-center justify-between py-3.5 border-b mb-3 border-[#9CA4AB50]
+}
+
+.h__312mainSearchModalInnerSecDiv {
+	@apply border rounded px-2 flex items-center border-[#004B7A] focus:border-[#000] h-10 gap-2 relative z-20 bg-white
+}
+
+.h__312mainSearchModalInnerThirdDiv {
+	@apply overflow-y-auto h-[-webkit-fill-available] pb-40 mt-4
+}
+
+.h__312mainSearchModalInnerFourDiv {
+	@apply mb-6 flex flex-wrap gap-2
+}
+
+.h__312mainSearchModalInnerSecDivInput {
+	@apply form-input focus-visible:outline-none focus:ring-transparent text-sm h-9 border-none w-full
+}
+
+.h__312mainSearchModalDialogTitle {
+	@apply text-lg font-bold leading-6 text-gray-dark
+}
+
+.h__312mainSearchModalClearBtn {
+	@apply focus-visible:outline-none underline text-xs text-[#DC4E4E] font-semibold
+}
+
+.h__312mainSearchModalCatNameBtn {
+	@apply text-[#5D686F] text-xs font-medium bg-[#F0F5FA] py-2 px-3.5 rounded-full hover:bg-[#004B7A] hover:text-white
+}
+
+.h__312mainSearchModalRCInnerDiv {
+	@apply flex flex-wrap items-center gap-3
+}
+
+.h__312mainSearchModalRCLink {
+	@apply bg-[#F0F5FA] border border-[#D9D9D920] flex items-center gap-2 p-2.5 text-xs rounded-md hover:border-[#004B7A] hover:text-[#004B7A] hover:bg-white font-semibold
+}
+
+.h__312BsmHeading {
+	@apply text-sm font-bold mb-1.5 ltr:text-left rtl:text-right
+}
+
+.h__312mainSearchModalInnerBrandDiv {
+	@apply grid grid-cols-4 gap-3
+}
+
+.h__312mainSearchModalBrandLink {
+	@apply py-2 rounded shadow-md transition-shadow duration-300 ease-in-out border border-[#9CA4AB50]
+}
+
+.h__312mainSearchModalProductCP {
+	@apply grid grid-cols-2 gap-2 mb-4
+}
+
+.h__312BsmPara {
+	@apply mt-2 font-bold w-20 text-center text-sm
+}
+
+.h__312mainDownloadAppDialog {
+	@apply relative z-40
+}
+
+.h__312mainDownloadAppInnerFirstDiv {
+	@apply fixed inset-0 bg-dark/40
+}
+
+.h__312mainDownloadAppInnerSecDiv {
+	@apply bg-dark/25 p-3 rounded-full;
+}
+
+.h__312mainDownloadAppDiv {
+	@apply fixed inset-0 overflow-y-auto
+}
+
+.h__312mainDownloadAppInnerThirdDiv {
+	@apply flex min-h-full items-center justify-center p-4 text-center
+}
+
+.h__312mainDownloadAppDialogPanel {
+	@apply w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-xl transition-all
+}
+
+.h__312mainDownloadAppBtn {
+	@apply focus-visible:outline-none fill-white absolute top-4 right-4
+}
+
+.h__312mainDownloadAppImg {
+	@apply h-full w-full
+}
+
+.h__312mainCSlink {
+	@apply fixed bottom-[5rem] md:bottom-10 z-10 max-md:z-20
+}
+
+.h__312mainCSlinkConditonalLtr {
+	@apply left-8 max-md:left-5
+}
+
+.h__312mainCSlinkConditonalRtl {
+	@apply right-8 max-md:right-5
+}
+
+/* End h__312 */
+
+/* Start tc__311 */
+.tc__311maindiv {
+	@apply container py-16 md:py-4
+}
+
+.tc__311mainInnerOL {
+	@apply flex text-[#6B7280] font-semibold dark:text-[#E5E7EB]
+}
+
+.tc__311mainInnerLIOne {
+	@apply text-sm text-[#6B7280] font-semibold
+}
+
+.tc__311mainInnerLITwo {
+	@apply text-sm text-primary font-medium before:content-['/'] before:px-1.5
+}
+
+.tc__311mainInnerFirstDiv {
+	@apply my-6 text-[#5D686F]
+}
+
+.tc__311mainInnerFirstPara {
+	@apply text-xs md:text-sm mb-3 leading-5
+}
+
+.tc__311mainInnerSecDiv {
+	@apply grid md:grid-cols-2 md:gap-4 mt-3
+}
+
+.tc__311mainDisclosureBtn {
+	@apply flex w-full justify-between rounded-md text-left text-sm font-medium text-[#21638C] focus-visible:outline-none bg-[#EEF8FC] p-2 md:p-3 mb-1
+}
+
+.tc__311mainDisclosureBtnSvg {
+	@apply fill-[#004B7A] transition duration-150 ease-in-out transform
+}
+
+.tc__311mainDisclosurePanel {
+	@apply text-xs mb-3
+}
+
+.tc__311mainLinkPara {
+	@apply font-semibold underline
+}
+
+/* End tc__311 */
+
+/* Start Wp__310 */
+.Wp__310mainDiv {
+	@apply container md:py-4 pt-4 pb-20
+}
+
+.Wp__310mainInnerOL {
+	@apply flex text-[#5D686F] font-semibold dark:text-[#E5E7EB]
+}
+
+.Wp__310mainInnerFirstDiv {
+	@apply my-6
+}
+
+.Wp__310mainInnerFirstHeading {
+	@apply font-semibold text-lg 2xl:text-xl
+}
+
+.Wp__310mainInnerSecDiv {
+	@apply text-sm text-[#5D686F] mt-3
+}
+
+tp__309mainDiv
+/* End Wp__310 */
+
+/* Start tp__309 */
+.tp__309mainDiv {
+	@apply container py-16 md:py-4
+}
+
+.tp__309mainInnerOl {
+	@apply flex text-[#6B7280] font-semibold dark:text-[#E5E7EB]
+}
+
+.tp__309mainInnerFirstLi {
+	@apply text-sm text-[#5D686F] font-semibold
+}
+
+.tp__309mainSmHeading {
+	@apply text-[#004B7A] font-semibold text-sm md:text-base
+}
+
+.tp__309mainImage {
+	@apply h-auto w-auto rounded-md my-3
+}
+
+.tp__309mainXsPara {
+	@apply text-xs mt-1 text-[#5D686F] font-normal
+}
+
+.tp__309mainInnerThirdDiv {
+	@apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mt-3
+}
+
+.tp__309mainInnerFourthDiv {
+	@apply bg-white p-3 rounded-md shadow-md
+}
+
+.tp__309mainInnerFifthDiv {
+	@apply flex items-start justify-between
+}
+
+.tp__309mainSmMdHeading {
+	@apply text-[#004B7A] text-sm font-medium
+}
+
+.tp__309mainLgPara {
+	@apply text-[#B15533] text-lg font-semibold mb-3 md:mb-6
+}
+
+.tp__309mainLgPara {
+	@apply text-[#B15533] text-lg font-semibold mb-3 md:mb-6
+}
+
+.tp__309mainLink {
+	@apply border border-[#004B7A] text-[#004B7A] rounded-full text-xs font-semibold hover:bg-[#004B7A] hover:text-white md:py-2.5 py-1.5 px-3 md:px-4
+}
+
+.tp__309mainInnerSixDiv {
+	@apply w-full border border-[#dfdfdf70] my-2
+}
+
+.tp__309mainInnerSevDiv {
+	@apply border-[#dfdfdf70] flex items-center text-xs md:text-sm
+}
+
+.tp__309mainInnerPara {
+	@apply w-1/2 text-center py-6 md:py-8 font-semibold text-sm
+}
+
+.tp__309mainInnerLabel {
+	@apply w-1/2 border-r border-[#dfdfdf70] py-6 md:py-8 font-normal md:line-clamp-1
+}
+
+/* End tp__309 */
+
+/* Start tpb__308 */
+.tpb_308mainDiv {
+	@apply container py-4 max-md:pt-20
+}
+
+.tpb_308mainFirstOL {
+	@apply flex text-[#6B7280] font-semibold dark:text-[#E5E7EB]
+}
+
+.tpb_308mainInnerFirstDiv {
+	@apply my-8 w-1/2 mx-auto
+}
+
+.tpb_308mainInnerLink {
+	@apply flex items-center gap-x-1
+}
+
+.tpb_308mainInnerLgHeading {
+	@apply text-lg font-bold line-clamp-1
+}
+
+.tpb_308mainInnerSecDiv {
+	@apply w-full border border-[#dfdfdf70] my-2
+}
+
+.tpb_308mainInnerThirdDiv {
+	@apply flex items-center gap-x-3 text-sm font-semibold
+}
+
+.tpb_308mainInnerFourDiv {
+	@apply flex items-start gap-x-5 mt-3
+}
+
+.tpb_308mainInnerSixDiv {
+	@apply shadow-lg rounded-2xl
+}
+
+.tpb_308mainInnerSevDiv {
+	@apply py-5 px-2 bg-gray/10 mt-3 shadow-md rounded-md flex items-center gap-4
+}
+
+.tpb_308mainInnerEightDiv {
+	@apply h-[480px] border border-l border-[#dfdfdf70]
+}
+
+.tpb_308mainInnerSmPara {
+	@apply font-semibold mt-2 text-sm text-[#000000]
+}
+
+.tpb_308mainInnerBaseHeading {
+	@apply text-base font-semibold
+}
+
+.tpb_308mainInnerNineDiv {
+	@apply fill-[#5D686F90] flex items-center gap-1 mt-1 text-[#5D686F90]
+}
+
+.tpb_308mainInnerTenDiv {
+	@apply my-4 flex items-center justify-between
+}
+
+.tpb_308mainInnerXsPara {
+	@apply text-xs font-semibold
+}
+
+.tpb_308mainInnerElevenDiv {
+	@apply flex items-center gap-x-2
+}
+
+.tpb_308mainInnerTwelveDiv {
+	@apply flex items-center gap-3 my-3
+}
+
+.tpb_308mainInnerFirstImgBtn {
+	@apply focus-visible:outline-none p-1 border border-[#004B7A] rounded-md hover:border-[#004B7A]
+}
+
+.tpb_308mainInnerSecImgBtn {
+	@apply focus-visible:outline-none p-1 border border-[#dfdfdf70] rounded-md hover:border-[#004B7A]
+}
+
+.tpb_308mainInnerLabel {
+	@apply text-sm font-medium text-[#344054]
+}
+
+.tpb_308mainInnerThirteenDiv {
+	@apply border border-[#dfdfdf70] focus-visible:outline-none hover:border-[#004B7A] bg-white rounded p-2
+}
+
+.tpb_308mainInnerFourteenDiv {
+	@apply flex items-center gap-3 fill-[#004B7A]
+}
+
+.tpb_308mainInnerInput {
+	@apply text-xs focus-visible:outline-none w-full
+}
+
+.tpb_308mainInnerFifteenDiv {
+	@apply fill-[#5D686F90] flex items-center gap-1 mb-1.5 text-[#5D686F90]
+}
+
+.tpb_308mainProceedBtn {
+	@apply bg-[#004B7A] focus-visible:outline-none w-full p-3 rounded-md text-white text-sm
+}
+
+/* End tpb__308 */
+
+/* Start tw__307 */
+.tw__307mainInnerFirstDiv {
+	@apply md:my-6 w-full
+}
+
+.tw__307mainBaseHeading {
+	@apply font-semibold text-base md:text-lg 2xl:text-xl hidden md:block
+}
+
+/* End tw__307 */
+
+/* End stl__306 */
+.stl__306mainInnerSecDiv {
+	@apply md:grid md:grid-cols-2 gap-x-3 my-2 md:my-6
+}
+
+.stl__306mainInnerThirdDiv {
+	@apply rounded-md w-full border-0 hidden md:block
+}
+
+.stl__306mainInnerFifthDiv {
+	@apply flex items-center mb-3 gap-x-3
+}
+
+.stl__306mainInnerSelect {
+	@apply text-primary font-medium text-sm focus-visible:outline-none w-full
+}
+
+.stl__306mainInnerRadioGroup {
+	@apply flex items-center mb-3 gap-x-3 text-xs
+}
+
+.stl__306mainInnerRadioCheckedOne {
+	@apply focus-visible:outline-none border border-[#219EBC] bg-[#219EBC] text-white
+}
+
+.stl__306mainInnerRadioCheckedTwo {
+	@apply border border-[#219EBC60] text-[#219EBC80]
+}
+
+.stl__306mainInnerRadioOption {
+	@apply py-1.5 px-2 rounded-md flex items-center gap-x-2
+}
+
+.stl__306mainInnerSixDiv {
+	@apply shadow-md bg-white rounded mb-4
+}
+
+.stl__306mainInnerSevDiv {
+	@apply md:flex md:items-center md:justify-between p-3
+}
+
+.stl__306mainInnerSmHeading {
+	@apply font-semibold text-sm mb-1 text-[#004B7A]
+}
+
+.stl__306mainInnerXsHeading {
+	@apply font-semibold text-xs mt-2 mb-1
+}
+
+.stl__306mainInnerUL {
+	@apply text-xs mb-2 ltr:ml-4 rtl:mr-4 flex items-center text-[#515567]
+}
+
+.stl__306mainInnerEigthDiv {
+	@apply ltr:ml-5 rtl:mr-5
+}
+
+.stl__306mainInnerXsPara {
+	@apply text-[#515567] font-medium text-xs
+}
+
+.stl__306mainInnerNineDiv {
+	@apply flex items-center gap-x-3 mt-6 md:mt-0
+}
+
+/* End stl__306 */
+
+/* Start su__305 */
+.su__305mainDiv {
+	@apply bg-white py-3 shadow-md fixed w-full top-0
+}
+
+.su__305mainInnerFirstDiv {
+	@apply container grid grid-cols-2
+}
+
+.su__305mainInnerSecDiv {
+	@apply flex gap-x-8 items-center justify-end
+}
+
+.su__305mainInnerFirstLink {
+	@apply text-sm 2xl:text-base gap-x-1.5 flex items-center text-primary hover:text-secondary
+}
+
+.su__305mainInnerThirdDiv {
+	@apply container py-16 md:py-4 md:mt-20
+}
+
+.su__305mainInnerFourDiv {
+	@apply w-full lg:w-[60%] mx-auto my-6
+}
+
+.su__305mainInnerFifthDiv {
+	@apply grid grid-cols-1 md:grid-cols-2 items-center gap-6
+}
+
+.su__305mainInnerXlHeading {
+	@apply text-xl font-bold text-center
+}
+
+.su__305mainInnerXsPara {
+	@apply font-normal text-xs mt-1 text-[#5D686F] text-center
+}
+
+.su__305mainInnerSixDiv {
+	@apply flex w-80 mx-auto gap-2
+}
+
+.su__305mainInnerFirstInput {
+	@apply border border-[#D0D5DD] w-full mt-3 h-auto text-primary p-2 rounded-md focus:border-[#f0660c] outline-none focus-visible:outline-none appearance-none text-center font-semibold text-lg
+}
+
+.su__305mainInnerSecXsPara {
+	@apply text-xs text-[#fb4a4a] mt-4
+}
+
+.su__305mainInnerRVBtn {
+	@apply text-secondary text-xs underline font-bold text-center mx-auto w-full
+}
+
+.su__305mainInnerXsThirdPara {
+	@apply font-normal text-xs mt-1 text-center text-[#5D686F]
+}
+
+.su__305mainInnerVOBtn {
+	@apply focus-visible:outline-none border border-[#004B7A] bg-[#004B7A] p-2.5 rounded-md w-full text-center text-white fill-white font-medium text-sm mt-4
+}
+
+.su__305mainInnerSecXlHeading {
+	@apply text-xl font-bold
+}
+
+.su__305mainInnerFourPara {
+	@apply font-normal text-xs mt-1 text-[#5D686F]
+}
+
+.su__305mainLoader {
+	@apply animate-spin h-6 w-6 mr-3 fill-white mx-auto
+}
+
+.su__305mainxsPara {
+	@apply font-normal text-xs
+}
+
+.su__305mainInnerSevDiv {
+	@apply pb-3 pt-2.5 px-3 bg-white rounded-md border flex items-center border-[#5D686F30] gap-x-2
+}
+
+.su__305mainInnerSecInput {
+	@apply focus-visible:outline-none w-1/2 font-normal text-xs
+}
+
+.su__305mainInnerEightDiv {
+	@apply border-r border-[#5D686F30] h-6
+}
+
+.su__305mainInnerNineDiv {
+	@apply mb-1 align__center gap-x-3
+}
+
+.su__305mainInnerTenDiv {
+	@apply pb-3.5 pt-3 px-3 bg-white rounded-md border flex items-center border-[#5D686F30] gap-x-2
+}
+
+.su__305mainInnerThirdInput {
+	@apply focus-visible:outline-none w-full
+}
+
+.su__305mainInnerElevenDiv {
+	@apply flex items-center rounded-md border pb-2 pt-1.5 px-3 w-full text-sm border-[#5D686F30] font-medium focus-visible:outline-none focus-visible:border-[#20831E] gap-3 bg-white
+}
+
+.su__305mainInnerTwelveDiv {
+	@apply h-5 w-[1px] bg-primary opacity-20
+}
+
+.su__305mainInnerThirteenDiv {
+	@apply text-xs pt-1 flex items-center
+}
+
+.su__305mainInnerFirstMI {
+	@apply w-full focus-visible:outline-none
+}
+
+.su__305mainInnerTandCLink {
+	@apply font-bold underline text-[#004B7A]
+}
+
+.su__305mainInnerATCBtn {
+	@apply focus-visible:outline-none border border-[#004B7A] bg-[#004B7A] p-2.5 rounded-md w-full text-white fill-white font-medium text-sm mt-8
+}
+
+.su__305mainInnerSecLoader {
+	@apply animate-spin w-full mr-3 fill-white mx-auto
+}
+
+.su__305mainInnerFourteenDiv {
+	@apply w-full md:w-80 ml-auto
+}
+
+.su__305mainInnerFifteenDiv {
+	@apply bg-white rounded-md shadow-md
+}
+
+.su__305mainInnerThirdLink {
+	@apply focus-visible:outline-none w-full text-left
+}
+
+.su__305mainInnerSixteenDiv {
+	@apply rounded-md bg-dark/10 p-2.5 h-[194px] mt-2
+}
+
+.su__305mainInnerSeventeenDiv {
+	@apply px-5 pt-3
+}
+
+.su__305mainInnerBaseHeading {
+	@apply font-semibold text-base text-[#004B7A]
+}
+
+.su__305mainInnerSmall {
+	@apply font-medium text-[#000000]
+}
+
+.su__305mainInnerSecSmall {
+	@apply font-medium text-[#5D686F] text-xs
+}
+
+.su__305mainInnerEigtheenDiv {
+	@apply px-5 pb-5
+}
+
+.su__305mainInnerHr {
+	@apply my-4 opacity-10
+}
+
+.su__305mainInnerSmHading {
+	@apply font-semibold text-sm
+}
+
+.su__305mainInnerNineteenDiv {
+	@apply flex items-center gap-2 mb-3 fill-[#004B7A]
+}
+
+.su__305mainInnerTwNTYDiv {
+	@apply bg-primary py-4 mt-10 fixed w-full bottom-0
+}
+
+.su__305mainInnerTwNTYOneDiv {
+	@apply grid grid-cols-2
+}
+
+.su__305mainInnerTwNTYTwoDiv {
+	@apply flex gap-x-4 items-center
+}
+
+.su__305mainInnerTwNTHreeDiv {
+	@apply flex items-center justify-end
+}
+
+.su__305mainInnerTwNFourDiv {
+	@apply font-light text-sm text-white ltr:ml-14 rtl:mr-14
+}
+
+.su__305mainInnerTwNTFivDiv {
+	@apply font-light text-sm text-white ltr:mr-14 rtl:ml-14
+}
+
+.su__305mainInnerTwNSixDiv {
+	@apply flex items-center gap-x-3
+}
+
+.su__305mainInnerFouthLink {
+	@apply font-light text-sm text-white underline
+}
+
+.su__305mainInnerFifLink {
+	@apply fill-white hover:fill-secondary
+}
+
+/* End su__305 */
+
+/* Start st__304 */
+.st__304mainBaseHeading {
+	@apply font-semibold text-base
+}
+
+.st__304mainInnerThirdDiv {
+	@apply space-y-3 mt-1.5
+}
+
+.st__304mainInnerRadioChecked {
+	@apply relative cursor-pointer rounded-md px-5 py-4 shadow-md focus:outline-none bg-white
+}
+
+.st__304mainInnerRadioCheckedOne {
+	@apply border border-[#219EBC]
+}
+
+.st__304mainInnerRadioCheckedTwo {
+	@apply border border-[#00000000]
+}
+
+.st__304mainInnerFourthDiv {
+	@apply flex w-full items-center justify-between
+}
+
+.st__304mainInnerFifthDiv {
+	@apply flex items-center gap-2
+}
+
+.st__304mainInnerXsPara {
+	@apply text-xs mb-3 text-[#5D686F]
+}
+
+.st__304mainInnerLoadBtn {
+	@apply border border-[#004B7A] bg-[#004B7A] p-2.5 rounded-md w-full text-white fill-white flex items-center justify-center font-medium gap-x-2
+}
+
+.btn_primaryCustomSM {
+	@apply bg-primary border border-primary text-white text-sm py-2 px-3 rounded-md shadow-md hover:shadow-none
+}
+
+.btn_primaryCustomXS {
+	@apply bg-primary border border-primary text-white text-xs py-2 px-3 rounded-md shadow-md hover:shadow-none
+}
+
+.btn_pendingCustomXS {
+	@apply bg-gray border border-gray cursor-not-allowed text-white text-xs py-2 px-3 rounded-md shadow-md hover:shadow-none
+}
+
+/* End st__304 */
+
+/* Start shipping tracking sht__303 */
+.sht_303mainDiv {
+	@apply bg-white p-2 shadow-sm fixed top-0 z-10 w-full
+}
+
+.sht_303mainInnerSecDiv {
+	@apply flex items-center justify-between mt-1
+}
+
+.sht_303mainContinueShopBtn {
+	@apply bg-primary text-xs font-semibold p-3 rounded-md text-white shadow-md hover:shadow-none
+}
+
+.sht_303mainInnerHr {
+	@apply my-3 opacity-10
+}
+
+.sht_303mainInnerHr {
+	@apply flex items-center gap-3
+}
+
+.sht_303mainInnerThirdDiv {
+	@apply flex items-center gap-3
+}
+
+.sht_303mainInnerFirstXsHeading {
+	@apply font-normal text-xs text-dark
+}
+
+.sht_303mainInnerSpan {
+	@apply font-semibold text-primary
+}
+
+.sht_303mainInnerFourthDiv {
+	@apply bg-white p-2 shadow-sm mt-3
+}
+
+
+.sht_303mainInnerSecXsHeading {
+	@apply text-xs font-bold
+}
+
+.sht_303mainInnerSeventhDiv {
+	@apply mt-5 font-normal text-xs
+}
+
+.sht_303mainInnerPara {
+	@apply font-semibold flex items-center gap-2
+}
+
+.sht_303mainInnerSecPara {
+	@apply pt-1 flex items-center gap-2
+}
+
+.sht_303mainInnerThirdPara {
+	@apply pt-5 underline font-semibold flex items-center gap-2
+}
+
+.sht_303mainInnerAddressPara {
+	@apply pt-1 flex items-center gap-2 text-primary underline capitalize font-bold
+}
+
+.sht_303mainInnerEightDiv {
+	@apply text-xs flex items-center justify-end font-bold
+}
+
+.sht_303mainInnerLocSetBtn {
+	@apply w-full flex items-center justify-center p-2 rounded-lg hover:bg-primary/70 transition text-white bg-primary
+}
+
+.sht_303mainInnerNineDiv {
+	@apply text-sm font-semibold py-1 text-center
+}
+
+.sht_303mainInnerTenDiv {
+	@apply text-sm font-semibold pt-1 pb-3 text-center
+}
+
+.sht_303mainInnerXsTextBtn {
+	@apply underline text-white mt-3 bg-primary p-3 rounded-md text-xs
+}
+
+.sht_303mainInnerElevenDiv {
+	@apply bg-white p-4 shadow-sm mt-3
+}
+
+.sht_303mainInnerTwelveDiv {
+	@apply container relative
+}
+
+.sht_303mainInnerThirteenDiv {
+	@apply absolute w-1
+}
+
+.sht_303mainInnerStatusDiv {
+	@apply w-0.5 h-8
+}
+
+.sht_303mainInnerSecStatusDiv {
+	@apply w-0.5 h-14
+}
+
+.sht_303mainInnerTSDiv {
+	@apply flex text-xs gap-2 items-start font-semibold mb-8
+}
+
+.sht_303mainInnenFourteenDiv {
+	@apply flex items-center gap-5 mt-6
+}
+
+.sht_303mainInnenFifteenDiv {
+	@apply grid grid-cols-1 md:grid-cols-2 items-center justify-between
+}
+
+.sht_303mainInnenSixteenDiv {
+	@apply mt-5 font-normal text-xs flex items-center
+}
+
+.sht_303mainInnenSeventeenDiv {
+	@apply bg-white p-2 shadow-sm
+}
+
+.sht_303mainInnenEighteenDiv {
+	@apply flex items-center justify-between mt-1
+}
+
+.sht_303mainInnenNineteenDiv {
+	@apply flex items-center gap-2
+}
+
+.sht_303mainInnenTwTYDiv {
+	@apply bg-white p-2 shadow-sm mt-3
+}
+
+.sht_303mainInnenParaBtnDiv {
+	@apply text-xs font-semibold flex items-center justify-between py-1
+}
+
+.sht_303mainInnenParaBtnSecDiv {
+	@apply text-xs font-semibold align__center pt-1 pb-3
+}
+
+.sht_303mainInnenStatusDiv {
+	@apply grid grid-cols-4 absolute top-[0.645rem] w-full
+}
+
+.sht_303mainInnerFStatusDiv {
+	@apply grid grid-cols-4 relative
+}
+
+.sht_303mainInnerSStatusDiv {
+	@apply grid grid-cols-4 relative mt-1.5 text-[0.65rem] font-semibold
+}
+
+.sht_303mainInnenFSTDiv {
+	@apply p-[1px] m-auto w-[100%]
+}
+
+.sht_303mainInnenSSTDiv {
+	@apply w-6 h-6 rounded-full m-auto
+}
+
+.sht_303mainTelLinkDiv {
+	@apply flex items-center justify-end gap-5
+}
+
+.sht_303mainModalFirstDiv {
+	@apply fixed inset-0 bg-[black]/60 z-[999] overflow-y-auto
+}
+
+.sht_303mainModalSecDiv {
+	@apply flex items-start justify-center min-h-screen px-4
+}
+
+.sht_303mainDialogPanelDiv {
+	@apply bg-white border-0 rounded-lg w-full max-w-xl p-0 my-20 text-[#000000] dark:text-[#E5E7EB]
+}
+
+.sht_303mainModalThirdDiv {
+	@apply flex items-center rounded-t-lg justify-between px-5 py-3
+}
+
+.sht_303mainLgHeading {
+	@apply font-bold text-lg
+}
+
+.sht_303mainInnerMapDiv {
+	@apply px-5 py-3
+}
+
+.sht_303mainInnerMFooterDiv {
+	@apply flex justify-end px-5 py-3
+}
+
+.sht_303mainInnerCloseBtn {
+	@apply text-white px-4 py-2 rounded-lg mr-2 bg-[#6b7280]
+}
+
+.sht_303mainSaveBtn {
+	@apply bg-primary text-white px-4 py-2 rounded-lg
+}
+
+.sht_303mainInnerSaveBtn {
+	@apply bg-primary text-white px-2 rounded-lg inline-flex items-center
+}
+
+/* End shipping tracking sht__303 */
+
+/* Start Search tracking srh__302 */
+.srh__302mainDiv {
+	@apply py-8 max-md:py-0
+}
+
+.srh__302mainInnerXlHeading {
+	@apply text-xl font-semibold mb-4
+}
+
+.srh__302mainInnerSmHeading {
+	@apply text-sm font-bold pt-3 max-md:pt-0
+}
+
+.srh__302mainInnerSecDiv {
+	@apply mb-4 flex items-center justify-between
+}
+
+.srh__302mainInnerSelect {
+	@apply w-44 max-md:w-36 text-primary font-medium text-xs focus-visible:outline-none
+}
+
+.srh__302mainInnerThirdDiv {
+	@apply grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-3
+}
+
+.srh__302mainInnerUL {
+	@apply flex items-center justify-center space-x-0.5 rtl:space-x-reverse m-auto mt-0 md:mt-6 max-md:my-20
+}
+
+.srh__302mainActionBtn {
+	@apply focus-visible:outline-none flex justify-center font-medium text-sm px-3.5 py-1.5 rounded transition text-primary bg-white hover:text-[#219EBC] border border-[#DFE3E8] hover:border-[#219EBC]
+}
+
+.srh__302mainPagBtn {
+	@apply focus-visible:outline-none flex justify-center font-medium text-sm px-3.5 py-1.5 rounded transition bg-white hover:text-[#219EBC] border hover:border-[#219EBC]
+}
+
+.srh__302mainInnerFourthDiv {
+	@apply container my-10 flex items-center justify-center py-8
+}
+
+.srh__302mainInnerLottie {
+	@apply h-80 my-[-50px]
+}
+
+.srh__302mainInnerBasePara {
+	@apply text-center text-base text-[#5D686F] w-1/2 m-auto mt-14
+}
+
+.srh__302mainShopProdBtn {
+	@apply focus-visible:outline-none bg-[#004B7A] w-72 p-2.5 rounded-md text-sm 2xl:text-base text-white mt-6
+}
+
+/* End Search tracking srh__302 */
+
+/* Start reset username ru__301 */
+.ru__301mainDiv {
+	@apply bg-white py-3 shadow-md absolute w-full top-0
+}
+
+.ru__301mainInnerFirstDiv {
+	@apply container grid grid-cols-2
+}
+
+.ru__301mainInnerSecDiv {
+	@apply flex gap-x-8 items-center justify-end
+}
+
+.ru__301mainInnerLink {
+	@apply text-sm 2xl:text-base gap-x-1.5 flex items-center text-primary hover:text-secondary
+}
+
+.ru__301mainInnerSpan {
+	@apply shrink-0 h-4 w-4 2xl:h-5 2xl:w-5 text-[#219EBC]
+}
+
+.ru__301mainInnerThirdDiv {
+	@apply grid grid-cols-2
+}
+
+.ru__301mainInnerFourthDiv {
+	@apply h-[100vh] bg-[#00243C]
+}
+
+.ru__301mainInnerFifthDiv {
+	@apply h-auto mt-16 py-8 px-6
+}
+
+.ru__301mainInnerSixDiv {
+	@apply w-[600px] 2xl:w-[730px]
+}
+
+.ru__301mainInnerXlHeading {
+	@apply font-semibold text-xl 2xl:text-2xl
+}
+
+.ru__301mainInnerSmPara {
+	@apply text-[#5D686F] text-sm 2xl:text-base mt-1.5
+}
+
+.ru__301mainInnerLabel {
+	@apply text-sm 2xl:text-base font-medium text-[#344054]
+}
+
+.ru__301mainInnerSevenDiv {
+	@apply flex items-center justify-between border border-[#20831E] focus-visible:outline-none hover:border-primary bg-white rounded mt-1
+}
+
+.ru__301mainInnerEightDiv {
+	@apply flex items-center
+}
+
+.ru__301mainInnerNineDiv {
+	@apply flex justify-center items-center ltr:rounded-l-md rtl:rounded-r-md p-3
+}
+
+.ru__301mainInnerMailIcon {
+	@apply shrink-0 h-5 w-5 2xl:h-5 2xl:w-5 text-primary
+}
+
+.ru__301mainInnerInput {
+	@apply text-sm 2xl:text-base p-3 focus-visible:outline-none w-[500px]
+}
+
+.ru__301mainInnerCheck {
+	@apply shrink-0 h-5 w-5 2xl:h-5 2xl:w-5 text-[#20831E]
+}
+
+.ru__301mainInnerTenDiv {
+	@apply absolute bottom-10 w-[600px] 2xl:w-[730px]
+}
+
+.ru__301mainInnerBtn {
+	@apply focus-visible:outline-none w-full bg-[#004B7A] p-3 rounded-md text-white
+}
+
+/* End reset username ru__301 */
+
+/* Start reset password rp__300 */
+.rp__300mainInnerIcon {
+	@apply shrink-0 h-5 w-5 2xl:h-5 2xl:w-5 text-[#fb4a4a]
+}
+
+.rp__300mainInnerInput {
+	@apply text-sm 2xl:text-base p-3 focus-visible:outline-none w-[500px] outline-none border-none
+}
+
+.rp__300mainInnerSevenDiv {
+	@apply flex items-center justify-between border border-[#fb4a4a] focus-visible:outline-none hover:border-primary bg-white rounded mt-1
+}
+
+/* End reset password rp__300 */
+
+/* start Project_sales pjs__290 */
+.pjs__290mainInnerSecDiv {
+	@apply w-full md:w-[400px] lg:w-[540px] mx-auto
+}
+
+.pjs__290mainInnerSmHeading {
+	@apply font-semibold text-sm md:text-base
+}
+
+.pjs__290mainInnerThirdDiv {
+	@apply pb-3 pt-2.5 px-3 bg-white rounded-md border flex items-center border-[#5D686F30] gap-x-2
+}
+
+.pjs__290mainInnerInput {
+	@apply focus-visible:outline-none w-1/2 text-xs font-normal
+}
+
+.pjs__290mainInnerFourthDiv {
+	@apply pb-3 pt-2.5 px-3 bg-white rounded-md border flex items-center border-[#5D686F30] gap-x-2 w-full
+}
+
+.pjs__290mainInnerTextarea {
+	@apply focus-visible:outline-none w-full text-xs font-normal
+}
+
+.pjs__290mainInnerFifthDiv {
+	@apply mx-auto flex items-center justify-end mt-4
+}
+
+.pjs__290mainSubmitBtn {
+	@apply w-1/3 focus-visible:outline-none border border-[#004B7A] bg-[#004B7A] text-white text-xs font-semibold px-3.5 py-3 rounded-md shadow-md hover:shadow-none
+}
+
+.pjs__290mainInnerSixthDiv {
+	@apply fixed bottom-0 py-3 bg-white w-full border-t border-[#00000010] flex items-center justify-between container gap-2
+}
+
+.pjs__290mainFirstSubmitBtn {
+	@apply w-full focus-visible:outline-none border border-[#004B7A] bg-[#004B7A] text-white text-sm font-semibold px-3.5 py-3 rounded-md shadow-md hover:shadow-none
+}
+
+/* End Project_sales pjs__290 */
+
+/* Start Otp_confirmation otp__289 */
+.otp__289_mainInnerDiv {
+	@apply flex items-center gap-4 mt-1
+}
+
+.otp__289_mainInnerInput {
+	@apply border border-[#D0D5DD] w-20 h-auto text-primary p-3 rounded-md focus:border-[#f0660c] outline-none focus-visible:outline-none appearance-none text-center font-semibold text-lg
+}
+
+.otp__289_mainInnerPara {
+	@apply text-sm 2xl:text-base text-[#fb4a4a] mt-4
+}
+
+.otp__289_mainSubmitBtn {
+	@apply focus-visible:outline-none w-full bg-[#004B7A] p-3 rounded-md text-white
+}
+
+/* End Otp_confirmation otp__289 */
+
+/* Start notifications ntf__288 */
+.ntf__288__mainInnerBtn {
+	@apply focus-visible:outline-none bg-white shadow-md rounded-md pb-2 text-left w-full mb-3
+}
+
+.ntf__288__mainInnerImg {
+	@apply h-auto w-full rounded-tl-md rounded-tr-md
+}
+
+.ntf__288__mainInnerSecDiv {
+	@apply mt-3 px-2 ltr:text-left rtl:text-right
+}
+
+.ntf__288__mainInnerBaseHeading {
+	@apply text-base font-semibold text-[#004B7A]
+}
+
+/* End notifications ntf__288 */
+
+/* Start new-arrival na__279 */
+.na__279mainInnerFirstDiv {
+	@apply flex xl:flex-row flex-col gap-4 mt-5 max-md:mt-0
+}
+
+.na__279mainInnerSecDiv {
+	@apply xl:w-80 w-full xl:mt-0
+}
+
+.na__279mainInnerThirdDiv {
+	@apply bg-white shadow-md rounded-lg mb-4 p-4
+}
+
+.na__279mainRefreshBtn {
+	@apply focus-visible:outline-none flex items-center justify-between mt-6 w-full
+}
+
+.na__279mainInnerSecBtn {
+	@apply focus-visible:outline-none flex items-center justify-between mt-6 w-full
+}
+
+.na__279mainInnerSmHeading {
+	@apply text-sm font-medium
+}
+
+.na__279mainInnerLabel {
+	@apply inline-flex gap-x-2
+}
+
+.na__279mainInnerInput {
+	@apply rounded outline-none focus-visible:outline-none focus:outline-none checked:bg-[#20831E]
+}
+
+.na__279mainInnerSpan {
+	@apply text-xs text-[#5D686F]
+}
+
+.na__279mainInnerHr {
+	@apply opacity-10 my-4
+}
+
+.na__279mainInnerRatingBtn {
+	@apply focus-visible:outline-none flex items-center justify-between mt-6 w-full capitalize
+}
+
+.na__279mainInnerFourthDiv {
+	@apply my-3 flex items-center gap-x-1.5
+}
+
+.na__279mainInnerFifthDiv {
+	@apply flex items-center
+}
+
+.na__279mainInnerXsPara {
+	@apply text-xs font-medium
+}
+
+.na__279mainInnerSixthDiv {
+	@apply px-0 flex-1 py-0 ltr:xl:mr-1 rtl:xl:ml-1
+}
+
+.na__279mainInnerSevenDiv {
+	@apply grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-3
+}
+
+.na__279mainInnerUL {
+	@apply flex items-center justify-center space-x-0.5 rtl:space-x-reverse m-auto mt-6
+}
+
+.na__279mainInnerSecInput {
+	@apply form-input rounded-md w-full text-[#004B7A]
+}
+
+/* End new-arrival na__279 */
+
+/* Start newcart nc__278 */
+.nc__278mainDiv {
+	@apply container my-10 flex items-center justify-center
+}
+
+.nc__278mainInnerXsPara {
+	@apply text-center text-xs md:text-sm text-[#5D686F] w-full md:w-[72%] m-auto
+}
+
+.nc__278mainInnerSecDiv {
+	@apply w-72 mt-6 mx-auto
+}
+
+.nc__278mainInnerLink {
+	@apply focus-visible:outline-none bg-[#004B7A] py-2.5 px-4 rounded-md text-sm 2xl:text-base text-white
+}
+
+.nc__278mainInnerThirdDiv {
+	@apply bg-white container py-2 shadow-sm
+}
+
+.nc__278mainInnerFourthDiv {
+	@apply mt-6 flex items-center justify-between gap-2
+}
+
+.nc__278mainInnerFifthDiv {
+	@apply border border-[#31e8a8] p-2 rounded-md bg-white w-1/2 text-xs relative
+}
+
+.nc__278mainInnerImg {
+	@apply absolute -top-[25%]
+}
+
+.nc__278mainInnerSixthDiv {
+	@apply bg-white mt-3 container py-2 shadow-sm
+}
+
+.nc__278mainInnerSixthDiv {
+	@apply flex items-start
+}
+
+.nc__278mainInnerSevDiv {
+	@apply text-xs flex items-center mb-1 ltr:-ml-2 rtl:-mr-2
+}
+
+.nc__278mainInnerSmHeading {
+	@apply line-clamp-2 text-xs font-semibold mt-1
+}
+
+.nc__278mainInnerEightDiv {
+	@apply flex items-center justify-between gap-1 mt-3
+}
+
+.nc__278mainInnerNineDiv {
+	@apply flex items-center gap-1
+}
+
+.nc__278mainInnerLgPara {
+	@apply font-bold text-lg text-[#DC4E4E] leading-3
+}
+
+.nc__278mainInnerSecXsPara {
+	@apply text-xs font-medium text-[#5D686F80]
+}
+
+.nc__278mainInnerTenDiv {
+	@apply bg-[#20831E30] px-2 py-1 rounded-md
+}
+
+.nc__278mainInnerThirdXspara {
+	@apply font-semibold text-[#20831E] text-[0.65rem]
+}
+
+.nc__278mainInnerEleDiv {
+	@apply flex items-center justify-between mt-4
+}
+
+.nc__278mainInnerRemoveBtn {
+	@apply border p-1.5 text-[0.65rem] rounded-md border-[#5D686F80] text-[#5D686F80] fill-[#5D686F] hover:fill-[#004B7A] hover:text-[#004B7A] hover:border-[#004B7A] flex items-center gap-2
+}
+
+.nc__278mainInnerWLBtn {
+	@apply border p-1.5 text-[0.65rem] rounded-md border-[#5D686F80] text-[#5D686F80] fill-[#5D686F] hover:fill-[#DC4E4E] hover:text-[#DC4E4E] hover:border-[#DC4E4E] flex items-center gap-2
+}
+
+.nc__278mainInnerWLBtnWhislist {
+	@apply border p-1.5 text-[0.65rem] rounded-md border-[#DC4E4E] text-[#DC4E4E] fill-[#DC4E4E] flex items-center gap-2
+}
+
+.nc__278mainInnerTwlDiv {
+	@apply text-xs text-[#5D686F] flex items-center gap-2
+}
+
+.nc__278mainInnerSelect {
+	@apply w-16 text-primary font-medium text-base 2xl:text-lg ltr:text-sm focus-visible:outline-none
+}
+
+.nc__278mainInnerHr {
+	@apply my-4 border-[#5D686F40]
+}
+
+.nc__278mainInnerXsHeading {
+	@apply text-xs font-semibold text-[#5D686F]
+}
+
+.nc__278mainInnerXsHeading {
+	@apply mt-1.5 bg-[#EEF8FC] rounded-md p-2 flex items-center gap-2
+}
+
+.nc__278mainInnerThirteenDiv {
+	@apply mt-1.5 bg-[#EEF8FC] rounded-md p-2 flex items-center gap-2
+}
+
+.nc__278mainInnerFourteenDiv {
+	@apply flex items-center justify-between w-full
+}
+
+.nc__278mainInnerLgPara {
+	@apply font-bold text-lg text-[#DC4E4E]
+}
+
+.nc__278mainInnerFifteenDiv {
+	@apply sticky flex-col top-[14.6rem]
+}
+
+.nc__278mainInnerSixteenDiv {
+	@apply bg-white shadow-md rounded-md p-3
+}
+
+.nc__278mainInnerSeventeenDiv {
+	@apply text-base font-semibold mb-4
+}
+
+.nc__278mainInnerNineteenDiv {
+	@apply text-base font-bold w-full align__center mb-1
+}
+
+.nc__278mainInnerSmall {
+	@apply text-xs text-[#5D686F80] font-normal
+}
+
+.nc__278mainInnerTwntyDiv {
+	@apply text-sm w-full flex items-center justify-between mb-3
+}
+
+.nc__278mainInnerMdLabel {
+	@apply font-medium text-[#5D686F]
+}
+
+.nc__278mainInnerPara {
+	@apply font-bold text-[#20831E]
+}
+
+.nc__278mainInnerTtyOneDiv {
+	@apply bg-[#004B7A] hover:shadow-none p-2.5 rounded-md mt-4 text-center shadow-md
+}
+
+.nc__278mainInnerLMBtn {
+	@apply text-[#3866df] underline text-xs mt-2
+}
+
+.nc__278mainInnerTtyTwoDiv {
+	@apply border border-[#d47c84] p-2 rounded-md bg-white w-1/2 text-xs relative
+}
+
+.nc__278mainInnerTtyThreeDiv {
+	@apply border border-[#8684b9] p-2 rounded-md bg-white text-xs relative mt-5
+}
+
+.nc__278mainInnerSecImg {
+	@apply absolute -top-[32%]
+}
+
+.nc__278mainInnerTtyFourDiv {
+	@apply mt-6 text-center text-sm font-light
+}
+
+.nc__278mainInnerThirdXsPara {
+	@apply mt-1 text-xs
+}
+
+.nc__278mainInnerTtyFiveDiv {
+	@apply flex flex-wrap items-center gap-4 justify-center mt-3
+}
+
+.nc__278mainInnerCheckDiv {
+	@apply fixed bottom-16 bg-white container py-2 w-full z-20 border-b border-dark/10
+}
+
+.nc__278mainInnerCheckFirstDiv {
+	@apply bg-[#004B7A] hover:shadow-none p-2.5 rounded-md text-center shadow-md
+}
+
+.nc__278mainInnerCheckBtn {
+	@apply font-semibold text-sm text-white
+}
+
+.nc__278mainInnerCartDiv {
+	@apply container py-5 relative
+}
+
+.nc__278mainInnerXlHeading {
+	@apply text-xl font-semibold mb-3
+}
+
+.nc__278mainInnerCartFisrtDiv {
+	@apply flex flex-row items-start gap-3 relative h-full
+}
+
+.nc__278mainInnerFirstSmall {
+	@apply text-xs font-medium text-gray-dark
+}
+
+.nc__278mainInnerCartSecDiv {
+	@apply w-full flex-col
+}
+
+.nc__278mainInnerCartThirdDiv {
+	@apply bg-white p-3 shadow-md rounded-md mb-3 flex items-start
+}
+
+.nc__278mainInnerCartFourthDiv {
+	@apply line-clamp-2 text-sm font-semibold
+}
+
+.nc__278mainInnerSpan {
+	@apply font-semibold text-[#20831E]
+}
+
+.nc__278mainInnerSpan {
+	@apply mt-4 flex items-center justify-between
+}
+
+/* End newcart nc__278 */
+
+
+/* Home Page CSS */
+.banner_ts193 {
+	@apply max-sm:container px-[4.8rem] flex items-center justify-between pt-1.5 pb-6 flex-col md:flex-row gap-2 w-full overflow-hidden
+}
+
+.panel_ts193 {
+	@apply bg-white rounded-md shadow-md overflow-hidden
+}
+
+.imgSlider_ts1001 {
+	@apply relative w-full max-sm:h-[26vh] md:h-[33vh] lg:h-[25vh]
+}
+
+.form-radio {
+	@apply h-5 w-5 cursor-pointer rounded-full border-2 border-[#e0e6ed] bg-transparent text-primary !shadow-none !outline-none !ring-0 !ring-offset-0 checked:bg-[length:100%_100%] disabled:cursor-not-allowed disabled:bg-[#eee] ltr:mr-1.5 rtl:ml-1.5 dark:border-[#253b5c] dark:checked:border-transparent dark:disabled:bg-[#1b2e4b];
+}
+
+.animationImp {
+	animation: pulse 0.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.left_banner_slider .swiper-pagination-bullet,
+.right_banner_slider_top .swiper-pagination-bullet {
+	width: 1rem !important;
+}
+
+.tamkeenSales_btns .bestProButton {
+	border-width: 1.4px;
+}
+
+/* Footer Active Style Start */
+.footer_nav li.active .nav_icon {
+	position: absolute;
+	top: -35px;
+	border: 10px solid #E5F5FF;
+	border-radius: 50%;
+	transition: all 0.3s ease-in-out;
+	animation: IconMoveUp 0.5s ease-in-out forwards;
+	z-index: 1;
+}
+
+.footer_nav li.active .nav_icon div {
+	border-radius: 50%;
+	background-color: #ffffff;
+	box-shadow: 0px 0px 2px 0px #004b7a;
+	padding: 0.8rem;
+	transform: scale(1.1);
+	transition: all 0.3s ease-in-out;
+	animation: BorderPulse 0.5s ease-in-out;
+}
+
+.footer_nav li.active span {
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.footer_nav li.active .nav_icon svg path {
+	fill: #004b7a;
+}
+
+/* Floating up animation */
+@keyframes IconMoveUp {
+	0% {
+		top: 0;
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	100% {
+		top: -35px;
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+/* Glowing pulse effect */
+@keyframes BorderPulse {
+	0% {
+		box-shadow: 0px 0px 2px 0px #004b7a;
+	}
+
+	50% {
+		box-shadow: 0px 0px 6px 0px #004B7A;
+	}
+
+	100% {
+		box-shadow: 0px 0px 2px 0px #004b7a;
+	}
+}
+
+/* Footer Active Style End */
+
+/* Section 11 Button Background */
+.builtInAppliances_sec .btnPrimarySpecial {
+	background-color: #000000;
+	border-color: #000000;
+}
+
+.builtInAppliances_sec .btnPrimarySpecial:hover {
+	background-color: #004b7a;
+	border-color: #004b7a;
+}
+
+section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton:hover,
+section[data-section="6"] .tamkeenSales_btns .tamkeenBtns.bestProButton.selected {
+	background-color: #FF7B34;
+}
+
+.tamkeenProduct_card_footer .productSliderBtns svg path {
+	transition: all .3s ease-in-out;
+}
+
+.tamkeenProduct_card_footer .productSliderBtns:hover svg path {
+	fill: #ffffff;
+}
+
+@media (max-width: 480px) {
+	.product_badge {
+		padding-left: 1.6rem;
+		/* margin-top: 1.5rem; */
+	}
+
+	.product_badge span {
+		font-size: 5rem;
+		margin-right: -.2rem;
+	}
+
+	.product_badge span.span_one {
+		margin-right: -.7rem !important;
+	}
+
+	.tamkeenProduct_card_footer .bestProButton {
+		font-size: 0.54rem;
+		line-height: 10px;
+		/* padding: 0.875rem; */
+	}
+
+	/* .headingHomeMain {
+		@apply text-base
+	} */
+
+	.proBox {
+		@apply p-1.5
+	}
+
+	.specificationImagesProduct {
+		height: 18px;
+		width: 24px;
+		object-fit: contain;
+	}
+
+}
+
+@media (min-width: 300px) and (max-width: 420px) {
+	.productBadge_topText {
+		font-size: 5.76px;
+	}
+
+	.productBadge_topImg {
+		height: 13px;
+		width: 50px;
+	}
+
+	.headingHomeMain {
+		font-size: 1rem;
+	}
+
+	.rating_div {
+		padding-block: 3px;
+	}
+
+	.rating_div svg {
+		width: 7px;
+		height: 7px;
+	}
+
+	.afterDiscount {
+		font-size: 10px;
+	}
+
+	.offerPercent,
+	.realPrice,
+	.animated_orangePrice,
+	.productDesc,
+	.rating_div span {
+		font-size: 7px;
+	}
+
+	.productDesc:dir(ltr) {
+		line-height: normal;
+		height: 18px;
+	}
+
+	.productDesc:dir(rtl) {
+		line-height: normal;
+		height: 24px;
+	}
+
+	.paymentText {
+		font-size: 5px;
+	}
+
+	.prodTop_verticalImgs {
+		top: 2.7rem;
+	}
+
+	.productRedOrangeBtns button {
+		padding: 4px !important;
+	}
+
+	.productRedOrangeBtns button svg {
+		width: 10px;
+		height: 10px;
+	}
+}
+
+/* Animation slide up */
+.number-animation {
+	display: inline-flex;
+	position: relative;
+	overflow: hidden;
+	font-variant-numeric: tabular-nums;
+	/* consistent number widths */
+}
+
+.number-animation-inner {
+	display: inline-block;
+	position: relative;
+	height: 100%;
+}
+
+.number-animation span {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	white-space: nowrap;
+	animation: slideUp 4s infinite;
+	transform: translateX(-50%) translateY(100%);
+	opacity: 0;
+}
+
+.number-animation span:nth-child(1) {
+	animation-delay: 0s;
+}
+
+.number-animation span:nth-child(2) {
+	animation-delay: 2s;
+}
+
+.number-animation::after {
+	content: '10000';
+	/* max width example */
+	visibility: hidden;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+@keyframes slideUp {
+	0% {
+		transform: translateX(-50%) translateY(100%);
+		opacity: 0;
+	}
+
+	10% {
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
+	}
+
+	40% {
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
+	}
+
+	50% {
+		transform: translateX(-50%) translateY(-100%);
+		opacity: 0;
+	}
+
+	100% {
+		transform: translateX(-50%) translateY(-100%);
+		opacity: 0;
+	}
+}
+
+/* Flatpickr Styles */
+.flatpickr-weekdays,
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+span.flatpickr-weekday,
+.flatpickr-months .flatpickr-month {
+	@apply !bg-primary
+}
+
+.flatpickr-weekdays {
+	@apply !h-8 pt-3 pb-1
+}
+
+span.flatpickr-weekday {
+	@apply !text-white !text-xs !font-semibold
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months, .flatpickr-current-month .numInputWrapper {
+	@apply !text-white !text-sm !font-semibold
+}
+
+.flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange, .flatpickr-day.selected.inRange, .flatpickr-day.startRange.inRange, .flatpickr-day.endRange.inRange, .flatpickr-day.selected:focus, .flatpickr-day.startRange:focus, .flatpickr-day.endRange:focus, .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.startRange.prevMonthDay, .flatpickr-day.endRange.prevMonthDay, .flatpickr-day.selected.nextMonthDay, .flatpickr-day.startRange.nextMonthDay, .flatpickr-day.endRange.nextMonthDay {
+	@apply !bg-secondary !text-white !border-none font-semibold
+}
+
+.flatpickr-day {
+	height: 2.5rem !important;
+	max-width: 2.5rem !important;
+	border: 0 !important;
+	line-height: 40px !important;
+}
+
+.flatpickr-days {
+	@apply !border-none
+}
+
+.flatpickr-calendar{
+	font-size: 13px !important;
+}
+
+.flatpickr-innerContainer {
+	@apply !rounded-b-2xl
+}
+
+.flatpickr-months .flatpickr-month {
+	@apply !rounded-t-2xl
+}
+
+.flatpickr-calendar {
+	@apply !rounded-2xl !shadow-lg
+}
+
+.flatpickr-calendar.arrowTop:after {
+	border-bottom-color: #034b7a !important;
+}
+
+.flatpickr-calendar.arrowBottom:after {
+	border-top-color: #ffffff !important;
+}
+
+.flatpickr-calendar:after {
+	border-width: 8px !important;
+}
+
+.flatpickr-calendar:after {
+	margin: -1px -4px !important;
+}
+
+/* .category_topbar{
+	background-image:url("../../public/images/categoryNew/topbar_bg.png")
+}
+.category_sec_1{
+	background-image:url("../../public/images/categoryNew/banner_bg.png")
+} */
+
+.testimonials_sec .swiper.swiper-initialized{
+	@apply !pb-12 md:!pb-16
+}
+
+.categories_items .swiper-wrapper {
+	@apply justify-center
+}
+
+.categories_items .swiper-slide {
+	@apply !mr-0
+}
