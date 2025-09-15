@@ -21,7 +21,7 @@ const TamkeenServices = dynamic(() => import("./components/TamkeenServices"), { 
 const MobileHeaderNew = dynamic(() => import("./components/MobileHeaderNew"), { ssr: true, });
 const Newsletter = dynamic(() => import("./components/NewHomePageComp/Newsletter"), { ssr: true });
 const TopSectionSlider = dynamic(() => import("./components/NewHomePageComp/TopSectionSlider"), { ssr: false });
-const Popup = dynamic(() => import("./components/NewHomePageComp/Popup"), { ssr: true })
+// const Popup = dynamic(() => import("./components/NewHomePageComp/Popup"), { ssr: true })
 
 import { useHomepage } from "./context/HomepageContext";
 
@@ -1683,7 +1683,7 @@ export default function Homepage({ params }: { params: any }) {
         </div>
       </section>
       <Newsletter isMobileOrTablet={true} isArabic={isArabic} />
-      <Popup lang={isArabic} />
+      {/* <Popup lang={isArabic} /> */}
       {/* <div className="pb-20 md:pb-0"></div> */}
     </>
   );
