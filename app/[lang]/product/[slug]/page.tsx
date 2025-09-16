@@ -1398,8 +1398,11 @@ export default function Product({ params, searchParams }: { params: { lang: stri
     const stockText = isArabic ? "متوفر في المعرض" : "Item in Stock for Pickup";
 
     const badgeImageLink = data?.badge_image_link ? data?.badge_image_link : isArabic ? "/icons/express_logo/express_logo_ar.png" : "/icons/express_logo/express_logo_en.png";
-    const badgePromoTitle = isArabic ? (data?.badge_promo_title_arabic ?? "السعر بعد الخصم يشمل الاسترداد النقدي") : (data?.badge_promo_title ?? "Sale Price Included Cashback");
     const badgeBackgroundColor = data?.badge_bg_color ? data?.badge_bg_color : "#fde18d";
+
+    const excludedBrands = ["general-supreme", "kiriyazi", "gold-tech"];
+    const isAllowedBrand = excludedBrands.includes(data?.brand?.slug);
+    const badgePromoTitle = isArabic ? (data?.badge_promo_title_arabic ?? "السعر بعد الخصم يشمل الاسترداد النقدي") : (data?.badge_promo_title ?? "Sale Price Included Cashback");
     const badgeHeadingColor = data?.badge_heading_color ? data?.badge_heading_color : "#000000";
     const badgePriceColor = data?.badge_price_color ? data?.badge_price_color : "#219EBC";
 
@@ -1571,10 +1574,14 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 />
                                 <div className='text-sm font-normal'>
                                     <h6 className='text-sm font-extrabold' style={{color:badgeHeadingColor}}>{badgePromoTitle}</h6>
-                                        <div className="flex items-center gap-1">
-                                        <p className="text-xs font-bold">{isArabic ? 'السعر قبل': 'Price Before' }</p>
-                                    <span className="font-bold flex items-center gap-1 text-base" style={{color:badgePriceColor}}>{data?.sale_price}{currencyExtraSmallSymbol}</span>
-                                        </div>
+                                        {isAllowedBrand && 
+                                        <>
+                                            <div className="flex items-center gap-1">
+                                            <p className="text-xs font-bold">{isArabic ? 'السعر قبل': 'Price Before' }</p>
+                                            <span className="font-bold flex items-center gap-1 text-base" style={{color:badgePriceColor}}>{data?.sale_price}{currencyExtraSmallSymbol}</span>
+                                            </div>
+                                        </>
+                                        }
                                 </div>
                             </div>
                         : null}
@@ -1589,7 +1596,8 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                         :
                                         <>{getFormattedPrice(getDiscountedPrice())}{'  '}{currencySymbol}</>
                                     } */}
-                                    {getFormattedPrice(getDiscountedPrice())}{'  '}{currencySymbol}
+                                    {isAllowedBrand ? getFormattedPrice(getDiscountedPrice()) : data?.sale_price}
+                                    {' '}{currencySymbol}
                                 </div>
                                 {(extraData?.flash || data?.sale_price > 0) && (
                                     <span className="text-lg text-[#5D686F] line-through decoration-[#DC4E4E] decoration-2 decoration font-medium">
@@ -2196,7 +2204,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
             {/* Add to Cart Button For Mobile */}
             <div className="h-28"></div>
-            <div className="fixed bottom-0 w-full p-3 bg-white shadow-md border-t border-[#5D686F26] z-10">
+            <div className="fixed bottom-0 w-full p-3 bg-white shadow-md border-t border-[#5D686F26] z-30">
                 {/* QuantityBox */}
                 {quantityBox ?
                     <div className="flex flex-col m-auto p-auto">
