@@ -1464,18 +1464,18 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                                 <div className='text-[#EA4335] text-xs absolute ltr:right-0 rtl:left-0 top-0 bg-[#EA433520] md:px-3.5 px-2 py-1 rtl:rounded-tl-lg rtl:rounded-br-lg ltr:rounded-bl-lg ltr:rounded-tr-lg'>
                                                     {data?.save_type === 1 ?
                                                         isArabic ?
-                                                            `خصم %${Math.round(((data?.price - flashCalc) * 100) / data?.price)}` :
-                                                            `OFF ${Math.round(((data?.price - flashCalc) * 100) / data?.price)} %`
+                                                            `خصم %${Math.round(((data?.price - getDiscountedPrice()) * 100) / data?.price)}` :
+                                                            `OFF ${Math.round(((data?.price - getDiscountedPrice()) * 100) / data?.price)} %`
                                                         :
                                                         isArabic ?
                                                             <div className='flex gap-x-1 items-center'>
                                                                 {'وفر '}
-                                                                {(data?.price - flashCalc).toLocaleString('EN-US')}
+                                                                {(data?.price - getDiscountedPrice()).toLocaleString('EN-US')}
                                                                 {currencySmallSymbol}
                                                             </div> :
                                                             <div className='flex gap-x-1 items-center'>
                                                                 {'Save '}
-                                                                {(data?.price - flashCalc).toLocaleString('EN-US')}
+                                                                {(data?.price - getDiscountedPrice()).toLocaleString('EN-US')}
                                                                 {currencySmallSymbol}
                                                             </div>
                                                     }

@@ -112,7 +112,7 @@ export default function product_component(props: any) {
   const regularPrice = Number(productRegularPrice);
   const salePrice = Number(productSalePrice);
   const flashSalePrice = Number(productFlashSalePrice);
-  const percentage = productData?.save_type === "1" ? 1 : 0; // 1 for percentage, 0 for amount
+  const percentage = (productData?.save_type === "1" || productData?.save_type === 1) ? 1 : 0; // 1 for percentage, 0 for amount
   const sarIcon = () => (
     <svg
       className="riyal-svg"
@@ -133,7 +133,7 @@ export default function product_component(props: any) {
   );
   const discountPercentage =
     percentage > 0
-      ? Math.round((salePrice / regularPrice) * 100)
+      ? Math.round(((regularPrice - salePrice) * 100) / regularPrice)
       : Math.max(0, Number(productRegularPrice) - Number(productSalePrice));
   const productDiscountType = percentage > 0 ? (isArabic ? "خصم" : "OFF") : "";
   const productDiscountValue =
