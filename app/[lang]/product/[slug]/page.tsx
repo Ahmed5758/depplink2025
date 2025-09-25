@@ -1566,7 +1566,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                         </div>
                     </div>
                     <div className="my-2 w-fit rounded-md">
-                        {data?.promotional_price > 0 && data?.promotional_price != null && data?.sale_price ?
+                         {(data?.promotional_price >= 0 && data?.promotional_price != null && data?.sale_price) ?
                             <div className='flex items-center gap-4 py-0 ltr:pl-2 ltr:pr-4 rtl:pl-4 rtl:pr-2' style={{backgroundColor : badgeBackgroundColor}}>
                                 <Image
                                     src={badgeImageLink}
@@ -1574,14 +1574,14 @@ export default function Product({ params, searchParams }: { params: { lang: stri
                                 />
                                 <div className='text-sm font-normal'>
                                     <h6 className='text-sm font-extrabold' style={{color:badgeHeadingColor}}>{badgePromoTitle}</h6>
-                                        {isAllowedBrand && 
+                                        {/* {isAllowedBrand && 
                                         <>
                                             <div className="flex items-center gap-1">
                                             <p className="text-xs font-bold">{isArabic ? 'السعر قبل': 'Price Before' }</p>
                                             <span className="font-bold flex items-center gap-1 text-base" style={{color:badgePriceColor}}>{data?.sale_price}{currencyExtraSmallSymbol}</span>
                                             </div>
                                         </>
-                                        }
+                                        } */}
                                 </div>
                             </div>
                         : null}
