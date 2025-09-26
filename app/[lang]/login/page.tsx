@@ -1,7 +1,7 @@
 "use client"; // This is a client component 👈🏽
 
 import React, { useCallback, useEffect, useRef, useState, useContext } from 'react'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
@@ -420,9 +420,9 @@ export default function Login({ params, searchParams }: {
                     const userEmail = responseJson.user?.email?.toString() || '';
                     const userPhone: any = `966${responseJson.user?.phone_number?.toString() || ''}`;
                     const userProfileAtt: any = {
-                        "account_creation_date": responseJson?.user_webengage_data?.account_creation_date ? moment(responseJson?.user_webengage_data?.account_creation_date).locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        "account_creation_date": responseJson?.user_webengage_data?.account_creation_date ? dayjs(responseJson?.user_webengage_data?.account_creation_date).locale('en').format('DD-MM-YYYY hh:mm A') : '',
                         "backend_user_id": `${responseJson?.user_webengage_data?.backend_user_id ?? ''}`,
-                        "last_purchase_date": responseJson?.user_webengage_data?.last_purchase_date ? moment(responseJson.user_webengage_data?.last_purchase_date).locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        "last_purchase_date": responseJson?.user_webengage_data?.last_purchase_date ? dayjs(responseJson.user_webengage_data?.last_purchase_date).locale('en').format('DD-MM-YYYY hh:mm A') : '',
                         "store_language": responseJson?.user_webengage_data?.store_language ?? 'ar',
                         "total_purchases": responseJson?.user_webengage_data?.total_purchases ?? 0,
                         "total_revenue": responseJson?.user_webengage_data?.total_revenue ?? 0,
@@ -430,11 +430,11 @@ export default function Login({ params, searchParams }: {
                     };
                     wind.push({
                         event: "global_variables",
-                        account_creation_date: moment(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        account_creation_date: dayjs(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
                         user_id: String(userProfileAtt?.backend_user_id ?? ''),
                         email: userEmail ?? '',
                         phone: userPhone ?? '',
-                        last_purchase_date: moment(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+                        last_purchase_date: dayjs(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
                         store_language: userProfileAtt?.store_language ?? 'ar',
                         total_purchases: Number(userProfileAtt?.total_purchases ?? 0),
                         total_revenue: Number(userProfileAtt?.total_revenue ?? 0),
@@ -626,7 +626,7 @@ export default function Login({ params, searchParams }: {
                                             <small className="font-medium text-[#000000]">{params.lang === 'ar' ? notificationsListing?.message_arabic : notificationsListing?.message}</small>
 
                                             <div className="mt-2">
-                                                <small className="font-medium text-[#5D686F] text-xs">{moment(notificationsListing?.created_at?.split('T')[0]).format('MMMM Do, YYYY | h:mm A')}</small>
+                                                <small className="font-medium text-[#5D686F] text-xs">{dayjs(notificationsListing?.created_at?.split('T')[0]).format('MMMM Do, YYYY | h:mm A')}</small>
                                             </div>
                                         </div>
                                     </Link>

@@ -1,8 +1,8 @@
 "use client"; // This is a client component 👈🏽
 
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import "moment/locale/ar";
-import moment from "moment";
+import "dayjs/locale/ar";
+import dayjs from "dayjs";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";

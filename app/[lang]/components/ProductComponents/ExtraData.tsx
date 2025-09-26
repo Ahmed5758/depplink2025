@@ -1,6 +1,6 @@
 "use client";
 
-import moment from "moment";
+import dayjs from "dayjs";
 import Image from "next/image";
 import React, { useMemo } from "react";
 

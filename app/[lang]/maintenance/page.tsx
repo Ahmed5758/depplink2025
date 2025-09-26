@@ -3,7 +3,7 @@
 import React, { useEffect, useState, Fragment } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import MaskedInput from 'react-text-mask'
 import { getDictionary } from "../dictionaries"
 import { Dialog, Transition, RadioGroup } from '@headlessui/react'
@@ -223,7 +223,7 @@ export default function Maintenance({ params }: {
                                                                 </div>
                                                                 <div className="text-[#1C262D85] max-md:my-4">
                                                                     <h4 className="font-medium text-xs mb-1">{params.lang == 'ar' ? 'تاريخ الطلب' : 'Order Date'}:</h4>
-                                                                    <p className="font-medium text-[#004B7A]">{moment(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
+                                                                    <p className="font-medium text-[#004B7A]">{dayjs(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
                                                                 </div>
                                                                 <div className="text-[#1C262D85] max-md:my-4">
                                                                     <h4 className="font-medium text-xs mb-1">{params.lang == 'ar' ? 'عدد المنتجات' : 'No. of Products'}:</h4>
@@ -257,7 +257,7 @@ export default function Maintenance({ params }: {
                                                             </div>
                                                             <div className="text-[#1C262D85] max-md:my-4">
                                                                 <h4 className="font-medium text-xs mb-1">{params.lang == 'ar' ? 'تاريخ الطلب' : 'Order Date'}:</h4>
-                                                                <p className="font-medium text-[#004B7A]">{moment(orderDetails?.orderdata?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
+                                                                <p className="font-medium text-[#004B7A]">{dayjs(orderDetails?.orderdata?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
                                                             </div>
                                                             <div className="text-[#1C262D85] max-md:my-4">
                                                                 <h4 className="font-medium text-xs mb-1">{params.lang == 'ar' ? 'عدد المنتجات' : 'No. of Products'}:</h4>

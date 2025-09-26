@@ -1,6 +1,6 @@
 "use client"
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
 import React, { useState, useEffect, Fragment, useContext } from 'react'

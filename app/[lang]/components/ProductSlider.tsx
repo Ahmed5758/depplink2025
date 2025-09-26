@@ -1,7 +1,7 @@
 'use client'
 
 import 'swiper/css'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
 import Swal from 'sweetalert2'
@@ -692,8 +692,8 @@ export default function ProductSlider(props: any, request: any) {
                 >
                     {props?.products?.map((data: any, i: any) => {
 
-                        var d1 = moment(data.created_at.split('T')[0]).format('YYYY-MM-DD')
-                        var d2 = moment().format('YYYY-MM-DD')
+                        var d1 = dayjs(data.created_at.split('T')[0]).format('YYYY-MM-DD')
+                        var d2 = dayjs().format('YYYY-MM-DD')
                         var flashCalc = ProExtraData[data?.id]?.flash ? ProExtraData[data?.id]?.flash?.discount_type === 2 ? Math.round(data?.sale_price * ProExtraData[data?.id]?.flash?.discount_amount / 100) : ProExtraData[data?.id]?.flash?.discount_amount : data.sale_price
                         var checkQty = false
                         if (typeof window !== 'undefined' && localStorage.getItem('cartData')) {
@@ -727,7 +727,7 @@ export default function ProductSlider(props: any, request: any) {
                                                 />
                                             </div>
                                             :
-                                            moment(d2).diff(d1, 'days') <= data.newtype ?
+                                            dayjs(d2).diff(d1, 'days') <= data.newtype ?
                                                 <div className='text-[#20831E] text-[0.55rem] lg:text-xs absolute ltr:left-0 rtl:right-0 top-0 bg-[#20831E20] md:px-3.5 px-2 py-1 rtl:rounded-bl-lg rtl:rounded-tr-lg ltr:rounded-br-lg ltr:rounded-tl-lg z-10'>{props.lang == 'ar' ? 'جديد' : 'New'}</div>
                                                 : data.best_seller == 1 ?
                                                     <div className='text-[#20831E] text-[0.55rem] lg:text-xs absolute ltr:left-0 rtl:right-0 top-0 bg-[#20831E20] md:px-3.5 px-2 py-1 rtl:rounded-bl-lg rtl:rounded-tr-lg ltr:rounded-br-lg ltr:rounded-tl-lg z-10'>{props.lang == 'ar' ? 'أكثر مبيعا' : 'Selling Out Fast'}</div>

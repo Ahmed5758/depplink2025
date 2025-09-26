@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getDictionary } from "../../dictionaries";
-import moment from 'moment'
-import 'moment/locale/ar'
+import dayjs from 'dayjs'
+import 'dayjs/locale/ar'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -41,9 +41,9 @@ export default function BlogDetails({ params }: { params: { lang: string, data: 
                 <div className="flex justify-center py-6 px-44">
                     <div className="">
                         <ul className="text-sm flex items-center justify-center gap-x-3 font-bold text-[#004B7A]">
-                            <li>{moment(params?.data?.data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD")}</li>
+                            <li>{dayjs(params?.data?.data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD")}</li>
                             <li>|</li>
-                            <li>{moment(params?.data?.data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').endOf('day').fromNow()}</li>
+                            <li>{dayjs(params?.data?.data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').endOf('day').fromNow()}</li>
                         </ul>
                         <h1 className="my-4 font-bold text-xl text-[#004B7A] text-center">{params.lang == 'ar' ? params?.data?.data?.name_arabic : params?.data?.data?.name}</h1>
                         <Image
@@ -82,9 +82,9 @@ export default function BlogDetails({ params }: { params: { lang: string, data: 
                                     />
                                     <div className='mt-10 pb-5 px-3'>
                                         <ul className="text-xs flex items-center gap-x-3 font-medium">
-                                            <li>{moment(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD")}</li>
+                                            <li>{dayjs(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD")}</li>
                                             <li>|</li>
-                                            <li>{moment(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').endOf('day').fromNow()}</li>
+                                            <li>{dayjs(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').endOf('day').fromNow()}</li>
                                         </ul>
                                         <h2 className="mt-4 font-bold text-xs text-[#004B7A] line-clamp-1">{params.lang == 'ar' ? data?.name_arabic : data?.name}</h2>
                                         <div className="text-xs mt-1.5 line-clamp-3 leading-5" dangerouslySetInnerHTML={{ __html: params.lang == 'ar' ? data?.description_arabic : data?.description }} />
