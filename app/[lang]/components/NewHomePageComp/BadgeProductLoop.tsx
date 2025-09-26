@@ -12,7 +12,7 @@ import { get } from "../../api/ApiCalls";
 import { getCookie } from "cookies-next";
 
 const ProductComponent = dynamic(
-    () => import("./product_component"),
+    () => import("./product_component_updated"),
     { ssr: true }
 );
 

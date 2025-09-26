@@ -15,7 +15,7 @@ import {
   removeProductWishlistData,
 } from "@/lib/components/component.client";
 
-export default function product_component_updated(props: any) {
+export default function product_component_updated_updated(props: any) {
   const NewMedia = props?.NewMedia;
   const router = useRouter();
   const origin = props?.origin;

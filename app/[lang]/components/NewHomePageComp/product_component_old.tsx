@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next-nprogress-bar";
 import { setCartItems } from "../../cartstorage/cart";
 
-export default function product_component(props: any) {
+export default function product_component_updated(props: any) {
   const router = useRouter();
   const origin = props?.origin;
   const isArabic = props?.lang;

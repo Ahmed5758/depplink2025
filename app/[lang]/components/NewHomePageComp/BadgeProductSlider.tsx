@@ -9,7 +9,7 @@ import 'swiper/css/scrollbar';
 import './scrollBar.css';
 
 const ProductComponent = dynamic(
-  () => import("./product_component"),
+  () => import("./product_component_updated"),
   { ssr: true }
 );
 

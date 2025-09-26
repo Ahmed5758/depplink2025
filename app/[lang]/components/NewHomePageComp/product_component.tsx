@@ -15,7 +15,7 @@ import { setCartItems } from "../../cartstorage/cart";
 import GlobalContext from "../../GlobalContext";
 import FlashSaleTimer from "./FlashSaleTimer";
 
-export default function product_component({
+export default function product_component_updated({
   productData,
   isArabic,
   isMobileOrTablet,
