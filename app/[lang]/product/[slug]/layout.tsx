@@ -1,7 +1,7 @@
 import { Api } from "../../api/Api";
 import { cache } from 'react';
 import { headers, cookies } from 'next/headers'
-import { cacheKey } from '../../GlobalVar';
+import { cacheKey } from '../../../GlobalVar';
 
 const fetcher = cache(async (params: any) => {
     const { slug } = params;

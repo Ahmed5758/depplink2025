@@ -4,7 +4,7 @@ import { NewMedia } from '../../api/Api';
 import { Api } from "../../api/Api";
 import { headers, cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { cacheKey } from '../../GlobalVar';
+import { cacheKey } from '../../../GlobalVar';
 import Script from 'next/script';
 type Props = {
   params: { slug: string, data: any, lang: string, devicetype: any, query: any },

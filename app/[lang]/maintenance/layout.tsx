@@ -1,6 +1,6 @@
 
 import { Api } from "../api/Api";
-import { cacheKey } from '../GlobalVar'
+import { cacheKey } from '../../GlobalVar'
 
 const fetcher = async (params: any) => {
     const slug = "maintenance";

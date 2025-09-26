@@ -10,7 +10,7 @@ import { useRouter } from "next-nprogress-bar";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { NewMedia } from "../../api/Api";
-import { cacheKey } from "../../GlobalVar";
+import { cacheKey } from "../../../GlobalVar";
 import { setCartItems } from "../../cartstorage/cart";
 import GlobalContext from "../../GlobalContext";
 import FlashSaleTimer from "./FlashSaleTimer";

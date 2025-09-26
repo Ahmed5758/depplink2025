@@ -1,7 +1,7 @@
 import { Api } from "../../api/Api";
 import { redirect } from 'next/navigation'
 import { headers, cookies } from 'next/headers'
-import { cacheKey } from '../../GlobalVar';
+import { cacheKey } from '../../../GlobalVar';
 
 type Props = {
   params: { slug: string, data: any, lang: string }

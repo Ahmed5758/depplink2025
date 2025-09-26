@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { NewMedia, NewMedia2 } from "./api/Api";
 import { userAgent } from "next/server";
 import { get } from "./api/ApiCalls";
 
@@ -24,16 +23,42 @@ const TopSectionSlider = dynamic(() => import("./components/NewHomePageComp/TopS
 // const Popup = dynamic(() => import("./components/NewHomePageComp/Popup"), { ssr: true })
 
 import { useHomepage } from "./context/HomepageContext";
+import { useApp } from "../_ctx/AppContext";
+import { getHomePages } from "@/lib/homepage/homepage.pages";
 
-export default function Homepage({ params }: { params: any }) {
-  const homepageProps = useHomepage()
+export default function Homepage() {
+  const {
+    lang,
+    deviceType,
+    deviceDetail,
+    isWebView,
+    os,
+    city,
+    origin,
+    baseUrl,
+    fullUrl,
+    slug, slugStr, slugParts,
+  } = useApp();
+  const NewMedia = process.env.NEXT_PUBLIC_NEW_MEDIA;
+  const NewMedia2 = process.env.NEXT_PUBLIC_NEW_MEDIA2; 
+  const [homepagepartonelatest, setHomepagePartOneLatest] = useState<any>(null);
+  const [homepageparttwolatest, setHomepagePartTwoLatest] = useState<any>(null);
+  const [homepagepartthreelatest, setHomepagePartThreeLatest] = useState<any>(null);
+
+  useEffect(() => {
+    (async () => {
+      const {
+        homepageSectionOne,
+        homepageSectionTwo,
+        homepageSectionThree,
+      } = await getHomePages(lang, deviceType); // ✅ must await
+      setHomepagePartOneLatest(homepageSectionOne);
+      setHomepagePartTwoLatest(homepageSectionTwo);
+      setHomepagePartThreeLatest(homepageSectionThree);
+    })();
+  }, []);
   const router = useRouter();
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const lang: any = params?.lang; // Default to 'en' if lang is undefined
-  const isArabic = params.lang === "ar" ? true : false;
-  const homepagepartonelatest = homepageProps?.homepagepartonelatest;
-  const homepageparttwolatest = homepageProps?.homepageparttwolatest;
-  const homepagepartthreelatest = homepageProps?.homepagepartthreelatest;
+  const isArabic = lang === "ar" ? true : false;
   const containerClass = "container";
   const containerClassMobile = "ltr:pl-4 rtl:pr-4";
   const [sec4SelectedIndex, setSec4SelectedIndex] = useState(0);
@@ -50,27 +75,21 @@ export default function Homepage({ params }: { params: any }) {
   const [gtmNewItemListName, setgtmNewItemListName] = useState<string | null>(null);
 
   useEffect(() => {
-    if (
-      params &&
-      homepagepartonelatest?.first_five_sec?.section_four?.length > 0
-    ) {
+    if (homepagepartonelatest?.first_five_sec?.section_four?.length > 0) {
       const firstSection: any =
         homepagepartonelatest.first_five_sec.section_four[0];
       setSec4SelectedCategory(firstSection?.category);
       setSec4SelectedProducts(firstSection?.products || []);
       setSec4SelectedIndex(0);
     }
-    if (
-      params &&
-      homepageparttwolatest?.six_eleven_sec?.section_six?.length > 0
-    ) {
+    if (homepageparttwolatest?.six_eleven_sec?.section_six?.length > 0) {
       const secondSection: any =
         homepageparttwolatest?.six_eleven_sec?.section_six[0];
       setSec6SelectedCategory(secondSection?.category);
       setSec6SelectedProducts(secondSection?.products || []);
       setSec6SelectedIndex(0);
     }
-  }, [params, homepagepartonelatest, homepageparttwolatest]);
+  }, [homepagepartonelatest, homepageparttwolatest]);
 
   function calculateTimeLeft(endTime: any) {
     const now: any = new Date();
@@ -87,14 +106,6 @@ export default function Homepage({ params }: { params: any }) {
       seconds: Math.floor((difference / 1000) % 60),
       expired: false
     };
-  }
-  function detectPlatform() {
-    if (window.Android) return "Android";
-    if (window.webkit?.messageHandlers?.iosBridge) return "iOS";
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (/android/i.test(userAgent)) return "Android";
-    if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS";
-    return "Web";
   }
 
   useEffect(() => {
@@ -191,7 +202,7 @@ export default function Homepage({ params }: { params: any }) {
           event: "view_item_list",
           value: totalPrice,
           currency: "SAR",
-          platform: detectPlatform(),
+          platform: deviceType,
           item_list_name: sectionName,
           item_list_id: String(itemListId),
           ecommerce: {
@@ -883,9 +894,13 @@ export default function Homepage({ params }: { params: any }) {
       <div className="sticky top-0 z-40 bg-white">
         <MobileHeaderNew
           type="Main"
-          lang={params?.lang}
-          dict={params?.dict}
-          devicetype={true}
+          isArabic={isArabic} 
+          NewMedia={NewMedia} 
+          lang={lang}
+          deviceType={deviceType}
+          city={city}
+          origin={origin}
+          slugStr={slugStr}
         />
       </div>
       <div className="pt-4"></div>
