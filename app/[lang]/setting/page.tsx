@@ -7,7 +7,7 @@ import { getDictionary } from "../dictionaries"
 import { Switch, RadioGroup } from '@headlessui/react'
 import { useRouter } from 'next/navigation'
 import { usePathname } from 'next/navigation';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 const MobileHeader = dynamic(() => import('../components/MobileHeader'), { ssr: true })
 
@@ -138,11 +138,11 @@ export default function Setting({ params }: { params: { lang: string, data: any,
         localStorage.setItem('userProfileData', JSON.stringify(userProfileAtt));
         wind.push({
             event: "global_variables",
-            account_creation_date: moment(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            account_creation_date: dayjs(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
             user_id : String(userProfileAtt?.backend_user_id ?? ''),
             email : userEmail ?? '',
             phone : userPhone ?? '',
-            last_purchase_date: moment(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            last_purchase_date: dayjs(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
             store_language: userProfileAtt?.store_language ?? 'ar',
             total_purchases: userProfileAtt?.total_purchases ?? 0,
             total_revenue : userProfileAtt?.total_revenue ?? 0,

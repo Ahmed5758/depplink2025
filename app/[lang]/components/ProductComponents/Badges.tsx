@@ -1,6 +1,6 @@
 "use client";
 
-import moment from "moment";
+import dayjs from "dayjs";
 import Image from "next/image";
 import React, { useMemo } from "react";
 
@@ -28,7 +28,7 @@ const Badges: React.FC<BadgeProps> = ({ devicetype, ProExtraData, data, d1, d2, 
     if (devicetype === "mobile") return null;
     const badgeContent = useMemo(() => {
         const expressDeliveryData = ProExtraData?.[data?.id]?.expressdeliveryData;
-        const daysDifference = moment(d2).diff(d1, "days");
+        const daysDifference = dayjs(d2).diff(d1, "days");
         const isNew = daysDifference <= data?.newtype;
 
         const badgeStyles = "text-[0.55rem] lg:text-xs absolute ltr:left-0 rtl:right-0 top-0 md:px-3.5 px-2 py-1 z-10 ";
