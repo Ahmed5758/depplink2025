@@ -9,18 +9,15 @@ import './scrollBar.css';
 import 'swiper/css/grid';
 import 'swiper/css/pagination';
 import Image from "next/image";
-import { NewMedia } from "../../api/Api";
 import Link from "next/link";
 
 
 export default function BrandSlider(props: any) {
-
+    const NewMedia = props?.NewMedia;
     const brands = props?.data;
     const origin = props?.origin;
     const isArabic = props?.isArabic;
-    const isMobileOrTablet = props?.isMobileOrTablet;
     // const productDataSlider = props?.productDataSlider?.products?.data;
-    const productDataSlider = props?.productDataSlider;
     const prevRef = useRef<HTMLButtonElement>(null);
     const nextRef = useRef<HTMLButtonElement>(null);
 

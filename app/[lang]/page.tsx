@@ -1098,6 +1098,7 @@ export default function Homepage() {
                 origin={origin}
                 isArabic={isArabic}
                 isMobileOrTablet={true}
+                NewMedia={NewMedia}
               />
             </>
           ) : (
