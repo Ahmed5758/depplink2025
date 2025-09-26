@@ -1,5 +1,5 @@
 import { Api } from "../../api/Api";
-import { cacheKey } from '../../GlobalVar';
+import { cacheKey } from '../../../GlobalVar';
 
 type Props = {
   params: { slug: string, lang: string, data: any }

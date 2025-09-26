@@ -2,7 +2,7 @@
 
 import React, { use, useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
 import Lottie from "lottie-react"
@@ -70,7 +70,7 @@ export default function Congratulations({ params }: { params: { lang: string, sl
         const newRevenue = Number(totalValue);
         userProfileAtt.total_purchases = (userProfileAtt.total_purchases || 0) + 1;
         userProfileAtt.total_revenue = (userProfileAtt.total_revenue || 0) + newRevenue;
-        userProfileAtt.last_purchase_date = moment().locale('en').format('DD-MM-YYYY hh:mm A');
+        userProfileAtt.last_purchase_date = dayjs().locale('en').format('DD-MM-YYYY hh:mm A');
         localStorage.setItem('userProfileData', JSON.stringify(userProfileAtt));
         const fullName = localStorage.getItem('fullName');
         const [firstname] = fullName?.trim().split(' ') || [];
@@ -134,11 +134,11 @@ export default function Congratulations({ params }: { params: { lang: string, sl
         const userProfileAttributes = {
             event: "global_variables",
             platform: detectPlatform(),
-            account_creation_date: moment(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            account_creation_date: dayjs(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
             user_id: String(userProfileAtt?.backend_user_id ?? ''),
             email: userEmail ?? '',
             phone: userPhone ?? '',
-            last_purchase_date: moment(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+            last_purchase_date: dayjs(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
             store_language: userProfileAtt?.store_language ?? 'ar',
             total_purchases: Number(userProfileAtt?.total_purchases ?? 0),
             total_revenue: Number(userProfileAtt?.total_revenue ?? 0),
@@ -386,9 +386,9 @@ export default function Congratulations({ params }: { params: { lang: string, sl
                         <h1 className="text-base mb-1 md:text-lg font-bold md:mb-3">{params.lang == 'ar' ? 'شكرا لـك علي طــلبك من مــتجــر تــمكيــن' : 'Thank you for choosing Tamkeen Store'}</h1>
                         <p className="text-xs md:text-base text-[#5D686F] md:w-[72%] w-full mx-auto">
                             {params.lang == 'ar' ?
-                                `نقوم بمعالجة طلبك الآن، وسيتم تسليمه خلال ${moment().add(7, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")} أيام عمل، إليك التفاصيل، وسيتم إرسال نسخة من إيصالك إلى علي البريد الالكتروني الخاص بك`
+                                `نقوم بمعالجة طلبك الآن، وسيتم تسليمه خلال ${dayjs().add(7, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")} أيام عمل، إليك التفاصيل، وسيتم إرسال نسخة من إيصالك إلى علي البريد الالكتروني الخاص بك`
                                 :
-                                `We are processing your order now, and it will be delivered before ${moment().add(7, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}. The invoice order confirmation is already send to your below mentioned email ID.`
+                                `We are processing your order now, and it will be delivered before ${dayjs().add(7, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}. The invoice order confirmation is already send to your below mentioned email ID.`
                             }
                             <span className="text-[#219EBC]">{' '}{orderDetails?.orderdata?.address?.user_data?.email}</span>
                         </p>
@@ -404,7 +404,7 @@ export default function Congratulations({ params }: { params: { lang: string, sl
                 <hr className="opacity-10 my-6" />
                 <div className="text-center text-sm md:text-base text-[#5D686F] font-normal">
                     <h5>{params.lang == 'ar' ? 'رقم طلبك' : 'Order Number'}: <span dir='ltr' className="text-[#B15533] font-bold">{orderDetails?.orderdata?.order_no}</span></h5>
-                    <p>{params.lang == 'ar' ? 'الوقت المتوقع للتوصيل' : 'Expected time for delivery'} {moment().add(DeliveryDate, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
+                    <p>{params.lang == 'ar' ? 'الوقت المتوقع للتوصيل' : 'Expected time for delivery'} {dayjs().add(DeliveryDate, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
                 </div>
                 <div className="md:flex items-start gap-x-4 my-6">
                     <div className="w-full">
@@ -448,7 +448,7 @@ export default function Congratulations({ params }: { params: { lang: string, sl
                             )}
                             <div className="text-sm font-medium">
                                 <p className="font-regular text-[#5D686F] text-sm">{params.lang == 'ar' ? 'الوقت المتوقع للتوصيل' : 'Expected time for delivery'}</p>
-                                <label className="text-[#004B7A] font-regular text-sm mt-1">{moment().add(DeliveryDate, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
+                                <label className="text-[#004B7A] font-regular text-sm mt-1">{dayjs().add(DeliveryDate, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</label>
                                 <hr className="opacity-10 my-3" />
                             </div>
                             <div className="text-sm font-medium">
@@ -614,13 +614,13 @@ export default function Congratulations({ params }: { params: { lang: string, sl
                                             {data?.expressproduct && orderDetails?.orderdata?.order_type != 1 ?
                                                 <>
                                                     <p className="text-xs text-[#DC4E4E] font-medium">{params?.lang === 'ar' ? 'اطلب مسبقًا الآن' : 'Express Delivery'}</p>
-                                                    <p className="text-xs text-primary font-medium mb-2">{params?.lang === 'ar' ? 'سلمت بواسطة' : 'Delivered by'}: {moment().add(orderDetails?.orderdata?.express_days, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM DD, YYYY")}</p>
+                                                    <p className="text-xs text-primary font-medium mb-2">{params?.lang === 'ar' ? 'سلمت بواسطة' : 'Delivered by'}: {dayjs().add(orderDetails?.orderdata?.express_days, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM DD, YYYY")}</p>
                                                 </>
                                                 : null}
                                             {data?.pre_order && orderDetails?.orderdata?.order_type != 1 ?
                                                 <>
                                                     <p className="text-sm text-[#DC4E4E] font-medium">{params?.lang === 'ar' ? 'اطلب مسبقًا الآن' : 'Pre-Order Now'}</p>
-                                                    <p className="text-sm text-primary font-medium">{params?.lang === 'ar' ? 'سلمت بواسطة' : 'Delivered by'}: {moment().add(data?.pre_order_day, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM DD, YYYY")}</p>
+                                                    <p className="text-sm text-primary font-medium">{params?.lang === 'ar' ? 'سلمت بواسطة' : 'Delivered by'}: {dayjs().add(data?.pre_order_day, 'days').locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM DD, YYYY")}</p>
                                                 </>
                                                 : null}
                                             {data?.express && orderDetails?.orderdata?.order_type != 1 ?

@@ -1,7 +1,7 @@
 "use client"; // This is a client component 👈🏽
 
 import React, { useEffect, useState } from 'react'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { get } from "../api/ApiCalls"
@@ -45,7 +45,7 @@ export default function Notifications({ params }: { params: { lang: string, data
                             <small className="font-medium text-[#000000]">{params.lang === 'ar' ? data?.message_arabic : data?.message}</small>
 
                             <div className="mt-4">
-                                <small className="font-medium text-[#5D686F] text-xs">{moment(data?.created_at?.split('T')[0]).format('MMMM Do, YYYY | h:mm A')}</small>
+                                <small className="font-medium text-[#5D686F] text-xs">{dayjs(data?.created_at?.split('T')[0]).format('MMMM Do, YYYY | h:mm A')}</small>
                             </div>
                         </div>
                     </button>

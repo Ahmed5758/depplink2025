@@ -1,7 +1,7 @@
 "use client"; // This is a client component 👈🏽
 
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
 import Select from 'react-select'
@@ -573,7 +573,7 @@ export default function Register({ params, searchParams }: {
                                     <small className="font-medium text-[#000000]">{params.lang === 'ar' ? notificationsListing?.message_arabic : notificationsListing?.message}</small>
 
                                     <div className="mt-2">
-                                        <small className="font-medium text-[#5D686F] text-xs">{moment(notificationsListing?.created_at?.split('T')[0]).format('MMMM Do, YYYY | h:mm A')}</small>
+                                        <small className="font-medium text-[#5D686F] text-xs">{dayjs(notificationsListing?.created_at?.split('T')[0]).format('MMMM Do, YYYY | h:mm A')}</small>
                                     </div>
                                 </div>
                             </Link>

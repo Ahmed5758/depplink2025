@@ -9,17 +9,18 @@ import 'swiper/css/scrollbar';
 import '../NewHomePageComp/scrollBar.css';
 import 'swiper/css/pagination';
 import Link from "next/link";
-import { get } from "../../api/ApiCalls";
 import { getCookie } from "cookies-next";
+import { getProductExtraData } from "@/lib/components/component.client";
 
 
 const ProductComponent = dynamic(
-   () => import("../NewHomePageComp/product_component"),
+   () => import("../NewHomePageComp/product_component_updated_updated"),
   { ssr: true }
 );
 
 export default function ProductLoopComponent(props: any) {
   const origin = props?.origin;
+  const NewMedia = props?.NewMedia;
   const isArabic = props?.isArabic;
   const isMobileOrTablet = props?.isMobileOrTablet;
   const productDataSlider = props?.productDataSlider?.products?.data;
@@ -47,10 +48,8 @@ export default function ProductLoopComponent(props: any) {
     var city = getCookie('selectedCity')
     // localStorage.getItem("globalcity")
     if (a?.length >= 1) {
-      await get(`productextradatamulti-regional-new/${a?.join(",")}/${city}`).then((responseJson: any) => {
-        const data = responseJson?.data;
-        setProExtraData(data)
-      })
+      const dataExtra = await getProductExtraData(a?.join(","), city);
+      setProExtraData(dataExtra?.extraDataDetails?.data)
     }
   }
 
@@ -60,13 +59,13 @@ export default function ProductLoopComponent(props: any) {
       <div className={`${containerClass}`}>
         <div className="flex justify-between items-start">
           <h2 className="headingHomeMain mb-5">{props?.sliderHeading}</h2>
-          <Link prefetch={false} scroll={false} href={`${origin}/${isArabic ? "ar" : "en"}/${props?.buttonLink}`} className="text-primary text-sm md:text-xl font-medium underline px-1.5 bg-[#EBEBEB] py-1 md:shadow-none rounded-md shadow-sm text-nowrap">
+          <Link prefetch={false} scroll={false} href={`${origin}/${isArabic ? "ar" : "en"}/${props?.buttonLink}`} className="text-primary text-sm md:text-xl font-medium px-1.5 bg-[#EBEBEB] py-1 md:shadow-none rounded-md shadow-sm text-nowrap">
             {props?.buttonTitle}
           </Link>
         </div>
         {isMobileOrTablet ? null :
           <>
-            <button ref={prevRef} className={`absolute top-1/2 translate-middle-y z-10 cursor-pointer fill-white p-2.5 left-1 md:p-3 md:left-7 bg-primary rounded-full`}>
+            <button ref={prevRef} className={`absolute top-1/2 translate-middle-y z-10 cursor-pointer fill-white text-white p-2.5 left-1 md:p-3 md:left-7 bg-primary rounded-full`}>
               <svg
                 height={isMobileOrTablet ? "18" : "22"}
                 viewBox="0 0 24 24"
@@ -82,7 +81,7 @@ export default function ProductLoopComponent(props: any) {
                 ></path>
               </svg>
             </button>
-            <button ref={nextRef} className={`absolute top-1/2 translate-middle-y z-10 cursor-pointer fill-white p-2.5 right-1 md:p-3 md:right-7 bg-primary rounded-full`}>
+            <button ref={nextRef} className={`absolute top-1/2 translate-middle-y z-10 cursor-pointer fill-white text-white p-2.5 right-1 md:p-3 md:right-7 bg-primary rounded-full`}>
               <svg
                 height={isMobileOrTablet ? "18" : "22"}
                 viewBox="0 0 24 24"
@@ -104,18 +103,18 @@ export default function ProductLoopComponent(props: any) {
       <div className={`${containerClassMobile}`}>
         <Swiper
           spaceBetween={10}
-          slidesPerView={5}
+          slidesPerView={4}
           breakpoints={{
             320: {
               slidesPerView: 1.2,
               spaceBetween: 6,
             },
             640: {
-              slidesPerView: 1.2,
+              slidesPerView: 1.5,
               spaceBetween: 6,
             },
             768: {
-              slidesPerView: 1.2,
+              slidesPerView: 2.2,
               spaceBetween: 6,
             },
             1024: {
@@ -172,7 +171,7 @@ export default function ProductLoopComponent(props: any) {
         >
           {productDataSlider?.map((productSlider: any, productSliderID: number) => (
             <SwiperSlide key={productSliderID}>
-              <ProductComponent productData={productSlider} lang={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} ProExtraData={ProExtraData?.[productSlider?.id]} gtmColumnItemListId={gtmNewListId} gtmColumnItemListName={gtmNewListName}/>
+              <ProductComponent NewMedia={NewMedia} productData={productSlider} isArabic={isArabic} isMobileOrTablet={isMobileOrTablet} origin={origin} ProExtraData={ProExtraData?.[productSlider?.id]} gtmColumnItemListId={gtmNewListId} gtmColumnItemListName={gtmNewListName}/>
             </SwiperSlide>
           ))}
         </Swiper>

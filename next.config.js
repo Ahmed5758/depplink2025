@@ -1,134 +1,69 @@
+// @ts-nocheck
+// next.config.js
+const path = require('path');
 const withPWA = require('next-pwa')({
-    dest: 'public'
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  register: true,
+  skipWaiting: true,
+  // swSrc: "service-worker.js", // ✅ our custom SW
+});
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    webpack: (config, { webpack }) => {
-        config.plugins.push(
-            new webpack.DefinePlugin({
-                'process.env.CUSTOM_VARIABLE': JSON.stringify('value'),
-            })
-        );
-        return config;
-    },
-    reactStrictMode: true,
-      productionBrowserSourceMaps: true, // Generate source maps for production
-      compress: false,
-    transpilePackages: ['crypto-js'],
-    async redirects() {
-        return [
-            {
-                source: '/',
-                destination: '/ar',
-                permanent: true,
-            },
-            {
-                source: '/ar(//+|/)$',
-                destination: '/ar',
-                permanent: true,
-            },
-        ];
-    },
-    images: {
-        formats: ['image/avif', 'image/webp'],
-        unoptimized: false, // Enable optimization
-        deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
-        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-        remotePatterns: [
-            {
-                protocol: 'https',
-                hostname: 'via.placeholder.com',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'partners.tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'adminpanelapis.tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'images.tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'media.tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'cdn-media.tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'cyberadmin.tamkeenstores.com.sa',
-                pathname: '/**',
-            },
-            {
-                protocol: 'https',
-                hostname: 'onelink.to',
-                pathname: '/**',
-            },
-        ],
-      	unoptimized: true,
-        deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
-        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    },
-    async headers() {
-        return [
-            {
-                source: '/:path*',
-                headers: [
-                    { key: 'X-DNS-Prefetch-Control', value: 'off' },
-                ],
-            },
-            {
-                source: '/_next/static/(.*)',
-                headers: [
-                    {
-                        key: 'Cache-Control',
-                        value: 'public, max-age=31536000, immutable',
-                    },
-                ],
-            },
-            {
-                source: '/:path*\\.(svg|jpg|jpeg|png|gif|webp|avif)',
-                headers: [
-                    {
-                        key: 'Cache-Control',
-                        value: 'public, max-age=31536000, immutable',
-                    },
-                ],
-            },
-            {
-                source: '/:path*\\.(js|css|html)',
-                headers: [
-                    {
-                        key: 'Cache-Control',
-                        value: 'public, max-age=3600, stale-while-revalidate=86400',
-                    },
-                ],
-            },
-        ];
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
-    experimental: {
-        nextScriptWorkers: true,
-    },
+  output: 'standalone',
+  outputFileTracingRoot: path.resolve(__dirname),
+  allowedDevOrigins: ['127.0.0.1', 'localhost', 'app.localhost', '0.0.0.0'],
+  reactStrictMode: true,
+  productionBrowserSourceMaps: false,
+  compress: true,
+  poweredByHeader: false,
+  trailingSlash: false,
+
+  transpilePackages: ['crypto-js'],
+
+  webpack: (config, { webpack }) => {
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.CUSTOM_VARIABLE': JSON.stringify('value'),
+      })
+    );
+    return config;
+  },
+
+  async redirects() {
+    return [
+      { source: '/', destination: '/ar', permanent: true },
+      { source: '/ar/', destination: '/ar', permanent: true },
+    ];
+  },
+
+  images: {
+    unoptimized: false,
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [680, 780, 1040, 1280, 1540, 1650, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    qualities: [60, 75, 85, 100],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'via.placeholder.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'tamkeenstores.com.sa', pathname: '/images/**' },
+      { protocol: 'https', hostname: 'partners.tamkeenstores.com.sa', pathname: '/assets/user-images/**' },
+      { protocol: 'https', hostname: 'adminpanelapis.tamkeenstores.com.sa', pathname: '/assets/**' },
+      { protocol: 'https', hostname: 'cdn-images.tamkeenstores.com.sa', pathname: '/assets/new-media/**' },
+      { protocol: 'https', hostname: 'images.tamkeenstores.com.sa', pathname: '/assets/new-media/**' },
+      { protocol: 'https', hostname: 'media.tamkeenstores.com.sa', pathname: '/assets/**' },
+      { protocol: 'https', hostname: 'media.tamkeenstores.com.sa', pathname: '/specificicons/**' },
+      { protocol: 'https', hostname: 'onelink.to', pathname: '/**' },
+    ],
+
+  },
+
+  eslint: { ignoreDuringBuilds: true },
+  turbopack: {},
 };
 
-module.exports = withPWA(nextConfig);
+module.exports = withBundleAnalyzer(withPWA(nextConfig));

@@ -1,16 +1,15 @@
 "use client"
 
-import React, { useEffect, useState, useContext } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter, usePathname } from 'next/navigation'
-import { NewMedia } from "../../api/Api";
 
 interface GridImagesTwoProps {
   isMobileOrTablet: boolean;
   isArabic: boolean;
   images: string[];
   links: string[];
+  NewMedia: any;
 }
 
 export default function GridImagesTwo({
@@ -18,10 +17,8 @@ export default function GridImagesTwo({
   isArabic,
   images = [],
   links = [],
+  NewMedia
 }: GridImagesTwoProps) {
-    const router = useRouter()
-    const path = usePathname();
-    const containerClass = isMobileOrTablet ? "container" : "px-20";
 
     // Fallback image
     const defaultImage = "/images/categoryNew/card-4.png";
@@ -45,8 +42,8 @@ export default function GridImagesTwo({
                         decoding="async"
                         data-nimg="1"
                         className="object-center object-cover shadow-lg rounded-2xl h-[13.25rem] lg:h-[9.25rem] w-full"
-                        sizes="100vw"
-                        style={{ color: "transparent;" }}
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                        style={{ color: "transparent" }}
                     />
                 </Link>
             </div>
@@ -61,8 +58,8 @@ export default function GridImagesTwo({
                         decoding="async"
                         data-nimg="1"
                         className="object-center object-cover shadow-lg rounded-2xl h-[13.25rem] lg:h-[9.25rem] w-full"
-                        sizes="100vw"
-                        style={{ color: "transparent;" }}
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                        style={{ color: "transparent" }}
                     />
                 </Link>
             </div>

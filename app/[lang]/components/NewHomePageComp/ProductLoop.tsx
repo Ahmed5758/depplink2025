@@ -6,7 +6,7 @@ import { get } from "../../api/ApiCalls";
 
 
 const ProductComponent = dynamic(
-    () => import("./product_component"),
+    () => import("./product_component_updated"),
     { ssr: true }
 );
 

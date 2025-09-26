@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getDictionary } from "../dictionaries";
-import moment from 'moment'
-import 'moment/locale/ar'
+import dayjs from 'dayjs'
+import 'dayjs/locale/ar'
 import { NewMedia } from '../api/Api';
 
 export default function Blogs({ params }: { params: { lang: string, data: any } }) {
@@ -65,9 +65,9 @@ export default function Blogs({ params }: { params: { lang: string, data: any } 
                                     />
                                     <div className='mt-10 pb-5 px-3'>
                                         <ul className="text-xs flex items-center gap-x-3 font-medium">
-                                            <li>{moment(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD")}</li>
+                                            <li>{dayjs(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD")}</li>
                                             <li>|</li>
-                                            <li>{moment(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').endOf('day').fromNow()}</li>
+                                            <li>{dayjs(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').endOf('day').fromNow()}</li>
                                         </ul>
                                         <h2 className="mt-4 font-bold text-base text-[#004B7A] line-clamp-2">{params.lang == 'ar' ? data?.name_arabic : data?.name}</h2>
                                         <div className="text-xs mt-1.5 line-clamp-2 leading-5" dangerouslySetInnerHTML={{ __html: params.lang == 'ar' ? data?.description_arabic : data?.description }} />

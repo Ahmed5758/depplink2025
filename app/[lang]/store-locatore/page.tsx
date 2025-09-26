@@ -34,6 +34,33 @@ export default function StoreLocator({ params,searchParams }: { params: { lang: 
     ];
 
     useEffect(() => {
+        if(storesdata?.stores?.length && searchParams?.city){
+            if(searchParams?.city.toLowerCase() == 'sabya_obhur'){
+                if (!storesdata.isFiltered) {
+                    const filteredStores = storesdata.stores.filter((store: any) => 
+                        store?.id == '50' || store?.id == '51'
+                    );
+                                        
+                    setStoresData({
+                        ...storesdata,
+                        stores: filteredStores,
+                        isFiltered: true // Mark as filtered
+                    });
+                }
+            }
+            else {
+                const filtercity = storesdata.regions?.find((item: { label: string | null }) =>
+                    item.label?.toLowerCase() == searchParams?.city.toLowerCase()
+                );
+
+                if (filtercity) {
+                    setCity(filtercity);
+                }
+            }
+        }
+    }, [storesdata]);
+
+    useEffect(() => {
         (async () => {
             const translationdata = await getDictionary(params.lang);
             setDict(translationdata);

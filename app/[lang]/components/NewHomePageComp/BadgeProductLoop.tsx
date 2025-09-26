@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { Autoplay, Navigation, Pagination, Scrollbar, Mousewheel, Grid, FreeMode } from "swiper/modules";
+import { Autoplay, Navigation, Pagination, Scrollbar, Mousewheel, FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css/free-mode';
 import 'swiper/css/scrollbar';
@@ -12,7 +12,7 @@ import { get } from "../../api/ApiCalls";
 import { getCookie } from "cookies-next";
 
 const ProductComponent = dynamic(
-    () => import("./product_component"),
+    () => import("./product_component_updated"),
     { ssr: true }
 );
 

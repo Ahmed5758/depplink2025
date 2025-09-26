@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -7,7 +7,6 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { NewMedia } from "../../api/Api"; // Import NewMedia for constructing category image URLs
 
 interface Category {
   id: number;
@@ -19,21 +18,22 @@ interface Category {
 
 interface SliderWithCategoriesProps {
   lang: string;
-  devicetype?: string;
+  isArabic: boolean;
+  deviceType?: string;
   categories?: Category[];
   bannerImage?: string;
+  NewMedia: any;
 }
 
 export default function SliderWithCategories({
   lang,
-  devicetype,
+  isArabic,
+  deviceType,
   categories = [],
   bannerImage,
+  NewMedia
 }: SliderWithCategoriesProps) {
   const router = useRouter();
-  const isMobileOrTablet = devicetype === "mobile" || devicetype === "tablet";
-  const containerClass = isMobileOrTablet ? "container" : "px-48";
-  const isArabic = lang === "ar";
   const prevRef = useRef<HTMLButtonElement | null>(null);
   const nextRef = useRef<HTMLButtonElement | null>(null);
 
@@ -52,7 +52,7 @@ export default function SliderWithCategories({
     // For banner image, use default if not a valid URL or path
     return image.startsWith("/") ? image : defaultBannerImage;
   };
-
+ const [visibleRange, setVisibleRange] = useState({ start: 0, end: 5});
   return (
     <section
       className={`bg-cover bg-center bg-no-repeat w-full h-full flex items-end justify-center mb-8 overflow-hidden relative`}
@@ -64,18 +64,26 @@ export default function SliderWithCategories({
         width={0}
         height={0}
         loading="lazy"
-        className="w-full h-full object-contain"
+        className="w-full h-full min-h-[25rem] object-cover"
         sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
       />
-      <div className="w-full shadow-lg absolute bottom-0 left-1/2 -translate-x-1/2 xl:px-56">
+      <div className="w-full shadow-md absolute bottom-0 left-1/2 -translate-x-1/2 xl:px-56">
         <Swiper
-          slidesPerView={2}
-          spaceBetween={20}
-          loop={categories.length > 2}
+         onSlideChange={(swiper) => {
+        const start = swiper.activeIndex;
+        // Swiper slidesPerView can be fractional so ceil it
+        const perView = Math.ceil(swiper.params.slidesPerView as number || 1);
+        setVisibleRange({ start, end: start + perView - 1 });
+      }}
+      onResize={(swiper) => {
+        const start = swiper.activeIndex;
+        const perView = Math.ceil(swiper.params.slidesPerView as number || 1);
+        setVisibleRange({ start, end: start + perView - 1 });
+      }}
           breakpoints={{
-            640: { slidesPerView: 3, spaceBetween: 20 },
-            768: { slidesPerView: 4, spaceBetween: 30 },
-            1024: { slidesPerView: 6, spaceBetween: 40 },
+            640: { slidesPerView: 3, spaceBetween: 16 },
+            768: { slidesPerView: 4, spaceBetween: 20 },
+            1024: { slidesPerView: 6, spaceBetween: 30 },
           }}
           modules={[Navigation, Pagination]}
           onBeforeInit={(swiper) => {
@@ -85,10 +93,14 @@ export default function SliderWithCategories({
               nav.nextEl = nextRef.current;
             }
           }}
-          className="mySwiper !bg-white xl:!py-8 !py-4 xl:!rounded-t-xl"
+          className="mySwiper !bg-white !py-2 xl:!px-20 xl:!rounded-t-[1.875rem] !w-full !max-w-full"
         >
           {categories.length > 0 ? (
-            categories.map((item, index) => (
+            categories.map((item, index) => {
+               const showDivider =
+                    index >= visibleRange.start &&
+                    index < visibleRange.end; // only between visible slides
+              return(
               <SwiperSlide key={item.slug || index} className="relative group">
                 <div
                   className="flex flex-col items-center w-full cursor-pointer"
@@ -101,8 +113,9 @@ export default function SliderWithCategories({
                       title={isArabic ? item.name_arabic : item.name || item.name_arabic}
                       width={0}
                       height={0}
+                      quality={100}
                       loading="lazy"
-                      className="object-cover rounded-2xl transition-transform duration-300 hover:scale-105 h-20 w-20"
+                      className="object-cover rounded-2xl transition-transform duration-300 hover:scale-105 h-16 w-16"
                       style={{
                         filter: "drop-shadow(0 5px 20px rgba(0, 0, 0, 0.15))",
                       }}
@@ -115,11 +128,16 @@ export default function SliderWithCategories({
                 </div>
 
                 {/* Divider (only show if NOT last slide) */}
-                {index < categories.length - 1 && (
-                  <span className="absolute top-1/2 right-0 transform -translate-y-1/2 w-px h-[80%] bg-gray opacity-30"></span>
-                )}
+               {showDivider && (
+              <span
+                className={`${
+                  isArabic ? "left-0" : "right-0"
+                } absolute top-1/2 -translate-y-1/2 w-px h-[80%] bg-gray opacity-30`}
+              />
+            )}
               </SwiperSlide>
-            ))
+              )
+            })
           ) : (
             <SwiperSlide>
               <div className="flex flex-col items-center w-full">

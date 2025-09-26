@@ -1,8 +1,8 @@
 "use client"; // This is a client component 👈🏽
 
 import React, { useEffect, useState, Fragment, Suspense, useRef } from 'react'
-import 'moment/locale/ar'
-import moment from 'moment'
+import 'dayjs/locale/ar'
+import dayjs from 'dayjs'
 import Link from 'next/link'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
@@ -98,11 +98,11 @@ export default function Profile({ params }: { params: { lang: string, data: any,
     const userProfileAttributes = {
         event: "global_variables",
         platform: detectPlatform(),
-        account_creation_date: moment(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+        account_creation_date: dayjs(userProfileAtt?.account_creation_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.account_creation_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
         user_id: String(userProfileAtt?.backend_user_id ?? ''),
         email: userEmail ?? '',
         phone: userPhone ?? '',
-        last_purchase_date: moment(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? moment(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
+        last_purchase_date: dayjs(userProfileAtt?.last_purchase_date, 'DD-MM-YYYY hh:mm A').isValid() ? dayjs(userProfileAtt.last_purchase_date, 'DD-MM-YYYY hh:mm A').locale('en').format('DD-MM-YYYY hh:mm A') : '',
         store_language: userProfileAtt?.store_language ?? 'ar',
         total_purchases: Number(userProfileAtt?.total_purchases ?? 0),
         total_revenue: Number(userProfileAtt?.total_revenue ?? 0),
@@ -292,7 +292,7 @@ export default function Profile({ params }: { params: { lang: string, data: any,
                                         </div>
                                         <div className="flex items-center gap-x-2 md:block md:mt-6 mt-3">
                                             <h4 className="font-medium text-xs md:mb-1">{params.lang == 'ar' ? 'رقم الهاتف' : 'Date of Birth'}:</h4>
-                                            <p dir='ltr' className="rtl:text-right">{profileData?.userdata?.date_of_birth ? moment(profileData?.userdata?.date_of_birth).locale(params.lang == 'ar' ? 'ar' : 'en').format("YYYY, MMM  DD") : <button className="text-[#219EBC] hover:underline text-sm" onClick={() => { setupdateProfile(true) }}>{params.lang === 'ar' ? 'يحرر' : 'Edit'}</button>}</p>
+                                            <p dir='ltr' className="rtl:text-right">{profileData?.userdata?.date_of_birth ? dayjs(profileData?.userdata?.date_of_birth).locale(params.lang == 'ar' ? 'ar' : 'en').format("YYYY, MMM  DD") : <button className="text-[#219EBC] hover:underline text-sm" onClick={() => { setupdateProfile(true) }}>{params.lang === 'ar' ? 'يحرر' : 'Edit'}</button>}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -330,7 +330,7 @@ export default function Profile({ params }: { params: { lang: string, data: any,
                                     </div>
                                     <div className="text-[#1C262D85] max-md:my-4">
                                         <h4 className="font-medium text-xs mb-1">{params.lang == 'ar' ? 'تاريخ الطلب' : 'Order Date'}:</h4>
-                                        <p className="font-medium text-[#004B7A]">{moment(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
+                                        <p className="font-medium text-[#004B7A]">{dayjs(data?.created_at).locale(params.lang == 'ar' ? 'ar' : 'en').format("MMM  DD, YYYY")}</p>
                                     </div>
                                     <div className="text-[#1C262D85] max-md:my-4">
                                         <h4 className="font-medium text-xs mb-1">{params.lang == 'ar' ? 'عدد المنتجات' : 'No. of Products'}:</h4>

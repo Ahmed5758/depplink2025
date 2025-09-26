@@ -5,11 +5,10 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/scrollbar";
+// import "swiper/css/free-mode";
+// import "swiper/css/scrollbar";
 import "swiper/css/pagination";
 import "../NewHomePageComp/scrollBar.css";
-import { NewMedia } from "../../api/Api";
 
 interface Brand {
   id: number;
@@ -29,6 +28,7 @@ interface BrandCategoriesProps {
   isArabic: boolean;
   lang: string;
   brands: Brand[];
+  NewMedia: any;
 }
 
 export default function BrandCategories({
@@ -37,6 +37,7 @@ export default function BrandCategories({
   isArabic,
   lang,
   brands = [],
+  NewMedia
 }: BrandCategoriesProps) {
   const router = useRouter();
   const prevRef = useRef<HTMLButtonElement | null>(null);
@@ -53,53 +54,58 @@ export default function BrandCategories({
   };
 
   return (
-    <>
-      <h2 className="headingHomeMain mb-2 text-center">
+    <div>
+      <h2 className="headingHomeMain mb-5">
         {isArabic ? "تسوق من أفضل العلامات التجارية" : "Shop from the best brands"}
       </h2>
 
-      {/* Left Arrow */}
-      <button
-        ref={prevRef}
-        className="swiper-prev absolute top-1/2 left-1 md:left-5 -translate-y-1/2 z-10 cursor-pointer p-2.5 md:p-3 bg-primary rounded-full text-white fill-white hover:bg-primary/90"
-      >
-        <svg
-          height="22"
-          width="22"
-          viewBox="0 0 24 24"
-          className={`fill-current ${isArabic ? "-rotate-90" : "rotate-90"}`}
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
-          />
-        </svg>
-      </button>
+      {/* Navigation Arrows */}
+      {!isMobileOrTablet && (
+        <div>
+          {/* Left Arrow */}
+          <button
+            ref={prevRef}
+            className="swiper-prev absolute top-1/2 left-1 md:left-5  z-10 cursor-pointer p-2.5 md:p-3 bg-primary rounded-full text-white fill-white hover:bg-primary/90"
+          >
+            <svg
+              height="22"
+              width="22"
+              viewBox="0 0 24 24"
+              className={`fill-current rotate-90`}
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
+              />
+            </svg>
+          </button>
 
-      {/* Right Arrow */}
-      <button
-        ref={nextRef}
-        className="swiper-next absolute top-1/2 right-1 md:right-5 -translate-y-1/2 z-10 cursor-pointer p-2.5 md:p-3 bg-primary rounded-full text-white fill-white hover:bg-primary/90"
-      >
-        <svg
-          height="22"
-          width="22"
-          viewBox="0 0 24 24"
-          className={`fill-current ${isArabic ? "rotate-90" : "-rotate-90"}`}
-        >
-          <path
-            fillRule="evenodd"
-            clipRule="evenodd"
-            d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
-          />
-        </svg>
-      </button>
+          {/* Right Arrow */}
+          <button
+            ref={nextRef}
+            className="swiper-next absolute top-1/2 right-1 md:right-5  z-10 cursor-pointer p-2.5 md:p-3 bg-primary rounded-full text-white fill-white hover:bg-primary/90"
+          >
+            <svg
+              height="22"
+              width="22"
+              viewBox="0 0 24 24"
+              className={`fill-current -rotate-90`}
+            >
+              <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
+              />
+            </svg>
+          </button>
+        </div>
+      )}
 
       <Swiper
         modules={[Navigation, Pagination]}
         loop={brands.length > 3} // Enable loop only if enough brands
-        slidesPerView={isMobileOrTablet ? 3.2 : 7.3}
+        slidesPerView={isMobileOrTablet ? 2.2 : 7.3}
         slidesPerGroup={1}
         spaceBetween={12}
         className="w-full"
@@ -113,9 +119,10 @@ export default function BrandCategories({
           }
         }}
         breakpoints={{
-          480: { slidesPerView: 3.2 },
+          480: { slidesPerView: 2.2 },
           768: { slidesPerView: 4.2 },
-          1024: { slidesPerView: 7.3 },
+          1024: { slidesPerView: 5.3 },
+          1280: { slidesPerView: 8 },
         }}
         dir={isArabic ? "rtl" : "ltr"}
       >
@@ -123,7 +130,7 @@ export default function BrandCategories({
           brands.map((brand) => (
             <SwiperSlide key={brand.slug || brand.id}>
               <button
-                className="focus-visible:outline-none w-24 py-3 md:w-full h-full md:py-4 max-w-xs overflow-hidden rounded-lg shadow-md transition-shadow duration-300 ease-in-out text-primary border hover:border-[#004B7A] hover:text-[#004B7A] hover:bg-[#004B7A05] border-white bg-white mb-1"
+                className="focus-visible:outline-none  py-3 w-full h-full md:py-4 max-w-xs overflow-hidden rounded-lg shadow-md transition-shadow duration-300 ease-in-out text-primary border hover:border-[#004B7A] hover:text-[#004B7A] hover:bg-[#004B7A05] border-white bg-white mb-1"
                 onClick={() => router.push(`${origin}/${lang}/brand/${brand.slug}`)}
               >
                 <Image
@@ -137,9 +144,9 @@ export default function BrandCategories({
                   quality={100}
                   style={{ maxWidth: "200px", height: "60px" }}
                 />
-                <p className="mt-2 text-sm font-medium text-center">
+                {/* <p className="mt-2 text-sm font-medium text-center">
                   {isArabic ? brand.name_arabic : brand.name || brand.name_arabic}
-                </p>
+                </p> */}
               </button>
             </SwiperSlide>
           ))
@@ -153,6 +160,6 @@ export default function BrandCategories({
           </SwiperSlide>
         )}
       </Swiper>
-    </>
+    </div>
   );
 }

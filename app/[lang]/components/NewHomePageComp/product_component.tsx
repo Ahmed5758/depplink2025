@@ -10,12 +10,12 @@ import { useRouter } from "next-nprogress-bar";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { NewMedia } from "../../api/Api";
-import { cacheKey } from "../../GlobalVar";
+import { cacheKey } from "../../../GlobalVar";
 import { setCartItems } from "../../cartstorage/cart";
 import GlobalContext from "../../GlobalContext";
 import FlashSaleTimer from "./FlashSaleTimer";
 
-export default function product_component({
+export default function product_component_updated({
   productData,
   isArabic,
   isMobileOrTablet,
@@ -135,7 +135,7 @@ export default function product_component({
   const regularPrice = Number(productRegularPrice);
   const salePrice = Number(productSalePrice);
   const flashSalePrice = Number(productFlashSalePrice);
-  const percentage = productData?.save_type === "1" ? 1 : 0; // 1 for percentage, 0 for amount
+  const percentage = (productData?.save_type === "1" || productData?.save_type === 1) ? 1 : 0; // 1 for percentage, 0 for amount
   const sarIcon = () => (
     <svg
       className="riyal-svg"
@@ -156,7 +156,7 @@ export default function product_component({
   );
   const discountPercentage =
     percentage > 0
-      ? Math.round((salePrice / regularPrice) * 100)
+      ? Math.round(((regularPrice - salePrice) * 100) / regularPrice)
       : Math.max(0, Number(productRegularPrice) - Number(productSalePrice));
   const productDiscountType = percentage > 0 ? (isArabic ? "خصم" : "OFF") : "";
   const productDiscountValue =

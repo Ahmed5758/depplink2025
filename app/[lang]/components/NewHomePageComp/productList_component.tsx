@@ -1,19 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import Link from "next/link";
-import { post } from "../../api/ApiCalls";
 import { useRouter } from "next-nprogress-bar";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { NewMedia } from "../../api/Api";
-import { cacheKey } from "../../GlobalVar";
+import { cacheKey } from "../../../GlobalVar";
 import { setCartItems } from "../../cartstorage/cart";
 import GlobalContext from "../../GlobalContext";
 import FlashSaleTimer from "./FlashSaleTimer";
+import { addProductWishlistData, removeProductWishlistData } from "@/lib/components/component.client";
 
 export default function ProductListComponent({
   productData,
@@ -23,6 +22,7 @@ export default function ProductListComponent({
   ProExtraData,
   gtmColumnItemListId = '50000',
   gtmColumnItemListName = 'direct',
+  NewMedia
 }: any) {
   const router = useRouter();
   const productSlug = `${origin}/${isArabic ? "ar" : "en"}/product/${
@@ -192,35 +192,42 @@ let imgAbsoluteTextTwo = "";
 let imgAbsoluteTextThree = "";
 let imgAbsoluteTextFour = "";
 
-const specs = productData?.specs && productData?.specs[0]?.specdetails ? productData?.specs[0]?.specdetails : [];
+// const specs =
+  //   productData?.specs && productData?.specs[0]?.specdetails
+  //     ? productData?.specs[0]?.specdetails
+  //     : [];
 
-if (specs.length >= 1) {
-  const first = specs[0];
-  imgAbsoluteTextOne = isArabic
-    ? `${first?.specs_ar || ""} ${first?.value_ar || ""}`
-    : `${first?.specs_en || ""} ${first?.value_en || ""}`;
-}
+  const specs =
+    productData?.features && productData?.features.length > 0
+      ? productData?.features
+      : [];
+      if (specs.length >= 1) {
+        const first = specs[0];
+        imgAbsoluteTextOne = isArabic
+        ? `${first?.feature_ar || ""} `
+      : `${first?.feature_en || ""} `
+    }
 
-if (specs.length >= 2) {
-  const second = specs[1];
-  imgAbsoluteTextTwo = isArabic
-    ? `${second?.specs_ar || ""} ${second?.value_ar || ""}`
-    : `${second?.specs_en || ""} ${second?.value_en || ""}`;
-}
+  if (specs.length >= 2) {
+    const second = specs[1];
+    imgAbsoluteTextTwo = isArabic
+      ? `${second?.feature_ar || ""}`
+      : `${second?.feature_en || ""} `
+  }
 
-if (specs.length >= 3) {
-  const third = specs[2];
-  imgAbsoluteTextThree = isArabic
-    ? `${third?.specs_ar || ""} ${third?.value_ar || ""}`
-    : `${third?.specs_en || ""} ${third?.value_en || ""}`;
-}
+  // if (specs.length >= 3) {
+  //   const third = specs[2];
+  //   imgAbsoluteTextThree = isArabic
+  //     ? `${third?.specs_ar || ""} ${third?.value_ar || ""}`
+  //     : `${third?.specs_en || ""} ${third?.value_en || ""}`;
+  // }
 
-if (specs.length >= 4) {
-  const fourth = specs[3];
-  imgAbsoluteTextFour = isArabic
-    ? `${fourth?.specs_ar || ""} ${fourth?.value_ar || ""}`
-    : `${fourth?.specs_en || ""} ${fourth?.value_en || ""}`;
-}
+  // if (specs.length >= 4) {
+  //   const fourth = specs[3];
+  //   imgAbsoluteTextFour = isArabic
+  //     ? `${fourth?.specs_ar || ""} ${fourth?.value_ar || ""}`
+  //     : `${fourth?.specs_en || ""} ${fourth?.value_en || ""}`;
+  // }
   const subOneText = isArabic ? "هدية" : "Gift";
   const subTwoText = isArabic ? "غير متوفر" : "Not Available";
   const subThreeText = isArabic ? 
@@ -259,6 +266,12 @@ if (specs.length >= 4) {
     : `${productData?.rating} ( Rating )`;
   const btnCheckoutText = isArabic ? "شراء الأن " : "Checkout Now";
   const btndiscoverText = isArabic ? "اكتشف المزيد" : "Discover More";
+  const productBadgeLeftBackgroundColor = productData?.badge_left_color
+    ? productData?.badge_left_color
+    : "#EA4335";
+  const productBadgeRightBackgroundColor = productData?.badge_right_color
+    ? productData?.badge_right_color
+    : "#004B7A";
 
   const fGift = ProExtraData?.freegiftData;
   const fGiftType =
@@ -307,6 +320,41 @@ if (specs.length >= 4) {
       });
     }
   };
+
+  useEffect(() => {
+      if (localStorage.getItem("userWishlist")) {
+        var wdata: any = localStorage.getItem("userWishlist");
+        setProWishlistData(JSON.parse(wdata));
+      }
+      // if (localStorage.getItem("userCompare")) {
+      //   var wdata: any = localStorage.getItem("userCompare");
+      //   setProComparetData(JSON.parse(wdata));
+      // }
+      window.addEventListener("storage", () => {
+        refetch();
+      });
+      return () => {
+        window.removeEventListener("storage", () => {
+          refetch();
+        });
+      };
+    }, []);
+
+    const refetch = () => {
+      if (localStorage.getItem("userWishlist")) {
+        var wdata: any = localStorage.getItem("userWishlist");
+        setProWishlistData(JSON.parse(wdata));
+      } else if (ProWishlistData.length) {
+        setProWishlistData([]);
+      }
+
+      // if (localStorage.getItem("userCompare")) {
+      //   var wdata: any = localStorage.getItem("userCompare");
+      //   setProComparetData(JSON.parse(wdata));
+      // } else if (ProComparetData.length) {
+      //   setProComparetData([]);
+      // }
+    };
 
   // Add to Cart Functionality
   const addToCart = (id: any, i: any, giftcheck = false, redirect = false) => {
@@ -365,7 +413,7 @@ if (specs.length >= 4) {
         name: productData.name,
         name_arabic: productData.name_arabic,
         image: productData?.featured_image
-          ? NewMedia + productData?.featured_image?.image
+          ? `${NewMedia}${productData?.featured_image?.image}`
           : "https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png",
         price: flashCalc
           ? flashCalc
@@ -409,7 +457,7 @@ if (specs.length >= 4) {
             name: element.productdetail.name,
             name_arabic: element.productdetail.name_arabic,
             image: element.productdetail?.featured_image
-              ? NewMedia + element.productdetail?.featured_image?.image
+              ? `${NewMedia}${element.productdetail?.featured_image?.image}`
               : "https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png",
             price: element.productdetail.sale_price
               ? element.productdetail.sale_price
@@ -439,7 +487,7 @@ if (specs.length >= 4) {
             sku: element?.product_sku_data.sku,
             name: element?.product_sku_data.name,
             name_arabic: element?.product_sku_data.name_arabic,
-            image: element?.product_sku_data?.featured_image ? NewMedia + element?.product_sku_data?.featured_image?.image : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png',
+            image: element?.product_sku_data?.featured_image ? `${NewMedia}${element?.product_sku_data?.featured_image?.image}` : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png',
             price: element?.product_sku_data.price,
             regular_price: 0,
             quantity: 1 * element?.free_gift_qty,
@@ -496,7 +544,7 @@ if (specs.length >= 4) {
         name: productData.name,
         name_arabic: productData.name_arabic,
         image: productData?.featured_image
-          ? NewMedia + productData?.featured_image?.image
+          ? `${NewMedia}${productData?.featured_image?.image}`
           : "https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png",
         price: flashCalc
           ? flashCalc
@@ -545,7 +593,7 @@ if (specs.length >= 4) {
                 name: element.productdetail.name,
                 name_arabic: element.productdetail.name_arabic,
                 image: element.productdetail?.featured_image
-                  ? NewMedia + element.productdetail?.featured_image?.image
+                  ? `${NewMedia}${element.productdetail?.featured_image?.image}`
                   : "https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png",
                 price: element.productdetail.sale_price
                   ? element.productdetail.sale_price
@@ -577,7 +625,7 @@ if (specs.length >= 4) {
             sku: element?.product_sku_data.sku,
             name: element?.product_sku_data.name,
             name_arabic: element?.product_sku_data.name_arabic,
-            image: element?.product_sku_data?.featured_image ? NewMedia + element?.product_sku_data?.featured_image?.image : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png',
+            image: element?.product_sku_data?.featured_image ? `${NewMedia}${element?.product_sku_data?.featured_image?.image}` : 'https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png',
             price: element?.product_sku_data.price,
             regular_price: 0,
             quantity: 1 * element?.free_gift_qty,
@@ -747,55 +795,58 @@ if (specs.length >= 4) {
   const handleGTMAddToCart = () => {
     pushGTMEvent('add_to_cart');
   };
+  const WishlistProduct = async (id: any, type: boolean) => {
+      // var testing: any = ProWishlistData
+      if (localStorage.getItem("userid")) {
+          var data = {
+              user_id: localStorage.getItem("userid"),
+              product_id: id,
+          }
+          if (type) {
+              const RemoveData = await removeProductWishlistData(data);
+              if (RemoveData?.removeWishlistData?.success) {
+              // testing[id].wishlist = !type;
+                  // setProWishlistData({ ...testing })
+                  var wishlistRemovetext = isArabic
+                      ? "تمت إزالة هذا المنتج من قائمة الرغبات."
+                      : "This product has been removed from wishlist.";
+                    topMessageAlartDanger(wishlistRemovetext);
+                  if (localStorage.getItem("wishlistCount")) {
+                      var wishlistlength: any = localStorage.getItem('wishlistCount');
+                      wishlistlength = parseInt(wishlistlength) - 1;
+                      localStorage.setItem('wishlistCount', wishlistlength);
+                  }
+                  localStorage.removeItem('userWishlist')
+                  setUpdateWishlist(updateWishlist == 0 ? 1 : 0)
+              }
+          } else {
+              const AddData = await addProductWishlistData(data);
+              if (AddData?.addWishlistData?.success) {
+                  // testing[id].wishlist = !type;
+                  // setProWishlistData({ ...testing })
+                  var wishlistAddtext = isArabic
+                    ? "تمت إضافة هذا المنتج إلى قائمة الرغبات."
+                    : "This product has been Added in the wishlist.";
+                  topMessageAlartSuccess(wishlistAddtext);
+                  if (localStorage.getItem("wishlistCount")) {
+                      var wishlistlength: any = localStorage.getItem('wishlistCount');
+                      wishlistlength = parseInt(wishlistlength) + 1;
+                      localStorage.setItem('wishlistCount', wishlistlength);
+                  }
+                  localStorage.removeItem('userWishlist')
+                  setUpdateWishlist(updateWishlist == 0 ? 1 : 0)
+              }
+          }
 
-  const WishlistProduct = (id: any, type: boolean) => {
-    if (localStorage.getItem("userid")) {
-      var data = {
-        user_id: localStorage.getItem("userid"),
-        product_id: id,
-      };
-      if (type) {
-        post("removewishlist", data).then((responseJson: any) => {
-          if (responseJson?.success) {
-            var wishlistRemovetext = isArabic
-              ? "تمت إزالة هذا المنتج من قائمة الرغبات."
-              : "This product has been removed from wishlist.";
-            topMessageAlartDanger(wishlistRemovetext);
-            if (localStorage.getItem("wishlistCount")) {
-              var wishlistlength: any = localStorage.getItem("wishlistCount");
-              wishlistlength = parseInt(wishlistlength) - 1;
-              localStorage.setItem("wishlistCount", wishlistlength);
-            }
-            localStorage.removeItem("userWishlist");
-            setUpdateWishlist(updateWishlist == 0 ? 1 : 0);
-          }
-        });
       } else {
-        post("addwishlist", data).then((responseJson: any) => {
-          if (responseJson?.success) {
-            var wishlistAddtext = isArabic
-              ? "تمت إضافة هذا المنتج إلى قائمة الرغبات."
-              : "This product has been Added in the wishlist.";
-            topMessageAlartSuccess(wishlistAddtext);
-            if (localStorage.getItem("wishlistCount")) {
-              var wishlistlength: any = localStorage.getItem("wishlistCount");
-              wishlistlength = parseInt(wishlistlength) + 1;
-              localStorage.setItem("wishlistCount", wishlistlength);
-            }
-            localStorage.removeItem("userWishlist");
-            setUpdateWishlist(updateWishlist == 0 ? 1 : 0);
-          }
-        });
+          router.push(`${origin}/${isArabic ? "ar" : "en"}/login`);
       }
-    } else {
-      router.push(`/${isArabic ? "ar" : "en"}/login`);
-    }
-  };
+  }
 
   return (
-    <div className="flex lg:flex-row flex-col 2xl:gap-24 bg-white rounded-2xl h-full w-full shadow-[0px_2.67px_2.67px_0px_#00000040] 2xl:pr-[7.5rem]">
+    <div className="flex items-center lg:flex-row flex-col bg-white rounded-2xl h-full w-full shadow-md">
       {/* Product Cart Top Area */}
-      <div className="xl:pt-0 xl:pb-0 pt-3.5 pb-1.5 relative shrink-0">
+      <div className="xl:pt-0 xl:pb-0 pt-3.5 pb-1.5 relative shrink-0 lg:border-r lg:border-[#F2F2F2]">
         {/* Product Image */}
         <Link prefetch={false} scroll={false} href={productSlug}>
           <div className="relative w-full xl:max-w-[380px] max-w-[305px] aspect-square mx-auto">
@@ -819,7 +870,7 @@ if (specs.length >= 4) {
           </div>
         </Link>
         {/* Product Specifications Text */}
-        <div className="flex items-center justify-center lg:px-8 mb-4 text-nowrap overflow-hidden">
+        <div className={`flex items-center justify-center ${(imgAbsoluteTextOne || imgAbsoluteTextTwo || imgAbsoluteTextThree || imgAbsoluteTextFour) ? 'mb-4' : 'mb-0'} text-nowrap mx-auto w-[356px] overflow-hidden`}>
           {imgAbsoluteTextOne && 
           <div className="text-[0.5rem] font-semibold">
             {imgAbsoluteTextOne}
@@ -845,8 +896,14 @@ if (specs.length >= 4) {
           }
         </div>
         {/* Wishlist And Cart */}
-        <div className="flex items-center gap-2 absolute xl:top-5 xl:left-12 top-3.5 left-3.5 z-10">
-          <button className="w-[1.65rem] h-[1.65rem] grid place-content-center bg-white hover:bg-red text-primary hover:text-white rounded-full shadow-md transition-all duration-200 ease-in-out"
+        <div className="flex items-center gap-2 absolute xl:top-5 top-3.5 left-3.5 z-10">
+          <button className={`w-[1.65rem] h-[1.65rem] grid place-content-center bg-white hover:!bg-red text-primary hover:text-white rounded-full shadow-md transition-all duration-200 ease-in-out
+            ${
+              ProWishlistData.filter((item: any) => item == productData?.id)
+                .length >= 1
+                ? "!bg-red !text-white"
+                : "!bg-white"
+            }`}
             onClick={(e: any) => {
               var type: boolean =
                 ProWishlistData.filter(
@@ -968,7 +1025,7 @@ if (specs.length >= 4) {
         </div>
       </div>
       {/* Product Cart Body Area */}
-      <div className="p-3.5 border-t border-[#F2F2F2] xl:grow">
+      <div className="py-[1.375rem] px-[1.875rem] lg:border-0 border-t border-[#F2F2F2] xl:grow">
         {/* Product Badges */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
@@ -1078,12 +1135,20 @@ if (specs.length >= 4) {
               {subTwoText}
             </div> */}
             {subThreeText && 
-            <div style={{ color: productData?.badge_left_color || '#1A84E5' }} className={`text-[.5625rem] bg-white shadow-[0_0_0.89px_0_#1A84E540] rounded-[2.67px] py-[3px] px-1`}>
+            <div className={`text-[.5625rem] bg-white shadow-[0_0_0.89px_0_#1A84E540] rounded-md py-[3px] px-1 border`}
+              style={{
+                borderColor: `${productBadgeLeftBackgroundColor}25`,
+                color: productBadgeLeftBackgroundColor,
+              }}>
               {subThreeText}
             </div>
             }
             {subFourText && 
-            <div style={{ color: productData?.badge_right_color || '#AC0408' }} className={`text-[.5625rem] bg-white shadow-[0_0_0.89px_0_#AC040840] rounded-[2.67px] py-[3px] px-1`}>
+            <div className={`text-[.5625rem] bg-white shadow-[0_0_0.89px_0_#AC040840] rounded-md py-[3px] px-1 border`}
+              style={{
+                borderColor: `${productBadgeRightBackgroundColor}25`,
+                color: productBadgeRightBackgroundColor,
+              }}>
               {subFourText}
             </div>
             }
@@ -1147,7 +1212,7 @@ if (specs.length >= 4) {
         </div>
         <div>
           {/* Product Name */}
-          <h2 className="text-sm line-clamp-2 font-normal h-10">
+          <h2 className="text-sm line-clamp-2 font-normal lg:h-auto h-10">
             <span className="font-bold after:mx-1 after:content-['•']">
               {productBrand}
             </span>
@@ -1211,7 +1276,7 @@ if (specs.length >= 4) {
                     title={`Specification ${productTitle}`}
                     width={0}
                     height={0}
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     className="specificationImagesProduct md:w-[36px] md:h-[26px] w-[24px] h-[18px] rounded-[.25rem]"
                   />
@@ -1225,7 +1290,7 @@ if (specs.length >= 4) {
                     title={`Specification ${productTitle}`}
                     width={0}
                     height={0}
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     className="specificationImagesProduct md:w-[36px] md:h-[26px] w-[24px] h-[18px] rounded-[.25rem]"
                   />
@@ -1239,7 +1304,7 @@ if (specs.length >= 4) {
                     title={`Specification ${productTitle}`}
                     width={0}
                     height={0}
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     className="specificationImagesProduct md:w-[36px] md:h-[26px] w-[24px] h-[18px] rounded-[.25rem]"
                   />
@@ -1253,7 +1318,7 @@ if (specs.length >= 4) {
                     title={`Specification ${productTitle}`}
                     width={0}
                     height={0}
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     className="specificationImagesProduct md:w-[36px] md:h-[26px] w-[24px] h-[18px] rounded-[.25rem]"
                   />
@@ -1267,7 +1332,7 @@ if (specs.length >= 4) {
                     title={`Specification ${productTitle}`}
                     width={0}
                     height={0}
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     className="specificationImagesProduct md:w-[36px] md:h-[26px] w-[24px] h-[18px] rounded-[.25rem]"
                   />
@@ -1281,7 +1346,7 @@ if (specs.length >= 4) {
                     title={`Specification ${productTitle}`}
                     width={0}
                     height={0}
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     className="specificationImagesProduct md:w-[36px] md:h-[26px] w-[24px] h-[18px] rounded-[.25rem] hidden md:block"
                   />
@@ -1365,7 +1430,7 @@ if (specs.length >= 4) {
               height={0}
               className="w-36 h-5"
               decoding="async"
-              sizes="100vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
             />
           </Link>
         </div>

@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
-import { NewMedia } from '../../api/Api';
 import 'swiper/css/scrollbar';
 import 'swiper/css/grid';  // Import grid module for multi-row layout
-import { Scrollbar, Mousewheel, Grid, FreeMode } from 'swiper/modules';
 import './styles.css';  // Ensure to import custom styles for the scrollbar
 
 export default function CategoriesHomeMobile(props: any) {
     const categories = props?.params?.categories || [];
-    const isArabic = props?.lang == 'ar' ? true : false;
+    const NewMedia = props?.NewMedia
+    const isArabic = props?.isArabic;
+    const origin = props?.origin;
     const renderCategoryName = (category: any) => (isArabic ? category.name_arabic : category.name);
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
     const renderHeading = () =>
         isArabic
             ? props?.params?.sec3_category_title_ar

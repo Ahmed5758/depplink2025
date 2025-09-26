@@ -16,12 +16,11 @@ import "swiper/css/free-mode";
 import "swiper/css/scrollbar";
 import "swiper/css/pagination";
 import "../NewHomePageComp/scrollBar.css";
-import { get } from "../../api/ApiCalls";
 import { getCookie } from "cookies-next";
-import { NewMedia } from "../../api/Api";
+import { getProductExtraData } from "@/lib/components/component.client";
 
 const ProductComponent = dynamic(
-  () => import("../NewHomePageComp/product_component"),
+  () => import("../NewHomePageComp/product_component_updated_updated"),
   { ssr: true }
 );
 
@@ -81,7 +80,7 @@ interface Product {
   featured_image: { id: number; image: string };
   brand: { id: number; name: string; name_arabic: string; brand_media_image: { id: number; image: string } };
   promotional_price: string;
-  tags?: ProductTag[];  // Updated to match API structure
+  tags?: ProductTag[];
 }
 
 interface ProductLoopFilterComponentProps {
@@ -94,6 +93,7 @@ interface ProductLoopFilterComponentProps {
   sliderHeading: string;
   buttonTitle: string;
   buttonLink: string;
+  NewMedia: any;
   filters: Tag[];
 }
 
@@ -107,55 +107,72 @@ export default function ProductLoopFilterComponent({
   sliderHeading,
   buttonTitle,
   buttonLink,
+  NewMedia,
   filters = [],
 }: ProductLoopFilterComponentProps) {
   const router = useRouter();
   const productData = productDataSlider?.products?.data || [];
   const brands = productDataSlider?.brands || [];
   const [ProExtraData, setProExtraData] = useState<any>({});
-  // CHANGED: Track selections by group for per-category OR + cross-category AND
   const [selectedFiltersByGroup, setSelectedFiltersByGroup] = useState<{ [key: number]: string[] }>({});
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [dropdowns, setDropdowns] = useState<{ [key: string]: boolean }>({});
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
+  const dropdownRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const setDropdownRef = (id: string, node: HTMLDivElement | null) => {
+    dropdownRefs.current[id] = node;
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      for (const key in dropdownRefs.current) {
+        const el = dropdownRefs.current[key];
+        if (el && el.contains(target)) {
+          return;
+        }
+      }
+      setDropdowns((prev: any) => {
+        const newState: any = {};
+        for (const key in prev) newState[key] = false;
+        return newState;
+      });
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const containerClass = isMobileOrTablet ? "container" : "px-20";
   const containerClassMobile = isMobileOrTablet
     ? "px-4 sm:px-6"
     : "px-10 md:px-16 lg:px-20";
+  const clearText = isArabic ? "مسح الكل" : "Clear all";
 
-  // IMPROVED: Simpler normalization to avoid false positives
   const normalizeTag = (tagName: string) => {
     return tagName
-      .replace(/[""]/g, '')  // Remove quotes
-      .replace(/hz$/i, '')   // Remove Hz suffix
-      .replace(/ - \d+hz?/i, '')  // Remove range like " - 60Hz"
+      .replace(/[""]/g, '')
+      .replace(/hz$/i, '')
+      .replace(/ - \d+hz?/i, '')
       .trim()
       .toLowerCase();
   };
 
-  // Fetch extra product data
+  const clearAllFilters = () => {
+    setSelectedFiltersByGroup({});
+    setSelectedBrands([]);
+  };
+
   useEffect(() => {
     if (productData.length) {
       (async () => {
         const ids = productData.map((item: Product) => item.id);
         const city = getCookie("selectedCity");
         try {
-          const response: any = await get(
-            `productextradatamulti-regional-new/${ids.join(",")}/${city}`
-          );
-          if (
-            response &&
-            typeof response === "object" &&
-            response.data &&
-            typeof response.data === "object"
-          ) {
-            setProExtraData(response.data);
-          } else {
-            console.warn("Unexpected API response format:", response);
-            setProExtraData({});
-          }
+          const dataExtra = await getProductExtraData(ids?.join(","), city);
+          setProExtraData(dataExtra?.extraDataDetails?.data);
         } catch (error) {
           console.error("Error fetching extra product data:", error);
           setProExtraData({});
@@ -164,12 +181,17 @@ export default function ProductLoopFilterComponent({
     }
   }, [productData]);
 
-  // Toggle dropdown for a specific filter or brand
   const toggleDropdown = (id: string) => {
-    setDropdowns((prev) => ({ ...prev, [id]: !prev[id] }));
+    setDropdowns((prev: any) => {
+      const newState: any = {};
+      for (const key in prev) {
+        newState[key] = false;
+      }
+      newState[id] = !prev[id];
+      return newState;
+    });
   };
 
-  // UPDATED: Handle filter change by group (tag_id)
   const handleFilterChange = (filterName: string, filterNameArabic: string, tagId: number) => {
     const nameToUse = isArabic ? filterNameArabic : filterName;
     const normalizedName = normalizeTag(nameToUse);
@@ -183,7 +205,6 @@ export default function ProductLoopFilterComponent({
     });
   };
 
-  // Handle brand selection
   const handleBrandChange = (brandName: string) => {
     setSelectedBrands((prev) =>
       prev.includes(brandName)
@@ -192,12 +213,10 @@ export default function ProductLoopFilterComponent({
     );
   };
 
-  // UPDATED: Group-based filtering (OR within group, AND across groups)
   const filteredProducts = productData.filter((product: Product) => {
     const productTagNames = (product.tags?.map(tag => normalizeTag(tag.name)) || [])
       .filter(Boolean);
 
-    // Check tag match: For each group, check if ANY selected filter in that group matches
     const allGroupsMatch = Object.entries(selectedFiltersByGroup).every(([groupIdStr, groupFilters]) => {
       const groupId = parseInt(groupIdStr);
       const groupMatch = groupFilters.length === 0 || groupFilters.some((filter) => productTagNames.includes(filter));
@@ -214,11 +233,27 @@ export default function ProductLoopFilterComponent({
     return overallMatch;
   });
 
-  // Construct image URL
   const getImageSrc = (image?: string) => {
     if (!image) return "/images/categoryNew/placeholder.png";
     if (/^https?:\/\//.test(image)) return image;
     return `${NewMedia}${image}`;
+  };
+
+  // NEW: Function to get valid child tags associated with products
+  const getValidChildTags = (tag: Tag) => {
+    return tag.childs.filter((child) =>
+      productData.some((product: Product) =>
+        product.tags?.some((productTag) =>
+          productTag.pivot.sub_tag_id === child.id.toString()
+        )
+      )
+    );
+  };
+
+  // NEW: Function to check if a tag has at least one valid child tag associated with products
+  const isTagInProducts = (tag: Tag) => {
+    const validChilds = getValidChildTags(tag);
+    return validChilds.length > 0;
   };
 
   return (
@@ -239,51 +274,128 @@ export default function ProductLoopFilterComponent({
         </div>
 
         {/* Filter and Brand Buttons */}
-        <div className="tamkeenSales_btns flex items-center justify-start gap-x-6 py-3 w-full mb-4 flex-wrap">
-          {/* Tag Filters */}
-          {filters.map((filter) => (
-            <div key={filter.id} className="relative">
-              <button
-                onClick={() => toggleDropdown(`filter-${filter.id}`)}
-                className="bestProButton w-fit whitespace-nowrap px-4 py-2 text-primary fill-primary border-gray hover:text-white hover:fill-white hover:bg-primary flex items-center justify-between gap-3 lg:gap-5"
+        <div className="flex items-start justify-between py-3">
+          <div className="tamkeenSales_btns flex items-center justify-start gap-x-6 gap-y-4 w-full mb-4 flex-wrap">
+            {/* Tag Filters */}
+            {filters.filter(isTagInProducts).map((filter, index) => (
+              <div
+                key={filter.id}
+                ref={(node) => setDropdownRef(`filter-${filter.id}`, node)}
+                className={`relative`}
               >
-                <span>{isArabic ? filter.name_arabic : filter.name}</span>
-                <svg
-                  height="12"
-                  viewBox="0 0 24 24"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`fill-current transform transition duration-150 ease-in-out ${
-                    dropdowns[`filter-${filter.id}`] ? "rotate-180" : "rotate-0"
-                  }`}
+                <button
+                  onClick={() => toggleDropdown(`filter-${filter.id}`)}
+                  className="bestProButton w-fit whitespace-nowrap px-4 py-2 text-primary fill-primary border-gray hover:text-white hover:fill-white hover:bg-primary flex items-center justify-between gap-3 lg:gap-5 !transition-none"
                 >
-                  <path
-                    clipRule="evenodd"
-                    fillRule="evenodd"
-                    d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
-                  />
-                </svg>
-              </button>
-              {dropdowns[`filter-${filter.id}`] && (
-                <div className="absolute top-full left-0 z-30 w-max bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-4">
-                  <ul className="space-y-3">
-                    {filter.childs.map((child) => {
-                      const childName = isArabic ? child.name_arabic : child.name;
-                      const normalizedChild = normalizeTag(childName);
-                      const currentGroup = selectedFiltersByGroup[child.tag_id] || [];
-                      const isChecked = currentGroup.includes(normalizedChild);
-                      return (
-                        <li key={child.id} className="flex items-center gap-3">
+                  <span>{isArabic ? filter.name_arabic : filter.name}</span>
+                  <svg
+                    height="12"
+                    viewBox="0 0 24 24"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`fill-current ${
+                      dropdowns[`filter-${filter.id}`] ? "rotate-180" : "rotate-0"
+                    }`}
+                  >
+                    <path
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
+                    />
+                  </svg>
+                </button>
+                {dropdowns[`filter-${filter.id}`] && (
+                  <div className={`absolute top-full left-0 z-30 w-max bg-white rounded-xl shadow-md p-4 ${getValidChildTags(filter).length > 4 ? 'h-40' : 'h-auto'} xl:min-w-32 min-w-20 overflow-y-auto custom_scrollbarStyle mt-2`}>
+                    <ul className="space-y-3">
+                      {getValidChildTags(filter).map((child) => {
+                        const childName = isArabic ? child.name_arabic : child.name;
+                        const normalizedChild = normalizeTag(childName);
+                        const currentGroup = selectedFiltersByGroup[child.tag_id] || [];
+                        const isChecked = currentGroup.includes(normalizedChild);
+                        return (
+                          <li key={child.id}>
+                            <label
+                              htmlFor={`filter-${child.id}`}
+                              className="flex items-center gap-3 cursor-pointer"
+                            >
+                              <span className="inline-flex justify-center items-center w-5 h-5 rounded border border-gray-300 peer-checked:border-primary transition-all duration-200">
+                                <input
+                                  type="checkbox"
+                                  id={`filter-${child.id}`}
+                                  className="hidden peer"
+                                  checked={isChecked}
+                                  onChange={() => handleFilterChange(child.name, child.name_arabic, child.tag_id)}
+                                />
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="14"
+                                  height="10"
+                                  viewBox="0 0 14 10"
+                                  fill="none"
+                                  className="hidden peer-checked:block"
+                                >
+                                  <path
+                                    d="M12.5029 0.569855C12.7684 0.569955 13.0232 0.675132 13.2109 0.862823C13.3986 1.05052 13.5038 1.3054 13.5039 1.57083C13.5039 1.83623 13.3985 2.09109 13.2109 2.27884L5.20898 9.2769C5.11608 9.3701 5.00632 9.4452 4.88477 9.4956C4.76325 9.5461 4.63254 9.5718 4.50098 9.5718C4.36962 9.5718 4.2395 9.546 4.11816 9.4956C4.02717 9.4579 3.94204 9.4066 3.86621 9.3443L0.792969 6.77786C0.70008 6.68492 0.62646 6.57407 0.576172 6.45267C0.52595 6.33129 0.5 6.20121 0.5 6.06985C0.50001 5.93848 0.52594 5.80843 0.576172 5.68704C0.62647 5.56562 0.70005 5.4548 0.792969 5.36185C0.885938 5.26888 0.9967 5.19537 1.11816 5.14505C1.23955 5.09477 1.36959 5.06892 1.50098 5.06888C1.63247 5.06888 1.76328 5.09473 1.88477 5.14514C2.00604 5.19533 2.11613 5.26904 2.20898 5.36185L4.50195 7.65482L11.7949 0.862823C11.9827 0.675263 12.2375 0.569855 12.5029 0.569855Z"
+                                    fill="#004B7A"
+                                    stroke="#004B7A"
+                                    strokeWidth="0.5"
+                                  />
+                                </svg>
+                              </span>
+                              <span className="sm:text-sm text-xs text-primary">
+                                {childName}
+                              </span>
+                            </label>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+                {index < filters.filter(isTagInProducts).length - 1 && (
+                  <span className={`${isArabic ? 'left-[-12px]' : 'right-[-12px]'} absolute top-1/2 transform -translate-y-1/2 w-px h-[60%] bg-gray opacity-30`}></span>
+                )}
+              </div>
+            ))}
+            {/* Brand Filter */}
+            {brands.length > 0 && (
+              <div className="relative">
+                <button
+                  onClick={() => toggleDropdown("brand")}
+                  className="bestProButton w-fit whitespace-nowrap px-4 py-2 text-primary fill-primary border-gray hover:text-white hover:fill-white hover:bg-primary flex items-center justify-between gap-3 lg:gap-5 !transition-none"
+                >
+                  <span>{isArabic ? "العلامة التجارية" : "Brand"}</span>
+                  <svg
+                    height="12"
+                    viewBox="0 0 24 24"
+                    width="12"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`fill-current ${
+                      dropdowns["brand"] ? "rotate-180" : "rotate-0"
+                    }`}
+                  >
+                    <path
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                      d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
+                    />
+                  </svg>
+                </button>
+                {dropdowns["brand"] && (
+                  <div className={`absolute top-full left-0 z-30 w-max bg-white rounded-xl shadow-md p-4 ${brands.length > 4 ? 'h-40' : 'h-auto'} xl:min-w-32 min-w-20 overflow-y-auto custom_scrollbarStyle mt-2`}>
+                    <ul className="space-y-3">
+                      {brands.map((brand: Brand) => (
+                        <li key={brand.id} className="flex items-center gap-3">
                           <label
-                            htmlFor={`filter-${child.id}`}
+                            htmlFor={`brand-${brand.id}`}
                             className="inline-flex justify-center items-center w-5 h-5 rounded border border-gray-300 peer-checked:border-primary cursor-pointer transition-all duration-200"
                           >
                             <input
                               type="checkbox"
-                              id={`filter-${child.id}`}
+                              id={`brand-${brand.id}`}
                               className="hidden peer"
-                              checked={isChecked}
-                              onChange={() => handleFilterChange(child.name, child.name_arabic, child.tag_id)}
+                              checked={selectedBrands.includes(isArabic ? brand.name_arabic : brand.name)}
+                              onChange={() => handleBrandChange(isArabic ? brand.name_arabic : brand.name)}
                             />
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -302,82 +414,26 @@ export default function ProductLoopFilterComponent({
                             </svg>
                           </label>
                           <span className="sm:text-sm text-xs text-primary">
-                            {childName}
+                            {isArabic ? brand.name_arabic : brand.name}
                           </span>
                         </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-            </div>
-          ))}
-          {/* Brand Filter */}
-          {brands.length > 0 && (
-            <div className="relative">
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="w-20">
+            {(selectedBrands.length > 0 || Object.values(selectedFiltersByGroup).some(arr => arr.length > 0)) && (
               <button
-                onClick={() => toggleDropdown("brand")}
-                className="bestProButton w-fit whitespace-nowrap px-4 py-2 text-primary fill-primary border-gray hover:text-white hover:fill-white hover:bg-primary flex items-center justify-between gap-3 lg:gap-5"
+                className="clear_all text-xs text-[#e10808] font-semibold"
+                onClick={() => clearAllFilters()}
               >
-                <span>{isArabic ? "العلامة التجارية" : "Brand"}</span>
-                <svg
-                  height="12"
-                  viewBox="0 0 24 24"
-                  width="12"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`fill-current transform transition duration-150 ease-in-out ${
-                    dropdowns["brand"] ? "rotate-180" : "rotate-0"
-                  }`}
-                >
-                  <path
-                    clipRule="evenodd"
-                    fillRule="evenodd"
-                    d="m2.58579 7.58579c.78104-.78105 2.04738-.78105 2.82842 0l6.58579 6.58581 6.5858-6.58581c.781-.78105 2.0474-.78105 2.8284 0 .7811.78104.7811 2.04738 0 2.82841l-8 8c-.781.7811-2.0474.7811-2.8284 0l-8.00001-8c-.78105-.78103-.78105-2.04737 0-2.82841z"
-                  />
-                </svg>
+                {clearText}
               </button>
-              {dropdowns["brand"] && (
-                <div className="absolute top-full left-0 z-30 w-max bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-4">
-                  <ul className="space-y-3">
-                    {brands.map((brand: Brand) => (
-                      <li key={brand.id} className="flex items-center gap-3">
-                        <label
-                          htmlFor={`brand-${brand.id}`}
-                          className="inline-flex justify-center items-center w-5 h-5 rounded border border-gray-300 peer-checked:border-primary cursor-pointer transition-all duration-200"
-                        >
-                          <input
-                            type="checkbox"
-                            id={`brand-${brand.id}`}
-                            className="hidden peer"
-                            checked={selectedBrands.includes(isArabic ? brand.name_arabic : brand.name)}
-                            onChange={() => handleBrandChange(isArabic ? brand.name_arabic : brand.name)}
-                          />
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="14"
-                            height="10"
-                            viewBox="0 0 14 10"
-                            fill="none"
-                            className="hidden peer-checked:block"
-                          >
-                            <path
-                              d="M12.5029 0.569855C12.7684 0.569955 13.0232 0.675132 13.2109 0.862823C13.3986 1.05052 13.5038 1.3054 13.5039 1.57083C13.5039 1.83623 13.3985 2.09109 13.2109 2.27884L5.20898 9.2769C5.11608 9.3701 5.00632 9.4452 4.88477 9.4956C4.76325 9.5461 4.63254 9.5718 4.50098 9.5718C4.36962 9.5718 4.2395 9.546 4.11816 9.4956C4.02717 9.4579 3.94204 9.4066 3.86621 9.3443L0.792969 6.77786C0.70008 6.68492 0.62646 6.57407 0.576172 6.45267C0.52595 6.33129 0.5 6.20121 0.5 6.06985C0.50001 5.93848 0.52594 5.80843 0.576172 5.68704C0.62647 5.56562 0.70005 5.4548 0.792969 5.36185C0.885938 5.26888 0.9967 5.19537 1.11816 5.14505C1.23955 5.09477 1.36959 5.06892 1.50098 5.06888C1.63247 5.06888 1.76328 5.09473 1.88477 5.14514C2.00604 5.19533 2.11613 5.26904 2.20898 5.36185L4.50195 7.65482L11.7949 0.862823C11.9827 0.675263 12.2375 0.569855 12.5029 0.569855Z"
-                              fill="#004B7A"
-                              stroke="#004B7A"
-                              strokeWidth="0.5"
-                            />
-                          </svg>
-                        </label>
-                        <span className="sm:text-sm text-xs text-primary">
-                          {isArabic ? brand.name_arabic : brand.name}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {/* Navigation Arrows */}
@@ -385,13 +441,13 @@ export default function ProductLoopFilterComponent({
           <>
             <button
               ref={prevRef}
-              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer fill-white p-2.5 left-1 md:p-3 md:left-7 bg-primary rounded-full"
+              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white fill-white p-2.5 left-1 md:p-3 md:left-7 bg-primary rounded-full"
             >
               <svg
                 height="22"
                 width="22"
                 viewBox="0 0 24 24"
-                className={`fill-current ${isArabic ? "-rotate-90" : "rotate-90"}`}
+                className={`fill-current rotate-90`}
               >
                 <path
                   fillRule="evenodd"
@@ -402,13 +458,13 @@ export default function ProductLoopFilterComponent({
             </button>
             <button
               ref={nextRef}
-              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer fill-white p-2.5 right-1 md:p-3 md:right-7 bg-primary rounded-full"
+              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white fill-white p-2.5 right-1 md:p-3 md:right-7 bg-primary rounded-full"
             >
               <svg
                 height="22"
                 width="22"
                 viewBox="0 0 24 24"
-                className={`fill-current ${isArabic ? "rotate-90" : "-rotate-90"}`}
+                className={`fill-current -rotate-90`}
               >
                 <path
                   fillRule="evenodd"
@@ -424,14 +480,14 @@ export default function ProductLoopFilterComponent({
       {/* Product Slider */}
       <div className={containerClassMobile}>
         <Swiper
-          spaceBetween={16}
-          slidesPerView={5}
+          spaceBetween={14}
+          slidesPerView={4}
           breakpoints={{
             320: { slidesPerView: 1.2, spaceBetween: 10 },
-            640: { slidesPerView: 1.2, spaceBetween: 10 },
-            768: { slidesPerView: 1.2, spaceBetween: 12 },
+            640: { slidesPerView: 1.5, spaceBetween: 10 },
+            768: { slidesPerView: 2.2, spaceBetween: 12 },
             1024: { slidesPerView: 4, spaceBetween: 14 },
-            1280: { slidesPerView: 5, spaceBetween: 16 },
+            1280: { slidesPerView: 5, spaceBetween: 14 },
           }}
           autoHeight
           centeredSlides={false}
@@ -472,7 +528,8 @@ export default function ProductLoopFilterComponent({
                 <div className="relative h-full">
                   <ProductComponent
                     productData={product}
-                    lang={isArabic ? "ar" : "en"}
+                    NewMedia={NewMedia}
+                    isArabic={isArabic}
                     isMobileOrTablet={isMobileOrTablet}
                     origin={origin}
                     ProExtraData={ProExtraData?.[product.id]}
@@ -486,7 +543,7 @@ export default function ProductLoopFilterComponent({
               </SwiperSlide>
             ))
           ) : (
-            <SwiperSlide>
+            <SwiperSlide className="!grow">
               <div className="flex flex-col items-center w-full">
                 <p className="text-sm font-medium text-center">
                   {isArabic ? "لا توجد منتجات متاحة" : "No products available"}
