@@ -915,8 +915,10 @@ export default function Homepage() {
             lang={lang}
             params={secCategoryData}
             userAgent={userAgent}
-            NewMedia={NewMedia2}
             devicetype={true}
+            isArabic={isArabic}
+            NewMedia={NewMedia}
+            origin={origin}
           />
         </div>
       </section>
