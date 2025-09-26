@@ -1,16 +1,15 @@
 "use client"
 
-import React, { useEffect, useState, useContext } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useRouter, usePathname } from 'next/navigation'
-import { NewMedia } from "../../api/Api";
 
 interface GridImagesSixProps {
   isMobileOrTablet: boolean;
   isArabic: boolean;
   images: string[];
   links: string[];
+  NewMedia: any;
 }
 
 export default function GridImagesSix({
@@ -18,10 +17,8 @@ export default function GridImagesSix({
   isArabic,
   images = [],
   links = [],
+  NewMedia
 }: GridImagesSixProps) {
-    const router = useRouter()
-    const path = usePathname();
-    const containerClass = isMobileOrTablet ? "container" : "px-20";
 
     // Fallback image
     const defaultImage = "/images/categoryNew/card-4.png";
@@ -43,7 +40,7 @@ export default function GridImagesSix({
                         width={0}
                         height={0}
                         className="object-fill w-full h-full"
-                        sizes="100vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     />
                 </Link>
                 <Link className="w-full" href={links[1]}>
@@ -55,7 +52,7 @@ export default function GridImagesSix({
                         width={0}
                         height={0}
                         className="object-fill w-full h-full"
-                        sizes="100vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     />
                 </Link>
                <Link className="w-full" href={links[2]}>
@@ -67,7 +64,7 @@ export default function GridImagesSix({
                         width={0}
                         height={0}
                         className="object-fill w-full h-full"
-                        sizes="100vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     />
                 </Link>
                 <Link className="w-full" href={links[3]}>
@@ -79,7 +76,7 @@ export default function GridImagesSix({
                         width={0}
                         height={0}
                         className="object-fill w-full h-full"
-                        sizes="100vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     />
                 </Link>
                 <Link className="w-full" href={links[4]}>
@@ -91,7 +88,7 @@ export default function GridImagesSix({
                         width={0}
                         height={0}
                         className="object-fill w-full h-full"
-                        sizes="100vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     />
                 </Link>
                 <Link className="w-full" href={links[5]}>
@@ -103,7 +100,7 @@ export default function GridImagesSix({
                         width={0}
                         height={0}
                         className="object-fill w-full h-full"
-                        sizes="100vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     />
                 </Link>
         </>);

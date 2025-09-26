@@ -5,26 +5,19 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Autoplay,
-  FreeMode,
-  Mousewheel,
   Navigation,
   Pagination,
-  Scrollbar,
 } from "swiper/modules";
 import "swiper/css/free-mode";
 import "swiper/css/pagination";
-import { get } from "../../api/ApiCalls";
 import { getCookie } from "cookies-next";
-// const ProductComponent = dynamic(() => import("./product_component"), { ssr: true });
+import { getProductExtraData } from "@/lib/components/component.client";
 
 export default function Testimonial(props: any) {
 
-  const origin = props?.origin;
   const isArabic = props.isArabic;
   const isMobileOrTablet = props?.isMobileOrTablet;
   const productData = props?.productData;
-  const gtmNewListId = props?.gtmColumnItemListId;
-  const gtmNewListName = props?.gtmColumnItemListName;
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const [ProExtraData, setProExtraData] = useState<any>([]);
@@ -89,12 +82,8 @@ export default function Testimonial(props: any) {
     });
     var city = getCookie("selectedCity");
     if (a?.length >= 1) {
-      await get(
-        `productextradatamulti-regional-new/${a?.join(",")}/${city}`
-      ).then((responseJson: any) => {
-        const data = responseJson?.data;
-        setProExtraData(data);
-      });
+      const dataExtra = await getProductExtraData(a?.join(","), city);
+      setProExtraData(dataExtra?.extraDataDetails?.data)
     }
   };
 
@@ -102,7 +91,6 @@ export default function Testimonial(props: any) {
 
 
   return (
-    <>
       <section
         className={`${containerClass} relative w-full pt-12 md:pt-16 testimonials_sec`}
         style={{
@@ -236,6 +224,5 @@ export default function Testimonial(props: any) {
           </Swiper>
         </div>
       </section>
-    </>
   );
 }

@@ -5,7 +5,6 @@ import "swiper/css";
 import "swiper/css/pagination";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { NewMedia } from "../../api/Api";
 
 interface GridImagesFourWithHeadingProps {
   isMobileOrTablet: boolean;
@@ -14,6 +13,7 @@ interface GridImagesFourWithHeadingProps {
   sectionHeading: string;
   images: string[];
   links: string[];
+  NewMedia: any;
 }
 
 export default function GridImagesFourWithHeading({
@@ -23,6 +23,7 @@ export default function GridImagesFourWithHeading({
   sectionHeading = isArabic ? "عنوان القسم" : "Section Heading",
   images = [],
   links = [],
+  NewMedia
 }: GridImagesFourWithHeadingProps) {
   const router = useRouter();
   const containerClass = isMobileOrTablet ? "container" : "px-20";
@@ -48,9 +49,9 @@ export default function GridImagesFourWithHeading({
           spaceBetween={16}
           slidesPerView={1.2}
           breakpoints={{
-            640: { slidesPerView: 2, spaceBetween: 20 },
-            768: { slidesPerView: 3, spaceBetween: 24 },
-            1024: { slidesPerView: 4, spaceBetween: 28 },
+            640: { slidesPerView: 2, spaceBetween: 8 },
+            768: { slidesPerView: 3, spaceBetween: 16 },
+            1024: { slidesPerView: 4, spaceBetween: 16},
           }}
           loop={images.length > 1} // Enable loop only if enough images
           autoplay={{
@@ -64,9 +65,9 @@ export default function GridImagesFourWithHeading({
         >
           {images.length > 0 ? (
             images.map((image, index) => (
-              <SwiperSlide key={index}>
+              <SwiperSlide key={index} >
                 <div
-                  className="lowerPrice_card !rounded-2xl overflow-hidden cursor-pointer"
+                  className="lowerPrice_card !rounded-2xl overflow-hidden cursor-pointer "
                   onClick={() => {
                     const link = links[index];
                     if (link && /^https?:\/\//.test(link)) {
@@ -83,8 +84,9 @@ export default function GridImagesFourWithHeading({
                     loading="lazy"
                     decoding="async"
                     quality={100}
-                    width={500}
-                    height={300}
+                    width={0}
+                    height={0}
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     className="w-full h-full object-cover rounded-2xl"
                   />
                 </div>

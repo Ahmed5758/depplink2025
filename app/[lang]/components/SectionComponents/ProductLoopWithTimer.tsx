@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   Autoplay,
@@ -16,11 +15,10 @@ import "swiper/css/free-mode";
 import "swiper/css/scrollbar";
 import "../NewHomePageComp/scrollBar.css";
 import "swiper/css/pagination";
-import { get } from "../../api/ApiCalls";
 import { getCookie } from "cookies-next";
-import { NewMedia } from "../../api/Api";
+import { getProductExtraData } from "@/lib/components/component.client";
 
-const ProductComponent = dynamic(() => import("../NewHomePageComp/product_component"), { ssr: true });
+const ProductComponent = dynamic(() => import("../NewHomePageComp/product_component_updated"), { ssr: true });
 
 interface Product {
   id: number;
@@ -58,6 +56,7 @@ interface ProductLoopTimerComponentProps {
   timerHeading: string;
   day: string;
   date: string;
+  NewMedia: any;
 }
 
 export default function ProductLoopTimerComponent({
@@ -73,8 +72,8 @@ export default function ProductLoopTimerComponent({
   timerHeading,
   day,
   date,
+  NewMedia
 }: ProductLoopTimerComponentProps) {
-  const router = useRouter();
   const productData = productDataSlider?.products?.data || [];
   const [ProExtraData, setProExtraData] = useState<any>({});
   const [timeLeft, setTimeLeft] = useState({
@@ -98,13 +97,8 @@ export default function ProductLoopTimerComponent({
         const ids = productData.map((item: Product) => item.id);
         const city = getCookie("selectedCity");
         try {
-          const response: any = await get(`productextradatamulti-regional-new/${ids.join(",")}/${city}`);
-          if (response && typeof response === "object" && response.data && typeof response.data === "object") {
-            setProExtraData(response.data);
-          } else {
-            console.warn("Unexpected API response format:", response);
-            setProExtraData({});
-          }
+          const dataExtra = await getProductExtraData(ids?.join(","), city);
+          setProExtraData(dataExtra?.extraDataDetails?.data)
         } catch (error) {
           console.error("Error fetching extra product data:", error);
           setProExtraData({});
@@ -153,51 +147,54 @@ export default function ProductLoopTimerComponent({
       <div className={containerClass}>
         <div className="flex justify-between items-center mb-6">
           <h2 className="headingHomeMain">{sliderHeading}</h2>
-          {buttonLink && buttonTitle && (
+          {/* {buttonLink && buttonTitle && (
             <button
               className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90"
               onClick={() => router.push(buttonLink.startsWith("http") ? buttonLink : `/${buttonLink}`)}
             >
               {buttonTitle}
             </button>
-          )}
+          )} */}
         </div>
+        {!(timeLeft.days === "00" && timeLeft.hours === "00" && timeLeft.minutes === "00" && timeLeft.seconds === "00") && (
+          <>
+            <div className="mb-2 flex items-center gap-3">
+              <span className="w-5 h-10 rounded-lg bg-orange"></span>
+              <h2 className="headingHomeMain !text-base !text-dark">{day || (isArabic ? "اليوم" : "Today")}</h2>
+            </div>
 
-        <div className="mb-2 flex items-center gap-3">
-          <span className="w-5 h-10 rounded-lg bg-orange"></span>
-          <h2 className="headingHomeMain !text-base !text-dark">{day || (isArabic ? "اليوم" : "Today")}</h2>
-        </div>
-
-        <div className="flex items-center gap-12 lg:gap-20 mb-5">
-          <h2 className="headingHomeMain !text-dark lg:!text-xl">
-            {timerHeading || (isArabic ? "صفقات سريعة" : "Quick Deals")}
-          </h2>
-          <div className="flex items-center gap-5">
-            {["Days", "Hours", "Minutes", "Seconds"].map((label, idx) => (
-              <div key={label} className="flex flex-col items-start gap-1">
-                <span className="text-xs font-bold">{isArabic ? ["أيام", "ساعات", "دقائق", "ثواني"][idx] : label}</span>
-                <div className="text-xl lg:text-2xl font-bold">
-                  {timeLeft[label.toLowerCase() as keyof typeof timeLeft]}
-                  {idx < 3 && (
-                    <span className="text-orangePrice opacity-50 ml-3 lg:ml-5">:</span>
-                  )}
-                </div>
+            <div className="flex items-center gap-12 lg:gap-20 mb-5">
+              <h2 className="headingHomeMain !text-dark lg:!text-xl">
+                {timerHeading || (isArabic ? "صفقات سريعة" : "Quick Deals")}
+              </h2>
+              <div className="flex items-center gap-5">
+                {["Days", "Hours", "Minutes", "Seconds"].map((label, idx) => (
+                  <div key={label} className="flex flex-col items-start gap-1">
+                    <span className="text-xs font-bold">{isArabic ? ["أيام", "ساعات", "دقائق", "ثواني"][idx] : label}</span>
+                    <div className="text-xl lg:text-2xl font-bold">
+                      {timeLeft[label.toLowerCase() as keyof typeof timeLeft]}
+                      {idx < 3 && (
+                        <span className={`text-orangePrice opacity-50 ${isArabic ? 'mr-3 lg:mr-5' : 'ml-3 lg:ml-5'}`}>:</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
 
         {!isMobileOrTablet && (
           <>
             <button
               ref={prevRef}
-              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer fill-white p-2.5 left-1 md:p-3 md:left-7 bg-primary rounded-full"
+              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white fill-white p-2.5 left-1 md:p-3 md:left-7 bg-primary rounded-full"
             >
               <svg
                 height="22"
                 width="22"
                 viewBox="0 0 24 24"
-                className={`fill-current ${isArabic ? "-rotate-90" : "rotate-90"}`}
+                className={`fill-current rotate-90`}
               >
                 <path
                   fillRule="evenodd"
@@ -208,13 +205,13 @@ export default function ProductLoopTimerComponent({
             </button>
             <button
               ref={nextRef}
-              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer fill-white p-2.5 right-1 md:p-3 md:right-7 bg-primary rounded-full"
+              className="absolute top-1/2 -translate-y-1/2 z-10 cursor-pointer text-white fill-white p-2.5 right-1 md:p-3 md:right-7 bg-primary rounded-full"
             >
               <svg
                 height="22"
                 width="22"
                 viewBox="0 0 24 24"
-                className={`fill-current ${isArabic ? "rotate-90" : "-rotate-90"}`}
+                className={`fill-current -rotate-90`}
               >
                 <path
                   fillRule="evenodd"
@@ -229,16 +226,16 @@ export default function ProductLoopTimerComponent({
 
       <div className={containerClassMobile}>
         <Swiper
-          spaceBetween={16}
-          slidesPerView={5}
+          spaceBetween={14}
+          slidesPerView={4}
           breakpoints={{
             320: { slidesPerView: 1.2, spaceBetween: 10 },
-            640: { slidesPerView: 1.2, spaceBetween: 10 },
-            768: { slidesPerView: 1.2, spaceBetween: 12 },
+            640: { slidesPerView: 1.5, spaceBetween: 10 },
+            768: { slidesPerView: 2.2, spaceBetween: 12 },
             1024: { slidesPerView: 4, spaceBetween: 14 },
-            1280: { slidesPerView: 5, spaceBetween: 16 },
-            1650: { slidesPerView: 5, spaceBetween: 16 },
-            1920: { slidesPerView: 5, spaceBetween: 16 },
+            1280: { slidesPerView: 4, spaceBetween: 14 },
+            1650: { slidesPerView: 4, spaceBetween: 14 },
+            1920: { slidesPerView: 5, spaceBetween: 14 },
           }}
           autoHeight
           centeredSlides={false}
@@ -279,7 +276,8 @@ export default function ProductLoopTimerComponent({
                 <div className="relative h-full">
                   <ProductComponent
                     productData={product} 
-                    lang={isArabic ? "ar" : "en"} 
+                    isArabic={isArabic} 
+                    NewMedia={NewMedia}
                     isMobileOrTablet={isMobileOrTablet} 
                     origin={origin} 
                     ProExtraData={ProExtraData?.[product.id]}

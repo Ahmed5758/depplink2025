@@ -1,78 +1,75 @@
 "use client";
 
-import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import "swiper/css";
 import "swiper/css/navigation";
-import Link from "next/link";
-import { getDictionary } from "../dictionaries";
-import Swal from "sweetalert2";
 import { useRouter } from "next-nprogress-bar";
-import { NewMedia } from "../api/Api";
-import { post } from "../api/ApiCalls";
-import { object } from "prop-types";
 
 // Import Images
-const MobileHeader = dynamic(() => import("../components/MobileHeader"), {
+const MobileHeader = dynamic(() => import("@/components/MobileHeader"), {
   ssr: true,
 });
 
 const FilterVertical = dynamic(
-  () => import("../components/SectionComponents/FilterVertical"),
+  () => import("@/components/SectionComponents/FilterVertical"),
   {
     ssr: true,
   }
 );
 
 const MobileFilterNew = dynamic(
-  () => import("../components/SectionComponents/MobileFilterNew"),
+  () => import("@/components/SectionComponents/MobileFilterNew"),
   {
     ssr: true,
   }
 );
 
 const FilterHorizontal = dynamic(
-  () => import("../components/SectionComponents/FilterHorizontal"),
+  () => import("@/components/SectionComponents/FilterHorizontal"),
   {
     ssr: true,
   }
 );
 
 const ProductLoop = dynamic(
-  () => import("../components/NewHomePageComp/ProductLoop"),
+  () => import("@/components/NewHomePageComp/ProductLoop"),
   {
     ssr: true,
   }
 );
 
 const ProductLoopList = dynamic(
-  () => import("../components/NewHomePageComp/productListLoop"),
+  () => import("@/components/NewHomePageComp/productListLoop"),
   {
     ssr: true,
   }
 );
 
-const Pagination = dynamic(() => import("../components/NewPagination"), {
+const Pagination = dynamic(() => import("@/components/NewPagination"), {
   ssr: true,
 });
 
-export default function SubCategoryNew({
-  params,
-  searchParams,
-}: {
-  params: { lang: string; slug: string; data: any; devicetype: any };
-  searchParams: any;
-}) {
+type ListingProps = {
+  data: any;
+  slug: string;
+  lang: string;
+  origin: string;
+  deviceType: string;
+  searchParams?: Record<string, string>;
+};
+
+export default function SubCategoryNew({ data, slug, lang, deviceType, origin, searchParams }: ListingProps) {
+  const NewMedia = process.env.NEXT_PUBLIC_NEW_MEDIA;
   const router = useRouter();
   const [dict, setDict] = useState<any>([]);
-  const [CatData, setCatData] = useState<any>(params?.data);
-  const [brandData, setBrandData] = useState<any>(params?.data?.productData?.brands);
-  const [loaderStatus, setLoaderStatus] = useState<any>(false);
+  const [CatData, setCatData] = useState<any>(data);
+  const [brandData, setBrandData] = useState<any>(
+    data?.productData?.brands
+  );
+  const [loaderStatus, setLoaderStatus] = useState<any>(true);
   const [currentPage, setcurrentPage] = useState<any>(
-    params?.data?.productData?.products?.current_page
+    data?.productData?.products?.current_page
   );
   const [BrandfilterHide, setBrandfilterHide] = useState<any>(false);
   const [selectedbrands, setselectedbrands] = useState<any>({});
@@ -84,31 +81,31 @@ export default function SubCategoryNew({
   const [sort, setsort] = useState<any>(false);
   const [products, setproducts] = useState<any>([]);
   const [view, setview] = useState<any>("grid");
-  const [min, setMin] = useState<any>(params?.data?.productData?.min || 0); // Adjust default as needed
-  const [max, setMax] = useState<any>(params?.data?.productData?.max || 0); // Adjust default as needed
+  const [min, setMin] = useState<any>(data?.productData?.min || 0); // Adjust default as needed
+  const [max, setMax] = useState<any>(data?.productData?.max || 0); // Adjust default as needed
   const SortingProduct = [
-    { value: "", label: params?.lang == "ar" ? "الأكثر تطابقاً" : "Relevance" },
+    { value: "", label: lang == "ar" ? "الأكثر تطابقاً" : "Relevance" },
     {
       value: "sale_price-asc",
       label:
-        params?.lang == "ar"
+        lang == "ar"
           ? "السعر (من الأقل إلى الأعلى)"
           : "Price (Low to High)",
     },
     {
       value: "sale_price-desc",
       label:
-        params?.lang == "ar"
+        lang == "ar"
           ? "السعر (من الأعلى إلى الأقل)"
           : "Price (Hight to Low)",
     },
   ];
   useEffect(() => {
-    if (!params?.devicetype) {
+    if (!deviceType) {
       router.refresh();
     }
     googleGTMList();
-  }, [params]);
+  }, []);
   function calculateTimeLeft(endTime: any) {
     const now: any = new Date();
     const end: any = new Date(endTime);
@@ -126,17 +123,10 @@ export default function SubCategoryNew({
     };
   }
 
-  function detectPlatform() {
-    if (window.Android) return "Android-WebView";
-    if (window.webkit?.messageHandlers?.iosBridge) return "iOS-WebView";
-    var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    if (/android/i.test(userAgent)) return "Android-Mobile-WebView";
-    if (/iPad|iPhone|iPod/.test(userAgent)) return "iOS-Mobile-WebView";
-    return "Web";
-  }
+
   const googleGTMList = () => {
     // Push to GTM's dataLayer
-    const productDataGTM = params?.data?.productData?.products?.data;
+    const productDataGTM = data?.productData?.products?.data;
     if (
       typeof window !== "undefined" &&
       window.dataLayer &&
@@ -164,11 +154,11 @@ export default function SubCategoryNew({
         event: "view_item_list",
         value: totalPrice,
         currency: "SAR",
-        platform: detectPlatform(),
+        platform: deviceType,
         item_list_name: isArabic
-          ? params?.data?.category?.name_arabic
-          : params?.data?.category?.name,
-        item_list_id: String(params?.data?.category?.id ?? ""), // Added item_list_id
+          ? data?.category?.name_arabic
+          : data?.category?.name,
+        item_list_id: String(data?.category?.id ?? ""), // Added item_list_id
         ecommerce: {
           items: productDataGTM.map((item: any, index: number) => {
             const getOriginalPrice = () => {
@@ -207,9 +197,8 @@ export default function SubCategoryNew({
                 ? item?.brand?.name_arabic
                 : item?.brand?.name,
               item_image_link: `${NewMedia}${item?.featured_image?.image}`,
-              item_link: `${origin}/${isArabic ? "ar" : "en"}/product/${
-                item?.slug
-              }`,
+              item_link: `${origin}/${isArabic ? "ar" : "en"}/product/${item?.slug
+                }`,
               item_availability: "in stock",
               index: index,
               quantity: 1,
@@ -232,10 +221,9 @@ export default function SubCategoryNew({
       window.removeEventListener("popstate", handlePopState);
     };
   }, [router]);
+
   useEffect(() => {
     (async () => {
-      const translationdata = await getDictionary(params?.lang);
-      setDict(translationdata);
       if (searchParams?.brand) {
         setBrandfilterHide(true);
         var br = searchParams?.brand.split(",");
@@ -246,7 +234,7 @@ export default function SubCategoryNew({
           }
         }
         setselectedbrands(brandnames);
-        if (params?.devicetype == "mobile") {
+        if (deviceType == "mobile") {
           window.scrollTo(0, 250);
         } else {
           window.scrollTo(0, 350);
@@ -275,11 +263,15 @@ export default function SubCategoryNew({
           }
         }
         setselectedrating(srate);
-        if (params?.devicetype == "mobile") {
+        if (deviceType == "mobile") {
           window.scrollTo(0, 250);
         } else {
           window.scrollTo(0, 350);
         }
+      }
+
+      if (searchParams?.sort) {
+        setsort(searchParams?.sort);
       }
 
       if (searchParams?.tags) {
@@ -300,7 +292,7 @@ export default function SubCategoryNew({
           }
         }
         setselectedtags({ ...shitems });
-        if (params?.devicetype == "mobile") {
+        if (deviceType == "mobile") {
           window.scrollTo(0, 250);
         } else {
           window.scrollTo(0, 350);
@@ -308,10 +300,11 @@ export default function SubCategoryNew({
       }
     })();
     // var prodata = products
-    // if (params?.data?.productData?.products?.current_page == 1)
+    // if (data?.productData?.products?.current_page == 1)
     //   prodata = []
-    // prodata = prodata.concat(params?.data?.productData?.products?.data)
-    var prodata = params?.data?.productData?.products?.data;
+    // prodata = prodata.concat(data?.productData?.products?.data)
+
+    var prodata = data?.productData?.products?.data;
     setproducts([...prodata]);
     setLoaderStatus(false);
     if (typeof window !== "undefined") {
@@ -327,28 +320,28 @@ export default function SubCategoryNew({
         }
       };
     }
-    if (searchParams?.notifications?.length) {
-      notificationCount();
-    }
-  }, [params]);
-  const notificationCount = () => {
-    if (searchParams?.notifications?.length) {
-      var data = {
-        id: searchParams?.notifications,
-        desktop: true,
-      };
-      post("notificationsCounts", data).then((responseJson: any) => {
-        if (responseJson?.success) {
-        }
-      });
-    }
-  };
+    // if (searchnotifications?.length) {
+    //   notificationCount();
+    // }
+  }, [data]);
+  // const notificationCount = () => {
+  //   if (searchnotifications?.length) {
+  //     var data = {
+  //       id: searchnotifications,
+  //       desktop: true,
+  //     };
+  //     post("notificationsCounts", data).then((responseJson: any) => {
+  //       if (responseJson?.success) {
+  //       }
+  //     });
+  //   }
+  // };
   const filter = () => {
     setLoaderStatus(true);
     var filterdata: any = {};
     if (
       currentPage &&
-      currentPage != params?.data?.productData?.products?.current_page
+      currentPage != data?.productData?.products?.current_page
     )
       filterdata["page"] = currentPage;
     // if (min)
@@ -365,16 +358,17 @@ export default function SubCategoryNew({
       filterdata["tags"] = Object.keys(selectedtags).join(",");
     if (sort) filterdata["sort"] = sort;
     const result = "?" + new URLSearchParams(filterdata).toString();
+    // console.log("result",result)
     if (
       Object.keys(filterdata).length == 3 &&
-      Object.keys(searchParams).length <= 3 &&
+      // Object.keys(searchParams).length <= 3 &&
       filterdata["page"] &&
-      currentPage == params?.data?.productData?.products?.current_page &&
-      min == params?.data?.productData?.min &&
-      max == params?.data?.productData?.max
+      currentPage == data?.productData?.products?.current_page &&
+      min == data?.productData?.min &&
+      max == data?.productData?.max
     )
       return false;
-    router.push(`/${params?.lang}/category-new/${params?.slug}${result}`, {
+    router.push(`${origin}/${lang}/category/${slug}${result}`, {
       scroll: false,
     });
     router.refresh();
@@ -384,6 +378,16 @@ export default function SubCategoryNew({
     if (sort != searchParams?.sort && sort) filter();
   }, [sort]);
 
+  useEffect(() => {
+    if (
+      (Object.keys(selectedcats).length > 0 &&
+        searchParams?.cats != Object.keys(selectedcats)[0]) ||
+      (Object.keys(selectedcats).length == 0 && searchParams?.cats)
+    ) {
+      filter();
+    }
+  }, [selectedcats]);
+
   // useEffect(() => {
   //   if (pricefilter) {
   //     setcurrentPage(1)
@@ -392,139 +396,58 @@ export default function SubCategoryNew({
   // }, [pricefilter])
 
   useEffect(() => {
-    if (currentPage != params?.data?.productData?.products?.current_page)
+    if (currentPage != data?.productData?.products?.current_page)
       filter();
   }, [currentPage]);
   const isMobileOrTablet =
-    params?.devicetype === "mobile" || params?.devicetype === "tablet"
+    deviceType === "mobile" || deviceType === "tablet"
       ? true
       : false;
-  const containerClass = isMobileOrTablet ? "container" : "px-20";
-  const isArabic = params.lang === "ar" ? true : false;
+  const isArabic = lang === "ar" ? true : false;
 
   // Const For Bottom Text
   const titleHeadingText =
-    params?.data?.productData?.products?.total +
+    data?.productData?.products?.total +
     (isArabic ? " منتج" : " Products");
   const subHeadingOneText = isArabic ? "الكل" : "All";
-  const subHeadingTwoText = isArabic ? "باب واحد" : "One Door";
-  const subHeadingThreeText = isArabic ? "بابين" : "Two Doors";
-  const subHeadingFourText = isArabic ? "باب جانب باب" : "Side-by-Side Door";
+
   const subHeadingFiveText = isArabic ? "ترتيب حسب" : "Sort by";
   const applyFiltersText = isArabic ? "تطبيق الفلاتر" : "Apply Filters";
-  const searchInEnableText = isArabic
-    ? "ابــحــث في تمكين ...."
-    : "Search in Tamkeen....";
-  const locationText = isArabic
-    ? "التوصيل إلى: حي مشرفة, جدة, المملكة العربية السعودية"
-    : "Delivery to: Mishrifah District, Jeddah, Saudi Arabia";
-  const helloText = isArabic ? "مرحبا" : "Hello";
-  const imgAbsoluteTextOne = isArabic ? "سعة: 430 لتر" : "Capacity: 430 Liters";
-  const imgAbsoluteTextTwo = isArabic ? "عرض: 83.9 سم" : "Width: 83.9 cm";
-  const imgAbsoluteTextThree = isArabic
-    ? "إرتفاع: 176.3 سم"
-    : "Height: 176.3 cm";
-  const imgAbsoluteTextFour = isArabic ? "عمق: 63.7 سم" : "Depth: 63.7 cm";
-  const subOneText = isArabic ? "هدية" : "Gift";
-  const subTwoText = isArabic ? "غير متوفر" : "Not Available";
-  const subThreeText = isArabic ? "الأكثر مبيعا" : "Best Seller";
-  const subFourText = isArabic ? "عروض ميجا" : "Mega Offers";
-  const subFiveText = isArabic
-    ? "التسليم خلال 24 ساعة"
-    : "Delivery within 24 hours";
-  const brandNameText = isArabic ? "جنرال سوبريم" : "General Supreme";
-  const brandDetailText = isArabic
-    ? "ثلاجة باب بجانب باب 15.2قدم ,430 لتر ,انفرتر."
-    : "Side-by-side refrigerator, 15.2 cu.ft, 430 liters, inverter";
-  const brandCodeText = isArabic ? "كود:" : "Code:";
-  const brandCodeNoText = isArabic ? "GS806SSI" : "GS806SSI";
-  const priceText = isArabic ? "659" : "659";
-  const priceDiscountedText = isArabic ? "1499" : "1499";
-  const priceSaveText = isArabic ? "وفر 800" : "Save 800";
-  const priceAdditionalDiscountText = isArabic
-    ? "السعر بعد خصم الاسترداد النقدي"
-    : "Price Included Additional Discount";
-  const buyNowText = isArabic
-    ? "إشتري الأن وإدفع لاحقا "
-    : "Buy now and pay later";
-  const ratingText = isArabic ? "4.7 ( تقيم )" : "4.7 ( Rating )";
-  const timerText = isArabic ? "09 : 31 : 07" : "09 : 31 : 07";
-  const btnCheckoutText = isArabic ? "شراء الأن " : "Checkout Now";
-  const btndiscoverText = isArabic ? "اكتشف المزيد" : "Discover More";
 
-  const [isImageLoaded, setImageLoaded] = useState(false);
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(brandCodeNoText);
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
-  };
 
-  // Copy Text Popup
-  const handleCopyPopup = async (type: any) => {
-    if (type === brandCodeNoText) {
-      const toast = Swal.mixin({
-        toast: true,
-        position: isArabic ? "top-start" : "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-      });
-      toast.fire({
-        icon: "success",
-        title: "Copied to clipboard!",
-        padding: "10px 20px",
-        background: "#20831E",
-        color: "#FFFFFF",
-      });
-    }
-  };
   const [sortPopup, setSortPopup] = useState(false);
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [filterModal, setFilterModal] = useState(false);
 
-  const handleFilterChange = (filterName: string) => {
-    setSelectedFilters((prev) =>
-      prev.includes(filterName)
-        ? prev.filter((f) => f !== filterName)
-        : [...prev, filterName]
-    );
-  };
 
-  const origin =
-    typeof window !== "undefined" && window.location.origin
-      ? window.location.origin
-      : "";
 
   return (
     <>
-      {isMobileOrTablet ? (
-        <>
-          <MobileHeader
-            type="Secondary"
-            lang={params?.lang}
-            dict={dict}
-            pageTitle={
-              isArabic
-                ? CatData?.category?.name_arabic
-                : CatData?.category?.name
-            }
-            onClick={() => setFilterModal(true)}
-          />
-        </>
-      ) : null}
+      {isMobileOrTablet && (
+        <MobileHeader
+          type="Secondary"
+          lang={lang}
+          dict={dict}
+          pageTitle={
+            isArabic
+              ? CatData?.category?.name_arabic
+              : CatData?.category?.name
+          }
+          onClick={() => setFilterModal(true)}
+        />
+      )}
 
-      <div className={`${isMobileOrTablet ? "mt-32" : "mt-24"}`}></div>
+      {/* <div className={`${isMobileOrTablet ? "mt-32" : "mt-24"}`}></div> */}
 
       {/* Section 1 */}
-      {!isMobileOrTablet ? (
+      {!isMobileOrTablet && (
         <section className={`filter_sec relative`}>
           <div className="xl:px-20 lg:px-10 px-4 py-5">
             <FilterHorizontal
+              NewMedia={NewMedia}
               isArabic={isArabic}
               isMobileOrTablet={isMobileOrTablet}
-              devicetype={params?.devicetype}
+              deviceType={deviceType}
               tags={CatData?.productData?.tags}
               selectedtags={selectedtags}
               onChangetags={(tagchild: any) => {
@@ -535,6 +458,7 @@ export default function SubCategoryNew({
                   delete tagnames[tagchild.name];
                   window.scrollTo(0, 0);
                 }
+                setLoaderStatus(true);
                 setselectedtags({ ...tagnames });
                 setcurrentPage(1);
                 filter();
@@ -548,11 +472,13 @@ export default function SubCategoryNew({
                 } else {
                   delete bdata[name];
                 }
+                setLoaderStatus(true);
                 setselectedbrands({ ...bdata });
                 setcurrentPage(1);
                 filter();
               }}
               setClear={() => {
+                setLoaderStatus(true);
                 setselectedbrands({});
                 setselectedrating({});
                 setselectedcats({});
@@ -560,7 +486,7 @@ export default function SubCategoryNew({
                 setselectedtags({});
                 // setFilterMobile(false)
                 window.scrollTo(0, 0);
-                router.push(`/${params?.lang}/category-new/${params?.slug}`, {
+                router.push(`${origin}/${lang}/category/${slug}`, {
                   scroll: true,
                 });
                 router.refresh();
@@ -568,21 +494,21 @@ export default function SubCategoryNew({
             />
           </div>
         </section>
-      ) : null}
+      )}
 
       {/* Section 2 */}
       <section
-        className={`relative md:mt-16 mt-4 ${
-          isMobileOrTablet ? "mb-24" : "mb-8"
-        }`}
+        className={`relative mt-4 ${isMobileOrTablet ? "mb-24" : "mb-8"
+          }`}
       >
-        <div className="xl:px-20 lg:px-10 px-4 flex md:flex-row flex-col items-start lg:gap-10 gap-4">
-          {!isMobileOrTablet ? (
-            <div className={`${!isMobileOrTablet ?'w-[24%]' : 'w-full' }`}>
+        <div className="xl:px-20 lg:px-10 px-4 flex md:flex-row flex-col items-start gap-4">
+          {!isMobileOrTablet && (
+            <div className={`${!isMobileOrTablet ? "w-[24%]" : "w-full"}`}>
               <FilterVertical
                 isArabic={isArabic}
+                NewMedia={NewMedia}
                 isMobileOrTablet={isMobileOrTablet}
-                devicetype={params?.devicetype}
+                deviceType={deviceType}
                 tags={CatData?.productData?.tags}
                 selectedtags={selectedtags}
                 onChangetags={(tagchild: any) => {
@@ -593,6 +519,7 @@ export default function SubCategoryNew({
                     delete tagnames[tagchild.name];
                     window.scrollTo(0, 0);
                   }
+                  setLoaderStatus(true);
                   setselectedtags({ ...tagnames });
                   setcurrentPage(1);
                   filter();
@@ -606,11 +533,13 @@ export default function SubCategoryNew({
                   } else {
                     delete bdata[name];
                   }
+                  setLoaderStatus(true);
                   setselectedbrands({ ...bdata });
                   setcurrentPage(1);
                   filter();
                 }}
                 setClear={() => {
+                  setLoaderStatus(true);
                   setselectedbrands({});
                   setselectedrating({});
                   setselectedcats({});
@@ -618,15 +547,18 @@ export default function SubCategoryNew({
                   setselectedtags({});
                   // setFilterMobile(false)
                   window.scrollTo(0, 0);
-                  router.push(`/${params?.lang}/category-new/${params?.slug}`, {
+                  router.push(`${origin}/${lang}/category/${slug}`, {
                     scroll: true,
                   });
                   router.refresh();
                 }}
               />
             </div>
-          ) : null}
-          <div className={`${!isMobileOrTablet ?'w-[76%]' : 'w-full' } pb-2 overflow-hidden`}>
+          )}
+          <div
+            className={`${!isMobileOrTablet ? "w-[76%]" : "w-full"
+              } pb-2 overflow-hidden`}
+          >
             {isMobileOrTablet ? (
               <div className="mb-5">
                 <div className="flex items-center justify-between gap-4 mb-5">
@@ -667,49 +599,48 @@ export default function SubCategoryNew({
 
                     {sortPopup && (
                       <div
-                        className="absolute top-full left-0 mt-2 z-30 w-max bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-4"
+                        className="absolute top-full left-0 mt-2 z-30 w-max bg-white rounded-xl shadow-md p-4"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <ul className="space-y-3">
                           {SortingProduct.map((filter) => (
-                            <li
-                              key={filter?.value}
-                              className="flex items-center gap-3"
-                            >
+                            <li key={filter?.value} className="">
                               <label
                                 htmlFor={filter?.label
                                   .toLowerCase()
                                   .replace(" ", "_")}
-                                className="inline-flex justify-center items-center w-5 h-5 rounded border border-gray-300 peer-checked:border-primary cursor-pointer transition-all duration-200"
+                                className="flex items-center gap-3 cursor-pointer"
                               >
-                                <input
-                                  type="checkbox"
-                                  id={filter?.label
-                                    .toLowerCase()
-                                    .replace(" ", "_")}
-                                  className="hidden peer"
-                                  checked={sort == filter?.value}
-                                  onChange={() => setsort(filter?.value)}
-                                />
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  width="14"
-                                  height="10"
-                                  viewBox="0 0 14 10"
-                                  fill="none"
-                                  className="hidden peer-checked:block"
-                                >
-                                  <path
-                                    d="M12.5029 0.569855C12.7684 0.569955 13.0232 0.675132 13.2109 0.862823C13.3986 1.05052 13.5038 1.3054 13.5039 1.57083C13.5039 1.83623 13.3985 2.09109 13.2109 2.27884L5.20898 9.2769C5.11608 9.3701 5.00632 9.4452 4.88477 9.4956C4.76325 9.5461 4.63254 9.5718 4.50098 9.5718C4.36962 9.5718 4.2395 9.546 4.11816 9.4956C4.02717 9.4579 3.94204 9.4066 3.86621 9.3443L0.792969 6.77786C0.70008 6.68492 0.62646 6.57407 0.576172 6.45267C0.52595 6.33129 0.5 6.20121 0.5 6.06985C0.50001 5.93848 0.52594 5.80843 0.576172 5.68704C0.62647 5.56562 0.70005 5.4548 0.792969 5.36185C0.885938 5.26888 0.9967 5.19537 1.11816 5.14505C1.23955 5.09477 1.36959 5.06892 1.50098 5.06888C1.63247 5.06888 1.76328 5.09473 1.88477 5.14505C2.00604 5.19533 2.11613 5.26904 2.20898 5.36185L4.50195 7.65482L11.7949 0.862823C11.9827 0.675263 12.2375 0.569855 12.5029 0.569855Z"
-                                    fill="#004B7A"
-                                    stroke="#004B7A"
-                                    strokeWidth="0.5"
+                                <span className="inline-flex justify-center items-center w-5 h-5 rounded border border-gray-300 peer-checked:border-primary cursor-pointer transition-all duration-200">
+                                  <input
+                                    type="checkbox"
+                                    id={filter?.label
+                                      .toLowerCase()
+                                      .replace(" ", "_")}
+                                    className="hidden peer"
+                                    checked={sort == filter?.value}
+                                    onChange={() => setsort(filter?.value)}
                                   />
-                                </svg>
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="14"
+                                    height="10"
+                                    viewBox="0 0 14 10"
+                                    fill="none"
+                                    className="hidden peer-checked:block"
+                                  >
+                                    <path
+                                      d="M12.5029 0.569855C12.7684 0.569955 13.0232 0.675132 13.2109 0.862823C13.3986 1.05052 13.5038 1.3054 13.5039 1.57083C13.5039 1.83623 13.3985 2.09109 13.2109 2.27884L5.20898 9.2769C5.11608 9.3701 5.00632 9.4452 4.88477 9.4956C4.76325 9.5461 4.63254 9.5718 4.50098 9.5718C4.36962 9.5718 4.2395 9.546 4.11816 9.4956C4.02717 9.4579 3.94204 9.4066 3.86621 9.3443L0.792969 6.77786C0.70008 6.68492 0.62646 6.57407 0.576172 6.45267C0.52595 6.33129 0.5 6.20121 0.5 6.06985C0.50001 5.93848 0.52594 5.80843 0.576172 5.68704C0.62647 5.56562 0.70005 5.4548 0.792969 5.36185C0.885938 5.26888 0.9967 5.19537 1.11816 5.14505C1.23955 5.09477 1.36959 5.06892 1.50098 5.06888C1.63247 5.06888 1.76328 5.09473 1.88477 5.14505C2.00604 5.19533 2.11613 5.26904 2.20898 5.36185L4.50195 7.65482L11.7949 0.862823C11.9827 0.675263 12.2375 0.569855 12.5029 0.569855Z"
+                                      fill="#004B7A"
+                                      stroke="#004B7A"
+                                      strokeWidth="0.5"
+                                    />
+                                  </svg>
+                                </span>
+                                <span className="sm:text-sm text-xs text-primary">
+                                  {filter?.label}
+                                </span>
                               </label>
-                              <span className="sm:text-sm text-xs text-primary">
-                                {filter?.label}
-                              </span>
                             </li>
                           ))}
                         </ul>
@@ -737,19 +668,19 @@ export default function SubCategoryNew({
                         stroke-opacity="0.7"
                         stroke-width="1.18056"
                         stroke-linecap="round"
-                        stroke-linejoin="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   </button>
                 </div>
                 <div className="flex items-center justify-between gap-4">
-                  <h2 className="headingHomeMain !text-sm text-nowrap order-0">
+                  <h2 className="headingHomeMain !text-base !text-dark text-nowrap order-0">
                     {titleHeadingText}
                   </h2>
                   {/* Pagination Section */}
-                  {params?.data?.productData?.products && (
+                  {data?.productData?.products && (
                     <>
-                      {params?.data?.productData?.products?.last_page > 1 && (
+                      {data?.productData?.products?.last_page > 1 && (
                         <Pagination
                           setCurrentPage={(newpage) => {
                             setLoaderStatus(true);
@@ -759,10 +690,10 @@ export default function SubCategoryNew({
                           isMobileOrTablet={isMobileOrTablet}
                           isArabic={isArabic}
                           currentPage={
-                            params?.data?.productData?.products?.current_page
+                            data?.productData?.products?.current_page
                           }
                           lastPage={
-                            params?.data?.productData?.products?.last_page
+                            data?.productData?.products?.last_page
                           }
                         />
                       )}
@@ -773,83 +704,97 @@ export default function SubCategoryNew({
               </div>
             ) : (
               <div className="mb-10">
-                <div className="flex items-start justify-between xl:gap-10 lg-gap-5 gap-4 p-2">
-                  <h2 className="headingHomeMain lg:!text-[1.375rem] !text-sm text-nowrap self-center">
+                <div className="flex items-start justify-between xl:gap-10 lg-gap-5 gap-4">
+                  <h2 className="headingHomeMain !text-dark lg:!text-[1.375rem] !text-sm text-nowrap self-center">
                     {titleHeadingText}
                   </h2>
-                  <div className="flex items-center 2xl:w-[36.25rem] lg:w-[30.25rem] w-full overflow-x-auto hide_scrollbar pb-1">
-                    <div className="flex flex-nowrap gap-2 min-w-max">
-                      <button
-                        className={`bestProButton flex gap-2 items-center w-fit whitespace-nowrap 
-      !text-xs !rounded-2xl !py-1 !px-4 md:!font-bold border-gray 
-      ${
-        Object.keys(selectedcats).length === 0
-          ? "!text-white fill-white bg-primary"
-          : "text-primary hover:text-white hover:fill-white hover:bg-primary"
-      }`}
-                        onClick={() => {
-                          setFilterHide(false);
-                          setselectedcats({});
-                          setcurrentPage(1);
-                          filter();
-                        }}
-                      >
-                        {subHeadingOneText}
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: CatData?.category?.icon,
+                  {CatData?.category?.child?.length > 0 ? 
+                    <>
+                    <div className="flex items-center 2xl:w-[36.25rem] lg:w-[30.25rem] w-full overflow-x-auto hide_scrollbar pb-1">
+                      <div className="flex flex-nowrap min-w-max">
+                        <button
+                          className={`bestProButton flex gap-2 items-center w-fit whitespace-nowrap 
+        !text-xs !rounded-2xl lg:!py-2 !py-1 !px-3 md:!font-bold border-gray !transition-none 
+        ${Object.keys(selectedcats).length === 0
+                              ? "!text-white fill-white bg-primary"
+                              : "text-primary fill-primary hover:text-white hover:fill-white hover:bg-primary"
+                            }`}
+                          onClick={() => {
+                            setFilterHide(false);
+                            setselectedcats({ ...{} });
+                            setcurrentPage(1);
+                            setLoaderStatus(true);
+                            // filter();
                           }}
-                        />
-                      </button>
+                        >
+                          <div className="filter_icons"
+                            dangerouslySetInnerHTML={{
+                              __html: CatData?.category?.icon,
+                            }}
+                          />
+                          {subHeadingOneText}
+                        </button>
 
-                      {CatData?.category?.child.map(
-                        (child: any, tc: number) => (
-                          <div
-                            key={tc}
-                            className="flex items-center gap-2 shrink-0"
-                          >
-                            <div className="h-[20px] w-px mx-2.5 border border-gray opacity-20"></div>
-                            <button
-                              className={`bestProButton flex gap-2 items-center w-fit whitespace-nowrap 
-          !text-xs !rounded-2xl !py-1 !px-4 md:!font-bold border-gray h-full 
-          ${
-            selectedcats[child?.name]
-              ? "!text-white fill-white bg-primary"
-              : "text-primary hover:text-white hover:fill-white hover:bg-primary"
-          }`}
-                              onClick={() => {
-                                const bdata: any = {};
-                                if (!bdata[child?.name]) {
-                                  bdata[child?.name] = true;
-                                } else {
-                                  delete bdata[child?.name];
-                                }
-                                setselectedcats({ ...bdata });
-                                setcurrentPage(1);
-                                filter();
-                              }}
+                        {CatData?.category?.child.map(
+                          (child: any, tc: number) => (
+                            <div
+                              key={tc}
+                              className="flex items-center shrink-0"
                             >
-                              {isArabic ? child?.name_arabic : child?.name}
-                              <div
-                                dangerouslySetInnerHTML={{
-                                  __html: child?.icon,
+                              <div className="h-[20px] w-px mx-2 border border-gray opacity-20"></div>
+                              <button
+                                className={`bestProButton flex gap-1 items-center w-fit whitespace-nowrap 
+            !text-xs !rounded-2xl lg:!py-2 !py-1 !px-3 md:!font-bold border-gray h-full !transition-none 
+            ${selectedcats[child?.name]
+                                    ? "!text-white fill-white bg-primary"
+                                    : "text-primary fill-primary hover:text-white hover:fill-white hover:bg-primary"
+                                  }`}
+                                onClick={() => {
+                                  const bdata: any = {};
+                                  bdata[child?.name] = true;
+                                  setselectedcats({ ...bdata });
+                                  setcurrentPage(1);
+                                  setLoaderStatus(true);
+                                  // setselectedcats((prev:any) => {
+                                  //   const newState = { ...bdata };
+                                  //   console.log("bdata", bdata);
+                                  //   setTimeout(() => {
+                                  //     console.log("selectedcats3", selectedcats);
+                                  //     filter();
+                                  //   }, 1000);
+                                  //   return newState;
+                                  // });
+                                  // setcurrentPage(1);
+                                  // console.log("bdata", bdata);
+
+                                  // setTimeout(() => {
+                                  //   console.log("selectedcats", selectedcats);
+                                  //   filter();
+                                  // }, 1000);
                                 }}
-                              />
-                            </button>
-                          </div>
-                        )
-                      )}
+                              >
+                                <div className="filter_icons"
+                                  dangerouslySetInnerHTML={{
+                                    __html: child?.icon,
+                                  }}
+                                />
+                                {isArabic ? child?.name_arabic : child?.name}
+                              </button>
+                            </div>
+                          )
+                        )}
+                      </div>
                     </div>
-                  </div>
+                    </>
+                  :null}
 
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center rounded-full py-1 px-2 shadow-md">
+                    <div className="flex items-center space-x-2 rounded-full py-1 px-2 shadow-md">
                       <button
-                        className={`bestProButton w-fit whitespace-nowrap test !border-0 lg:!py-2 !py-1 !px-2 
-                          ${
-                            view === "grid"
-                              ? "selected !text-white !fill-white bg-primary" // active state
-                              : "text-primary hover:text-white hover:bg-primary" // default + hover
+                        className={`bestProButton w-fit whitespace-nowrap test !border-0 lg:!py-2 !py-1 !transition-none !px-2 
+                          ${view === "grid"
+                            ? "selected !text-white !fill-white bg-primary" // active state
+                            : "text-primary fill-primary hover:!text-white hover:!fill-white hover:bg-primary" // default + hover
                           }`}
                         onClick={() => setview("grid")}
                       >
@@ -866,41 +811,40 @@ export default function SubCategoryNew({
                             y="1"
                             width="7"
                             height="7"
-                            stroke="#004B7A"
-                            fill="currentColor"
+                            stroke="currentColor"
+                            // fill="currentColor"
                           />
                           <rect
                             x="10.5"
                             y="1"
                             width="7"
                             height="7"
-                            stroke="#004B7A"
-                            fill="currentColor"
+                            stroke="currentColor"
+                            // fill="currentColor"
                           />
                           <rect
                             x="0.5"
                             y="11"
                             width="7"
                             height="7"
-                            stroke="#004B7A"
-                            fill="currentColor"
+                            stroke="currentColor"
+                            // fill="currentColor"
                           />
                           <rect
                             x="10.5"
                             y="11"
                             width="7"
                             height="7"
-                            stroke="#004B7A"
-                            fill="currentColor"
+                            stroke="currentColor"
+                            // fill="currentColor"
                           />
                         </svg>
                       </button>
                       <button
-                        className={`bestProButton w-fit whitespace-nowrap test !border-0 lg:!py-2 !py-1 !px-2 
-                          ${
-                            view === "list"
-                              ? "selected !text-white !fill-white bg-primary" // active state
-                              : "text-primary hover:text-white hover:bg-primary" // default + hover
+                        className={`bestProButton w-fit whitespace-nowrap test !border-0 lg:!py-2 !py-1 !transition-none !px-2 
+                          ${view === "list"
+                            ? "selected !text-white !fill-white bg-primary" // active state
+                            : "!text-primary !fill-primary hover:!text-white hover:!fill-white hover:bg-primary" // default + hover
                           }`}
                         onClick={() => setview("list")}
                       >
@@ -917,21 +861,21 @@ export default function SubCategoryNew({
                             width="18"
                             height="18"
                             rx="4"
-                            fill="white"
+                            fill="transparent"
                           />
                           <rect
                             x="0.5"
                             y="1"
                             width="17"
                             height="7"
-                            stroke="#004B7A"
+                            stroke="currentColor"
                           />
                           <rect
                             x="0.5"
                             y="11"
                             width="17"
                             height="7"
-                            stroke="#004B7A"
+                            stroke="currentColor"
                           />
                         </svg>
                       </button>
@@ -939,7 +883,7 @@ export default function SubCategoryNew({
                     <div className="relative inline-block">
                       <button
                         onClick={() => setSortPopup(!sortPopup)}
-                        className="bestProButton shadow-md !text-base flex gap-2 items-center w-fit whitespace-nowrap selected lg:!py-2.5 !py-1 !px-4 !text-primary !border-0 hover:!text-white hover:bg-primary transition-all"
+                        className="bestProButton shadow-md !text-base flex gap-2 items-center w-fit whitespace-nowrap selected lg:!py-2.5 !py-1 !px-4 !text-primary !border-0 hover:!text-white hover:bg-primary !transition-none"
                       >
                         {subHeadingFiveText}
                         <svg
@@ -973,49 +917,48 @@ export default function SubCategoryNew({
 
                       {sortPopup && (
                         <div
-                          className="absolute top-full left-0 mt-2 z-30 w-max bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.1)] p-4"
+                          className={`absolute top-full ${isArabic ? 'left-0' : 'right-0'} mt-2 z-30 w-max bg-white rounded-xl shadow-md p-4`}
                           onClick={(e) => e.stopPropagation()}
                         >
                           <ul className="space-y-3">
                             {SortingProduct.map((filter) => (
-                              <li
-                                key={filter?.value}
-                                className="flex items-center gap-3"
-                              >
+                              <li key={filter?.value} className="">
                                 <label
                                   htmlFor={filter?.label
                                     .toLowerCase()
                                     .replace(" ", "_")}
-                                  className="inline-flex justify-center items-center w-5 h-5 rounded border border-gray-300 peer-checked:border-primary cursor-pointer transition-all duration-200"
+                                  className="flex items-center gap-3 cursor-pointer"
                                 >
-                                  <input
-                                    type="checkbox"
-                                    id={filter?.label
-                                      .toLowerCase()
-                                      .replace(" ", "_")}
-                                    className="hidden peer"
-                                    checked={sort == filter?.value}
-                                    onChange={() => setsort(filter?.value)}
-                                  />
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="14"
-                                    height="10"
-                                    viewBox="0 0 14 10"
-                                    fill="none"
-                                    className="hidden peer-checked:block"
-                                  >
-                                    <path
-                                      d="M12.5029 0.569855C12.7684 0.569955 13.0232 0.675132 13.2109 0.862823C13.3986 1.05052 13.5038 1.3054 13.5039 1.57083C13.5039 1.83623 13.3985 2.09109 13.2109 2.27884L5.20898 9.2769C5.11608 9.3701 5.00632 9.4452 4.88477 9.4956C4.76325 9.5461 4.63254 9.5718 4.50098 9.5718C4.36962 9.5718 4.2395 9.546 4.11816 9.4956C4.02717 9.4579 3.94204 9.4066 3.86621 9.3443L0.792969 6.77786C0.70008 6.68492 0.62646 6.57407 0.576172 6.45267C0.52595 6.33129 0.5 6.20121 0.5 6.06985C0.50001 5.93848 0.52594 5.80843 0.576172 5.68704C0.62647 5.56562 0.70005 5.4548 0.792969 5.36185C0.885938 5.26888 0.9967 5.19537 1.11816 5.14505C1.23955 5.09477 1.36959 5.06892 1.50098 5.06888C1.63247 5.06888 1.76328 5.09473 1.88477 5.14505C2.00604 5.19533 2.11613 5.26904 2.20898 5.36185L4.50195 7.65482L11.7949 0.862823C11.9827 0.675263 12.2375 0.569855 12.5029 0.569855Z"
-                                      fill="#004B7A"
-                                      stroke="#004B7A"
-                                      strokeWidth="0.5"
+                                  <span className="inline-flex justify-center items-center w-5 h-5 rounded border border-gray-300 peer-checked:border-primary cursor-pointer transition-all duration-200">
+                                    <input
+                                      type="checkbox"
+                                      id={filter?.label
+                                        .toLowerCase()
+                                        .replace(" ", "_")}
+                                      className="hidden peer"
+                                      checked={sort == filter?.value}
+                                      onChange={() => setsort(filter?.value)}
                                     />
-                                  </svg>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="14"
+                                      height="10"
+                                      viewBox="0 0 14 10"
+                                      fill="none"
+                                      className="hidden peer-checked:block"
+                                    >
+                                      <path
+                                        d="M12.5029 0.569855C12.7684 0.569955 13.0232 0.675132 13.2109 0.862823C13.3986 1.05052 13.5038 1.3054 13.5039 1.57083C13.5039 1.83623 13.3985 2.09109 13.2109 2.27884L5.20898 9.2769C5.11608 9.3701 5.00632 9.4452 4.88477 9.4956C4.76325 9.5461 4.63254 9.5718 4.50098 9.5718C4.36962 9.5718 4.2395 9.546 4.11816 9.4956C4.02717 9.4579 3.94204 9.4066 3.86621 9.3443L0.792969 6.77786C0.70008 6.68492 0.62646 6.57407 0.576172 6.45267C0.52595 6.33129 0.5 6.20121 0.5 6.06985C0.50001 5.93848 0.52594 5.80843 0.576172 5.68704C0.62647 5.56562 0.70005 5.4548 0.792969 5.36185C0.885938 5.26888 0.9967 5.19537 1.11816 5.14505C1.23955 5.09477 1.36959 5.06892 1.50098 5.06888C1.63247 5.06888 1.76328 5.09473 1.88477 5.14505C2.00604 5.19533 2.11613 5.26904 2.20898 5.36185L4.50195 7.65482L11.7949 0.862823C11.9827 0.675263 12.2375 0.569855 12.5029 0.569855Z"
+                                        fill="#004B7A"
+                                        stroke="#004B7A"
+                                        strokeWidth="0.5"
+                                      />
+                                    </svg>
+                                  </span>
+                                  <span className="sm:text-sm text-xs text-primary">
+                                    {filter?.label}
+                                  </span>
                                 </label>
-                                <span className="sm:text-sm text-xs text-primary">
-                                  {filter?.label}
-                                </span>
                               </li>
                             ))}
                           </ul>
@@ -1028,40 +971,99 @@ export default function SubCategoryNew({
               </div>
             )}
             {view === "list" ? (
-              <div className="tamkeenSales_cardss relative grid grid-cols-1 xl:gap-10 gap-5 items-start justify-center mb-10 p-1">
-                <ProductLoopList
-                  productData={(products?.length
-                    ? products?.slice(0, 5)
-                    : params?.data?.productData?.products?.data
-                  )?.slice(0, 5)}
-                  lang={isArabic}
-                  isMobileOrTablet={isMobileOrTablet}
-                  origin={origin}
-                />
+              <div className="tamkeenSales_cardss relative grid grid-cols-1 gap-5 items-start justify-center mb-10">
+                {data?.productData?.products?.data?.length > 0 ? (
+                  <>
+                    {loaderStatus ? (
+                      <div
+                        className={`animate-pulse tamkeenSales_cardss relative grid grid-cols-1 xl:gap-x-3 gap-2 items-start justify-center`}
+                      >
+                        {[...Array(isMobileOrTablet ? 10 : 12)].map(
+                          (_, i) => (
+                            <div
+                              className="h-[22rem] bg-white rounded-2xl shadow-md"
+                              key={i + 200}
+                            ></div>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <ProductLoopList
+                        productData={
+                          products?.length
+                            ? products
+                            : data?.productData?.products?.data
+                        }
+                        lang={isArabic}
+                        isMobileOrTablet={isMobileOrTablet}
+                        origin={origin}
+                        NewMedia={NewMedia}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <h1 className="col-span-3 text-center text-[#5D686F] font-bold">
+                    {lang === "ar"
+                      ? "لم يتم العثور على منتجات"
+                      : "No Product Found"}
+                  </h1>
+                )}
               </div>
             ) : (
-              <div className="tamkeenSales_cardss relative grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 lg:gap-y-10 lg:gap-x-3 gap-3 items-start justify-center">
-                <ProductLoop
-                  productData={
-                    products?.length
-                      ? products
-                      : params?.data?.productData?.products?.data
-                  }
-                  lang={isArabic}
-                  isMobileOrTablet={isMobileOrTablet}
-                  origin={origin}
-                />
+              <div
+                className={`tamkeenSales_cardss relative ${loaderStatus
+                  ? ""
+                  : "grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 grid-cols-1"
+                  } gap-3 items-start justify-center`}
+              >
+                {data?.productData?.products?.data?.length > 0 ? (
+                  <>
+                    {loaderStatus ? (
+                      <div
+                        className={`animate-pulse tamkeenSales_cardss grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 xl:gap-x-3 gap-2 items-start justify-center`}
+                      >
+                        {[...Array(isMobileOrTablet ? 10 : 12)].map(
+                          (_, i) => (
+                            <div
+                              className="h-[32rem] bg-white rounded-2xl shadow-md"
+                              key={i + 200}
+                            ></div>
+                          )
+                        )}
+                      </div>
+                    ) : (
+                      <ProductLoop
+                        productData={
+                          products?.length
+                            ? products
+                            : data?.productData?.products?.data
+                        }
+                        lang={isArabic}
+                        NewMedia={NewMedia}
+                        isMobileOrTablet={isMobileOrTablet}
+                        origin={origin}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <h1 className="col-span-3 text-center text-[#5D686F] font-bold">
+                    {lang === "ar"
+                      ? "لم يتم العثور على منتجات"
+                      : "No Product Found"}
+                  </h1>
+                )}
               </div>
             )}
-            {isMobileOrTablet ? null : (
-              <hr className="w-2/3 h-px border border-gray my-3 opacity-40 mx-auto"></hr>
+            {!isMobileOrTablet && products?.length > 0 && (
+              <hr className="w-full h-px border border-gray my-3 opacity-40 mx-auto" />
             )}
+
             {/* Pagination Section */}
-            {!isMobileOrTablet ? (
-              <>
-                {params?.data?.productData?.products && (
-                  <>
-                    {params?.data?.productData?.products?.last_page > 1 && (
+            {!isMobileOrTablet && (
+              <div>
+                {data?.productData?.products && (
+                  <div>
+                    {data?.productData?.products?.last_page > 1 && (
                       <Pagination
                         setCurrentPage={(newpage) => {
                           setLoaderStatus(true);
@@ -1071,17 +1073,17 @@ export default function SubCategoryNew({
                         isMobileOrTablet={isMobileOrTablet}
                         isArabic={isArabic}
                         currentPage={
-                          params?.data?.productData?.products?.current_page
+                          data?.productData?.products?.current_page
                         }
                         lastPage={
-                          params?.data?.productData?.products?.last_page
+                          data?.productData?.products?.last_page
                         }
                       />
                     )}
-                  </>
+                  </div>
                 )}
-              </>
-            ) : null}
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -1092,11 +1094,12 @@ export default function SubCategoryNew({
     ${filterModal ? "translate-x-0" : "-translate-x-full"}`}
       >
         <MobileFilterNew
+          NewMedia={NewMedia}
           filterModal={filterModal}
           setFilterModal={setFilterModal}
           tags={CatData?.productData?.tags}
           isArabic={isArabic}
-          devicetype={params?.devicetype}
+          deviceType={deviceType}
           isMobileOrTablet={isMobileOrTablet}
           selectedtags={selectedtags}
           onChangetags={(tagchild: any) => {
@@ -1107,6 +1110,7 @@ export default function SubCategoryNew({
               delete tagnames[tagchild.name];
               window.scrollTo(0, 0);
             }
+            setLoaderStatus(true);
             setselectedtags({ ...tagnames });
             setcurrentPage(1);
             filter();
@@ -1120,11 +1124,13 @@ export default function SubCategoryNew({
             } else {
               delete bdata[name];
             }
+            setLoaderStatus(true);
             setselectedbrands({ ...bdata });
             setcurrentPage(1);
             filter();
           }}
           setClear={() => {
+            setLoaderStatus(true);
             setselectedbrands({});
             setselectedrating({});
             setselectedcats({});
@@ -1132,7 +1138,7 @@ export default function SubCategoryNew({
             setselectedtags({});
             // setFilterMobile(false)
             window.scrollTo(0, 0);
-            router.push(`/${params?.lang}/category-new/${params?.slug}`, {
+            router.push(`${origin}/${lang}/category/${slug}`, {
               scroll: true,
             });
             router.refresh();
@@ -1142,7 +1148,7 @@ export default function SubCategoryNew({
 
       {/* Section 3 */}
       {/* <section className="px-20 py-10">
-        <Accordion isArabic={isArabic} isMobileOrTablet={isMobileOrTablet} />
+        <Accordion isArabic={isArabic} origin={origin} isMobileOrTablet={isMobileOrTablet} />
       </section> */}
     </>
   );

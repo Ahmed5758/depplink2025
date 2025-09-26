@@ -2,12 +2,12 @@
 
 import React from "react";
 import Image from "next/image";
-import { NewMedia } from "../../api/Api";
 
 interface FilterProps {
   isArabic: boolean;
   isMobileOrTablet: boolean;
-  devicetype: string;
+  NewMedia: any;
+  deviceType: string;
   brands: { id: string; name: string; name_arabic: string; brand_media_image?: { image: string } }[];
   selectedbrands: Record<string, boolean>;
   tags: { name: string; name_arabic: string; childs: { name: string; name_arabic: string; icon?: string }[] }[];
@@ -18,9 +18,10 @@ interface FilterProps {
 }
 
 export default function FilterVertical(props: FilterProps) {
-  const isMobileOrTablet = props?.devicetype === "mobile" || props?.devicetype === "tablet";
+  const isMobileOrTablet = props?.deviceType === "mobile" || props?.deviceType === "tablet";
   const containerClass = isMobileOrTablet ? "container" : "px-20";
   const isArabic = props.isArabic;
+  const NewMedia = props.NewMedia;
 
   // Check Icon
   const checkIcon = (
@@ -49,12 +50,12 @@ export default function FilterVertical(props: FilterProps) {
   const brandText = isArabic ? "العلامة التجارية" : "Brand";
 
   return (
-    <div className={`filter_wrapper bg-white rounded-[1.438rem] md:py-[1.75rem] md:px-[1.125rem] p-4 shrink-0 overflow-hidden ${containerClass}`} style={{ boxShadow: "0px 0px 3.125px 0px rgba(0, 0, 0, 0.25);" }}>
+    <div className={`filter_wrapper bg-white rounded-[1.438rem] md:py-[1.75rem] md:px-[1.125rem] p-4 shrink-0 overflow-hidden shadow-md ${containerClass}`} >
       {/* Filter Header */}
       <div className="mb-5">
-        <div className="flex items-center justify-between mb-2.5">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="headingHomeMain !text-base !text-dark">{filterText}</h2>
-          {Object.keys(props.selectedbrands).length > 0 || Object.keys(props.selectedtags).length > 0 ? 
+          {(Object.keys(props.selectedbrands).length > 0 || Object.keys(props.selectedtags).length > 0) && 
             <button
               className="clear_all text-xs text-[#BE0404] font-semibold"
               onClick={props.setClear}
@@ -62,7 +63,7 @@ export default function FilterVertical(props: FilterProps) {
             >
               {clearText}
             </button>
-          :null}
+          }
         </div>
 
         <div className="flex items-center flex-wrap gap-2">
@@ -95,37 +96,37 @@ export default function FilterVertical(props: FilterProps) {
 
       {/* Brand Section */}
       {props.brands?.length > 0 && (
-        <div className="mb-5 p-4 rounded-[.25rem] border border-[#E8E8E8]">
+        <div className="mb-5 p-4 rounded-lg border border-[#E8E8E8]">
           <div className="text-xs text-[#252B42] font-bold flex items-center justify-between gap-4 w-full mb-4">
             <span className="line-clamp-1">{brandText}</span>
-            {Object.keys(props.selectedbrands).length > 0 ?
-            <span className="rounded-[.6375rem] w-4 h-4 bg-primary text-white shrink-0 inline-flex items-center justify-center text-[.6375rem] font-medium">
-              {Object.keys(props.selectedbrands).length}
-            </span>
-            :null}
+            {Object.keys(props.selectedbrands).length > 0 &&
+              <span className="rounded-[.6375rem] w-4 h-4 bg-primary text-white shrink-0 inline-flex items-center justify-center text-[.6375rem] font-medium">
+                {Object.keys(props.selectedbrands).length}
+              </span>
+            }
           </div>
-          <div className="flex items-center flex-wrap gap-y-2 gap-x-3">
+          <div className="flex items-center flex-wrap gap-2">
             {props.brands.map((brand) => {
               const isSelected = props.selectedbrands[brand.name] === true;
               return (
                 <button
                   key={brand.id}
                   onClick={() => props.setBrandData(brand.id, brand.name)}
-                  className={`relative w-16 h-8 px-4 py-[9px] rounded-full cursor-pointer outline-none border-primary bg-[#F3F3F3] ${isSelected ? "border-2" : "border"}`}
+                  className={`relative w-[66px] h-[31px] flex justify-center items-center rounded-full cursor-pointer outline-none border-primary bg-[#F3F3F3] ${isSelected ? "border-2" : "border"}`}
                   aria-label={isArabic ? brand.name_arabic : brand.name}
                 >
                   <Image
                     alt={isArabic ? brand.name_arabic : brand.name}
                     title={isArabic ? brand.name_arabic : brand.name}
-                    src={brand.brand_media_image ? NewMedia + brand.brand_media_image.image : "https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png"}
+                    src={brand.brand_media_image ? `${NewMedia}${brand.brand_media_image.image}` : "https://images.tamkeenstores.com.sa/assets/new-media/3f4a05b645bdf91af2a0d9598e9526181714129744.png"}
                     width={0}
                     height={0}
                     decoding="async"
                     data-nimg="1"
-                    sizes="100vw"
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     loading="lazy"
-                    className="w-full h-full object-cover rounded-[1rem]"
+                    className="w-full h-[13px] object-contain rounded-[1rem]"
                   />
                   {isSelected && checkIcon}
                 </button>
@@ -137,23 +138,23 @@ export default function FilterVertical(props: FilterProps) {
 
       {/* Tags Section */}
       {props.tags?.map((tagdata, t) => (
-        <div key={t} className="mb-5 p-4 rounded-[.25rem] border border-[#E8E8E8]">
+        <div key={t} className="mb-5 p-4 rounded-lg border border-[#E8E8E8]">
           <div className="text-xs text-[#252B42] font-bold flex items-center justify-between gap-4 w-full mb-4">
             <span className="line-clamp-1">{isArabic ? tagdata.name_arabic : tagdata.name}</span>
             {tagdata.childs.filter((child) => props.selectedtags[child.name]).length > 0 ?
-            <span className="rounded-[.6375rem] w-4 h-4 bg-primary text-white shrink-0 inline-flex items-center justify-center text-[.6375rem] font-medium">
-              {tagdata.childs.filter((child) => props.selectedtags[child.name]).length}
-            </span>
+              <span className="rounded-[.6375rem] w-4 h-4 bg-primary text-white shrink-0 inline-flex items-center justify-center text-[.6375rem] font-medium">
+                {tagdata.childs.filter((child) => props.selectedtags[child.name]).length}
+              </span>
             :null}
           </div>
-          <div className="flex items-center flex-wrap gap-y-2 gap-x-3">
-            {tagdata.childs.map((tagchild) => {
+          <div className="flex items-center flex-wrap gap-2">
+            {tagdata.childs.map((tagchild, i) => {
               const isSelected = props.selectedtags[tagchild.name] === true;
               return (
                 <button
-                  key={tagchild.name}
+                  key={i}
                   onClick={() => props.onChangetags(tagchild)}
-                  className={`relative w-16 h-8 rounded-full cursor-pointer outline-none border-primary flex items-center justify-center px-2 bg-[#F3F3F3] ${isSelected ? "border-2" : "border"}`}
+                  className={`relative rounded-full cursor-pointer outline-none border-primary flex items-center justify-center px-4 py-1.5 bg-[#F3F3F3] ${isSelected ? "border-2" : "border"}`}
                   aria-label={isArabic ? tagchild.name_arabic : tagchild.name}
                 >
                   {tagchild.icon ? (
@@ -161,13 +162,13 @@ export default function FilterVertical(props: FilterProps) {
                     //   dangerouslySetInnerHTML={{ __html: tagchild.icon }}
                     // />
                     <div className="text-[#121212] font-bold tracking-[0.00544rem]">
-                      <p className="text-[.5rem] leading-[.625rem]">
+                      <p className="text-[.625rem]">
                         {isArabic ? tagchild.name_arabic : tagchild.name}
                       </p>
                     </div>
                   ) : (
                     <div className="text-[#121212] font-bold tracking-[0.00544rem]">
-                      <p className="text-[.5rem] leading-[.625rem]">
+                      <p className="text-[.625rem]">
                         {isArabic ? tagchild.name_arabic : tagchild.name}
                       </p>
                     </div>
