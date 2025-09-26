@@ -2204,12 +2204,7 @@ export default function Product({ params, searchParams }: { params: { lang: stri
 
             {/* Add to Cart Button For Mobile */}
             <div className="h-28"></div>
-<<<<<<< HEAD
-            <div className="fixed bottom-0 w-full p-3 bg-white shadow-md border-t border-[#5D686F26] z-20">
-=======
             <div className="fixed bottom-0 w-full p-3 bg-white shadow-md border-t border-[#5D686F26] z-30">
->>>>>>> 1e0bef3620270e34ce273995ff5bcb4d70d9d3a2
-                {/* QuantityBox */}
                 {quantityBox ?
                     <div className="flex flex-col m-auto p-auto">
                         <div className="flex overflow-x-scroll hide-scroll-bar pb-1">
